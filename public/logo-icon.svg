@@ -1,0 +1,4 @@
+<svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="4" width="48" height="48" rx="10" fill="#EAEAE1" stroke="#1B2233" stroke-width="2"/>
+    <text x="28" y="36" font-family="IBM Plex Sans, sans-serif" font-weight="700" font-size="22" fill="#1B2233" text-anchor="middle">i<tspan fill="#1B7FA6">x</tspan></text>
+</svg>
