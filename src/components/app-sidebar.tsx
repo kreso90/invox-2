@@ -11,9 +11,11 @@ import {
 	SidebarMenuBadge,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
 	Home,
+	House,
 	LogOut,
 	Plus,
 	ReceiptText,
@@ -33,11 +35,35 @@ export function AppSidebar() {
 
 	return (
 		<Sidebar collapsible="icon">
-			<SidebarHeader />
+			<SidebarHeader>
+				<Image
+					src="/logo-white.svg"
+					alt="Logo"
+					width={240}
+					height={80}
+					loading="eager"
+				/>
+			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
 					<nav>
 						<SidebarMenu className="gap-2">
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									render={<Link href="/dashboard" />}
+									isActive={pathname === "/dashboard"}
+								>
+									<House
+										className={
+											pathname === "/dashboard"
+												? "text-(--sidebar-accent-icon-foreground)"
+												: ""
+										}
+										data-active={pathname === "/dashboard"}
+									/>
+									<span>Nadzorna ploča</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									render={<Link href="/invoices" />}

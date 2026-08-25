@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
-const protectedRoutes = ["/", "/invoices"];
+const protectedRoutes = ["/", "/invoices", "/settings"];
 
 export async function proxy(request: NextRequest) {
 	const session = await auth.api.getSession({

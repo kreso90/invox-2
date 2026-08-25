@@ -181,6 +181,28 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
+exports.Prisma.BusinessScalarFieldEnum = {
+  id: 'id',
+  business_name: 'business_name',
+  oib: 'oib',
+  vatId: 'vatId',
+  street: 'street',
+  city: 'city',
+  postalCode: 'postalCode',
+  country: 'country',
+  email: 'email',
+  phone: 'phone',
+  iban: 'iban',
+  description: 'description',
+  activity_code: 'activity_code',
+  annual_threshold: 'annual_threshold',
+  threshold_warning_pct: 'threshold_warning_pct',
+  logo_url: 'logo_url',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -203,7 +225,8 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   VerificationToken: 'VerificationToken',
-  PasswordResetToken: 'PasswordResetToken'
+  PasswordResetToken: 'PasswordResetToken',
+  Business: 'Business'
 };
 
 /**

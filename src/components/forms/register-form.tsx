@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/features/auth/actions";
 import { useActionState, useEffect, useState } from "react";
+import { useFormValues } from "@/hooks/use-form-values";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +14,7 @@ import { Separator } from "../ui/separator";
 
 export default function RegisterForm() {
 	const [state, formAction, isPending] = useActionState(createUser, null);
-	const [formValues, setFormValues] = useState({
+	const { formValues, setFormValues, handleInputChange } = useFormValues({
 		firstname: "",
 		surname: "",
 		email: "",
@@ -23,11 +24,6 @@ export default function RegisterForm() {
 	const [termsAccepted, setTermsAccepted] = useState(false);
 
 	const [isSocialPending, setIsSocialPending] = useState(false);
-
-	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-		const { name, value } = event.target;
-		setFormValues((current) => ({ ...current, [name]: value }));
-	}
 
 	useEffect(() => {
 		if (state?.status !== "success") {

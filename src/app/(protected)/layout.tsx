@@ -26,10 +26,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 			<body className={`${ibmPlexSans.variable} ${ibmPlexMono.variable}`}>
 				<SidebarProvider>
 					<AppSidebar />
-					<main className="flex-1 p-10">
-						<SidebarTrigger />
-						{children}
-					</main>
+					<SidebarTrigger className="absolute" />
+					<main className="flex-1 py-10 px-2.5 lg:p-10">{children}</main>
 				</SidebarProvider>
 			</body>
 		</html>
