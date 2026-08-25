@@ -5,8 +5,8 @@ import {
 	FieldLabel,
 	FieldDescription,
 	FieldSet,
-} from "../ui/field";
-import { Button } from "../ui/button";
+} from "../../../components/ui/field";
+import { Button } from "../../../components/ui/button";
 import { updateAnnualThreshold } from "@/features/business/actions";
 import { useActionState } from "react";
 import { Business } from "@/features/business/types";
@@ -16,10 +16,10 @@ import {
 	InputGroupAddon,
 	InputGroupInput,
 	InputGroupText,
-} from "../ui/input-group";
+} from "../../../components/ui/input-group";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Separator } from "../ui/separator";
+import { Separator } from "../../../components/ui/separator";
 import {
 	Select,
 	SelectContent,
@@ -27,7 +27,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
+} from "../../../components/ui/select";
 
 interface taxFormProps {
 	businessData?: Business | null;

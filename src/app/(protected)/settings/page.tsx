@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import BusinessProfileForm from "@/components/forms/business-profile-form";
-import TaxForm from "@/components/forms/tax-form";
+import BusinessProfileForm from "@/features/business/components/business-profile-form";
+import TaxForm from "@/features/business/components/tax-form";
 import { getCurrentBusiness } from "@/features/business/queries";
 import { userAgentFromString } from "next/server";
 import { headers } from "next/headers";
@@ -17,8 +17,10 @@ export default async function SettingsPage() {
 
 	return (
 		<>
-			<h1 className="page-title">Postavke</h1>
-			{businessData?.business_name}
+			<div className="flex flex-col mb-8">
+				<h1 className="page-title">Postavke</h1>
+				<span className="font-mono text-sm">{businessData?.business_name}</span>
+			</div>
 
 			<Tabs
 				defaultValue="business_profile"

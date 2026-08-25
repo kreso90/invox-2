@@ -79,6 +79,19 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 	);
 }
 
+function CardContentRow({ className, ...props }: React.ComponentProps<"div">) {
+	return (
+		<div
+			data-slot="card-content-row"
+			className={cn(
+				"px-(--card-spacing) py-1.5 flex justify-between border-t border-border",
+				className,
+			)}
+			{...props}
+		/>
+	);
+}
+
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
@@ -100,4 +113,5 @@ export {
 	CardAction,
 	CardDescription,
 	CardContent,
+	CardContentRow,
 };

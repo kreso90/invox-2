@@ -140,10 +140,10 @@
   }
 }
 
-form{
+form:not([class="button-form"]){
   @apply p-6 bg-white rounded-[var(--radius)] border;
 }
 
 .page-title {
-  @apply text-2xl font-semibold mb-4;
+  @apply text-xl lg:text-2xl font-semibold;
 }

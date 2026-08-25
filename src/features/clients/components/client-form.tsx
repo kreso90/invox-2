@@ -1,56 +1,61 @@
 "use client";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "../ui/field";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { createBusiness } from "@/features/business/actions";
+import {
+	Field,
+	FieldGroup,
+	FieldLabel,
+	FieldLegend,
+	FieldSet,
+} from "../../../components/ui/field";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { createClient } from "@/features/clients/actions";
 import { useActionState } from "react";
-import { Business } from "@/features/business/types";
+import { Client } from "@/features/clients/types";
 import { useFormValues } from "@/hooks/use-form-values";
+import { Textarea } from "../../../components/ui/textarea";
 
-interface businessProfileFormProps {
-	businessData?: Business | null;
+interface clientFormProps {
+	clientData?: Client | null;
 }
 
-export default function BusinessProfileForm({
-	businessData,
-}: businessProfileFormProps) {
-	const isEditMode = Boolean(businessData);
-
-	const [state, fromAction, isPending] = useActionState(createBusiness, null);
+export default function ClientForm({ clientData }: clientFormProps) {
+	const [state, fromAction, isPending] = useActionState(createClient, null);
 
 	const initialValues = {
-		businessName: businessData?.business_name || "",
-		oib: businessData?.oib || "",
-		address: businessData?.street || "",
-		city: businessData?.city || "",
-		postalCode: businessData?.postalCode || "",
-		businessCode: businessData?.activity_code || "",
-		vatNumber: businessData?.vatId || "",
-		email: businessData?.email || "",
-		iban: businessData?.iban || "",
+		companyName: clientData?.companyName || "",
+		oib: clientData?.oib || "",
+		address: clientData?.address || "",
+		city: clientData?.city || "",
+		postalCode: clientData?.postalCode || "",
+		contactFirstName: clientData?.contactFirstName || "",
+		contactLastName: clientData?.contactLastName || "",
+		vatNumber: clientData?.vatNumber || "",
+		email: clientData?.email || "",
+		phone: clientData?.phone || "",
+		iban: clientData?.iban || "",
+		note: clientData?.note || "",
 	};
 	const { formValues, handleInputChange } = useFormValues(initialValues);
 
 	return (
 		<form action={fromAction} className="w-full">
-			<div className="font-semibold text-base">Podaci o obrtu</div>
-			<div className="text-muted text-sm mb-5">
-				Ovi podaci se prikazuju u zaglavlju svakog izdanog računa.
-			</div>
-
-			<FieldSet className="w-full">
+			<input type="hidden" name="clientId" value={clientData?.id} />
+			<FieldSet className="w-full mb-2">
+				<FieldLegend variant="label" className="uppercase text-muted mb-2">
+					Osnovni podaci
+				</FieldLegend>
 				<FieldGroup>
 					<div className="grid md:grid-cols-2 md:gap-4">
 						<Field>
-							<FieldLabel htmlFor="businessName">
-								Naziv obrta <span className="text-destructive">*</span>
+							<FieldLabel htmlFor="companyName">
+								Naziv tvrtke / obrta <span className="text-destructive">*</span>
 							</FieldLabel>
 							<Input
-								id="businessName"
-								name="businessName"
+								id="companyName"
+								name="companyName"
 								type="text"
-								placeholder="Maks"
-								value={formValues.businessName}
+								placeholder="npr. Studio Marin d.o.o."
+								value={formValues.companyName}
 								onChange={handleInputChange}
 								required
 							/>
@@ -67,6 +72,32 @@ export default function BusinessProfileForm({
 								value={formValues.oib}
 								onChange={handleInputChange}
 								required
+							/>
+						</Field>
+					</div>
+
+					<div className="grid md:grid-cols-2 md:gap-4">
+						<Field>
+							<FieldLabel htmlFor="vatNumber">PDV broj</FieldLabel>
+							<Input
+								id="vatNumber"
+								name="vatNumber"
+								type="text"
+								placeholder="npr. 9512345678"
+								value={formValues.vatNumber}
+								onChange={handleInputChange}
+								required
+							/>
+						</Field>
+						<Field>
+							<FieldLabel htmlFor="iban">IBAN</FieldLabel>
+							<Input
+								id="iban"
+								name="iban"
+								type="text"
+								value={formValues.iban}
+								onChange={handleInputChange}
+								placeholder="HR1234567890123456789"
 							/>
 						</Field>
 					</div>
@@ -115,31 +146,41 @@ export default function BusinessProfileForm({
 							/>
 						</Field>
 					</div>
+				</FieldGroup>
+			</FieldSet>
 
+			<FieldSet className="w-full mt-6">
+				<FieldLegend variant="label" className="uppercase text-muted mb-2">
+					Kontakt osoba
+				</FieldLegend>
+				<FieldGroup>
 					<div className="grid md:grid-cols-2 md:gap-4">
 						<Field>
-							<FieldLabel htmlFor="businessCode">
-								Šifra djelatnosti <span className="text-destructive">*</span>
+							<FieldLabel htmlFor="contactFirstName">
+								Ime kontakt osobe <span className="text-destructive">*</span>
 							</FieldLabel>
 							<Input
-								id="businessCode"
-								name="businessCode"
+								id="contactFirstName"
+								name="contactFirstName"
 								type="text"
 								placeholder="Maks"
-								value={formValues.businessCode}
+								value={formValues.contactFirstName}
 								onChange={handleInputChange}
 								required
 							/>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="vatNumber">PDV broj</FieldLabel>
+							<FieldLabel htmlFor="contactLastName">
+								Prezime kontakt osobe{" "}
+								<span className="text-destructive">*</span>
+							</FieldLabel>
 							<Input
-								id="vatNumber"
-								name="vatNumber"
+								id="contactLastName"
+								name="contactLastName"
 								type="text"
-								value={formValues.vatNumber}
+								value={formValues.contactLastName}
 								onChange={handleInputChange}
-								placeholder="12345678901"
+								placeholder="Maksim"
 							/>
 						</Field>
 					</div>
@@ -160,17 +201,34 @@ export default function BusinessProfileForm({
 							/>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="iban">IBAN</FieldLabel>
+							<FieldLabel htmlFor="phone">Telefon</FieldLabel>
 							<Input
-								id="iban"
-								name="iban"
+								id="phone"
+								name="phone"
 								type="text"
-								value={formValues.iban}
+								value={formValues.phone}
 								onChange={handleInputChange}
-								placeholder="HR1234567890123456789"
+								placeholder="+385 91 123 4567"
 							/>
 						</Field>
 					</div>
+				</FieldGroup>
+			</FieldSet>
+
+			<FieldSet className="w-full mt-6 mb-2">
+				<FieldLegend variant="label" className="uppercase text-muted mb-2">
+					Napomena
+				</FieldLegend>
+				<FieldGroup>
+					<Field>
+						<Textarea
+							id="note"
+							name="note"
+							value={formValues.note}
+							onChange={handleInputChange}
+							placeholder="Interna napomena o klijentu, dogovoreni uvjeti i sl."
+						/>
+					</Field>
 
 					<Button
 						size="lg"

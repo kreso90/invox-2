@@ -23,6 +23,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   business      Business?
+  clients       Client[]
 
   @@unique([email])
   @@map("user")
@@ -114,4 +115,24 @@ model Business {
   userId                String   @unique
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+}
+
+model Client {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName      String
+  oib              String?
+  vatNumber        String?
+  address          String?
+  city             String?
+  postalCode       String?
+  contactFirstName String?
+  contactLastName  String?
+  email            String?
+  phone            String?
+  iban             String?
+  note             String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

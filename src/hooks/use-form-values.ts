@@ -5,7 +5,9 @@ type StringFields = Record<string, string>;
 export function useFormValues<T extends StringFields>(initialValues: T) {
 	const [formValues, setFormValues] = useState<T>(initialValues);
 
-	function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+	function handleInputChange(
+		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+	) {
 		const { name, value } = event.target;
 
 		setFormValues((current) => {

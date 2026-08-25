@@ -22,6 +22,7 @@ import {
 	Settings,
 	User,
 	User2,
+	Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -78,6 +79,22 @@ export function AppSidebar() {
 										data-active={pathname === "/invoices"}
 									/>
 									<span>Računi</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									render={<Link href="/clients" />}
+									isActive={pathname?.startsWith("/clients")}
+								>
+									<Users
+										className={
+											pathname?.startsWith("/clients")
+												? "text-(--sidebar-accent-icon-foreground)"
+												: ""
+										}
+										data-active={pathname?.startsWith("/clients")}
+									/>
+									<span>Klijenti</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 							<SidebarMenuItem>

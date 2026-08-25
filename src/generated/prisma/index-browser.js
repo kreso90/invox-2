@@ -203,6 +203,25 @@ exports.Prisma.BusinessScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ClientScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  companyName: 'companyName',
+  oib: 'oib',
+  vatNumber: 'vatNumber',
+  address: 'address',
+  city: 'city',
+  postalCode: 'postalCode',
+  contactFirstName: 'contactFirstName',
+  contactLastName: 'contactLastName',
+  email: 'email',
+  phone: 'phone',
+  iban: 'iban',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -226,7 +245,8 @@ exports.Prisma.ModelName = {
   Verification: 'Verification',
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
-  Business: 'Business'
+  Business: 'Business',
+  Client: 'Client'
 };
 
 /**

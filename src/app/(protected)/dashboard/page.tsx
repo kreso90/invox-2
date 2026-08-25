@@ -39,7 +39,7 @@ export default async function DashboardPage() {
 	return (
 		<div>
 			<div className="flex flex-col mb-8">
-				<span className="font-semibold text-xl">Pozdrav, {userData?.name}</span>
+				<h1 className="page-title">Pozdrav, {userData?.name}</h1>
 				<span className="font-mono text-sm">{currentDate}</span>
 			</div>
 
