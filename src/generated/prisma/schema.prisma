@@ -24,6 +24,7 @@ model User {
   accounts      Account[]
   business      Business?
   clients       Client[]
+  articles      Article[]
 
   @@unique([email])
   @@map("user")
@@ -135,4 +136,41 @@ model Client {
   note             String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model Article {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  unit        Unit
+  price       Float
+  description String?
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum PaymentType {
+  CASH
+  BANK_TRANSFER
+}
+
+enum Unit {
+  PIECE
+  HOUR
+  DAY
+  METER
+  SQUARE_METER
+  LITER
+  KILOGRAM
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  OVERDUE
+  CANCELLED
+  PARTIALLY_PAID
 }

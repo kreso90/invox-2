@@ -14,6 +14,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
+	Box,
 	Home,
 	House,
 	LogOut,
@@ -95,6 +96,22 @@ export function AppSidebar() {
 										data-active={pathname?.startsWith("/clients")}
 									/>
 									<span>Klijenti</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									render={<Link href="/articles" />}
+									isActive={pathname?.startsWith("/articles")}
+								>
+									<Box
+										className={
+											pathname?.startsWith("/articles")
+												? "text-(--sidebar-accent-icon-foreground)"
+												: ""
+										}
+										data-active={pathname?.startsWith("/articles")}
+									/>
+									<span>Artikli i usluge</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 							<SidebarMenuItem>

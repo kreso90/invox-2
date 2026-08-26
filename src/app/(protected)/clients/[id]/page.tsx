@@ -1,10 +1,8 @@
 import ClientForm from "@/features/clients/components/client-form";
 import { AvatarPlaceholder } from "@/components/ui/avatar-placeholder";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardContentRow } from "@/components/ui/card";
 import ClientDeleteForm from "@/features/clients/components/client-delete-form";
 import { getClientById } from "@/features/clients/queries";
-import { Trash2 } from "lucide-react";
 import Link from "next/link";
 
 export default async function ClientPage({
@@ -35,6 +33,9 @@ export default async function ClientPage({
 			<div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-4">
 				<ClientForm clientData={client} />
 				<div>
+					<div className="text-xs tracking-wider uppercase mb-2 text-muted">
+						Pregled kartice
+					</div>
 					<Card key={client?.id}>
 						<CardContent>
 							<div className="flex items-center gap-2">

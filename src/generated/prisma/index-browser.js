@@ -222,6 +222,18 @@ exports.Prisma.ClientScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ArticleScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  unit: 'unit',
+  price: 'price',
+  description: 'description',
+  lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -236,7 +248,15 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Unit = exports.$Enums.Unit = {
+  PIECE: 'PIECE',
+  HOUR: 'HOUR',
+  DAY: 'DAY',
+  METER: 'METER',
+  SQUARE_METER: 'SQUARE_METER',
+  LITER: 'LITER',
+  KILOGRAM: 'KILOGRAM'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -246,7 +266,8 @@ exports.Prisma.ModelName = {
   VerificationToken: 'VerificationToken',
   PasswordResetToken: 'PasswordResetToken',
   Business: 'Business',
-  Client: 'Client'
+  Client: 'Client',
+  Article: 'Article'
 };
 
 /**

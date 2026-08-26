@@ -30,7 +30,6 @@ export default async function SettingsPage() {
 				<TabsList>
 					<TabsTrigger value="business_profile">Podaci o obrtu</TabsTrigger>
 					<TabsTrigger value="tax">Paušalno oporezivanje</TabsTrigger>
-					<TabsTrigger value="notifications">Obavijesti</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value="business_profile">
