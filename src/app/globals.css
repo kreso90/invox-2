@@ -28,6 +28,8 @@
     --color-success: var(--success);
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
     --color-accent-foreground: var(--accent-foreground);
     --color-accent: var(--accent);
     --color-gauge: var(--gauge);
@@ -64,14 +66,16 @@
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
-    --muted: #5B6478;
-    --muted-foreground: rgba(0, 0, 0, 0.05);
+    --muted: #8B917F;
+    --muted-foreground: #8B917F;
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --success: #2B6B57;
     --success-foreground: #DEEAE2;
     --destructive: #e7000b;
     --destructive-foreground: rgba(231, 0, 11, 0.1);
+    --warning: #B4863A;
+    --warning-foreground: #F2E9D8;
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
@@ -81,7 +85,7 @@
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
     --radius: 0.625rem;
-    --gauge: #DEEAE2;
+    --gauge: #2B6B57;
     --sidebar: #171D2B;
     --sidebar-foreground: rgb(203 208 220);
     --sidebar-primary: oklch(0.205 0 0);
@@ -140,7 +144,7 @@
   }
 }
 
-form:not([class="button-form"]){
+form:not([class="no-wrapper"]){
   @apply p-6 bg-white rounded-[var(--radius)] border;
 }
 

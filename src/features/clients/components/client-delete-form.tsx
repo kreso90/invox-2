@@ -7,7 +7,7 @@ import { Trash2 } from "lucide-react";
 export default function ClientDeleteForm({ clientId }: { clientId: string }) {
 	const [state, formAction, isPending] = useActionState(deleteClient, null);
 	return (
-		<form action={formAction} className="button-form">
+		<form action={formAction} className="no-wrapper">
 			<input type="hidden" name="clientId" value={clientId} />
 			<Button
 				size="lg"

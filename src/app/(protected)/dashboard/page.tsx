@@ -10,20 +10,40 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { getCurrentBusiness } from "@/features/business/queries";
+import { getUserClients } from "@/features/clients/queries";
 import { getCurrentUser } from "@/features/dashboard/queries";
+import {
+	getDueInvoices,
+	getInvoices,
+	getInvoicesAmounts,
+} from "@/features/invoices/queries";
+import { statusLabels } from "@/features/invoices/constants";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { getEffectiveStatus } from "@/features/invoices/utils";
+import { Plus } from "lucide-react";
 
 export default async function DashboardPage() {
 	const userData = await getCurrentUser();
 	const businessData = await getCurrentBusiness();
-	const currentAnnualThreshold = 80;
+	const invoicesData = await getInvoices(undefined, 1, 5);
+	const amountsData = await getInvoicesAmounts();
+	const dueInvoices = await getDueInvoices();
+
+	const currentAnnualThreshold = amountsData.paidAmount;
 	const thresholdLeft = businessData?.annual_threshold
 		? businessData.annual_threshold - currentAnnualThreshold
 		: 0;
+	const thresholdPercentage =
+		(currentAnnualThreshold / (businessData?.annual_threshold ?? 1)) * 100;
 
-	const unpaidAmount = 120; // Replace with actual logic to calculate unpaid amount
-	const billsWaitingForPayment = 3; // Replace with actual logic to calculate the number of bills waiting for payment
-	const currentMonthPaidAmount = 50; // Replace with actual logic to calculate current month paid amount
+	const currentMonth = new Intl.DateTimeFormat("hr-HR", {
+		month: "long",
+	}).format(new Date());
+
+	const previousMonth = new Intl.DateTimeFormat("hr-HR", {
+		month: "long",
+	}).format(new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1));
 
 	const currentDate = new Intl.DateTimeFormat("hr-HR", {
 		weekday: "long",
@@ -32,15 +52,34 @@ export default async function DashboardPage() {
 		year: "numeric",
 	}).format(new Date());
 
-	const currentMonth = new Intl.DateTimeFormat("hr-HR", {
-		month: "long",
-	}).format(new Date());
+	const current = amountsData.currentMonthPaidAmount ?? 0;
+	const previous = amountsData.previousMonthPaidAmount ?? 0;
 
+	const percentageText =
+		previous === 0 && current > 0
+			? ""
+			: previous === 0 && current === 0
+				? "Isto kao prošli mjesec"
+				: current > previous
+					? `↑ ${(((current - previous) / previous) * 100).toFixed(0)}% više u odnosu na ${previousMonth}`
+					: current < previous
+						? `${(((previous - current) / previous) * 100).toFixed(0)}% manje u odnosu na ${previousMonth}`
+						: "Isto kao prošli mjesec";
 	return (
-		<div>
-			<div className="flex flex-col mb-8">
-				<h1 className="page-title">Pozdrav, {userData?.name}</h1>
-				<span className="font-mono text-sm">{currentDate}</span>
+		<>
+			<div className="flex justify-between items-end mb-8">
+				<div>
+					<h1 className="page-title">Pozdrav, {userData?.name}</h1>
+					<span className="font-mono text-sm">{currentDate}</span>
+				</div>
+
+				<Link
+					href="/invoices/new"
+					className="h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
+				>
+					<Plus />
+					Novi račun
+				</Link>
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -52,13 +91,13 @@ export default async function DashboardPage() {
 					</CardHeader>
 					<CardContent className="flex flex-col">
 						<span className="font-mono text-2xl font-semibold">
-							{currentMonthPaidAmount.toLocaleString("hr-HR", {
+							{amountsData.currentMonthPaidAmount?.toLocaleString("hr-HR", {
 								style: "currency",
 								currency: "EUR",
 							})}
 						</span>
 						<span className="text-muted text-xs font-normal">
-							↑ 12% u odnosu na srpanj
+							{percentageText}
 						</span>
 					</CardContent>
 				</Card>
@@ -70,13 +109,13 @@ export default async function DashboardPage() {
 					</CardHeader>
 					<CardContent className="flex flex-col">
 						<span className="font-mono text-2xl font-semibold">
-							{unpaidAmount.toLocaleString("hr-HR", {
+							{amountsData.unpaidAmount?.toLocaleString("hr-HR", {
 								style: "currency",
 								currency: "EUR",
 							})}
 						</span>
 						<span className="text-muted text-xs font-normal">
-							{billsWaitingForPayment} računa čekaju uplatu
+							{amountsData.invoiceUnpaid ?? 0} računa čekaju uplatu
 						</span>
 					</CardContent>
 				</Card>
@@ -111,7 +150,7 @@ export default async function DashboardPage() {
 							</div>
 						</div>
 						<Progress
-							value={currentAnnualThreshold}
+							value={thresholdPercentage}
 							locale="hr-HR"
 							className="h-5 mt-4"
 						></Progress>
@@ -151,8 +190,8 @@ export default async function DashboardPage() {
 					</div>
 					<Table>
 						<TableHeader>
-							<TableRow className="uppercase">
-								<TableHead className="w-[100px]">Broj</TableHead>
+							<TableRow className="uppercase pointer-events-none">
+								<TableHead className="w-25">Broj</TableHead>
 								<TableHead>Klijenti</TableHead>
 								<TableHead>Datum</TableHead>
 								<TableHead className="text-right">Iznos</TableHead>
@@ -160,15 +199,41 @@ export default async function DashboardPage() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							<TableRow>
-								<TableCell className="font-medium font-mono">
-									2026-0041
-								</TableCell>
-								<TableCell>Ivan Horvat</TableCell>
-								<TableCell className="font-mono">12.06.2026.</TableCell>
-								<TableCell className="text-right font-mono">€250.00</TableCell>
-								<TableCell className="text-right">Plačeno</TableCell>
-							</TableRow>
+							{invoicesData.invoices.map((invoice) => (
+								<TableRow key={invoice.id} className="hover:bg-transparent">
+									<TableCell className="font-medium font-mono">
+										<Link href={`/invoices/${invoice.id}`}>
+											{invoice.invoiceNumber}
+										</Link>
+									</TableCell>
+									<TableCell className="font-medium">
+										{invoice.client.companyName}
+									</TableCell>
+									<TableCell className="font-mono">
+										{new Date(invoice.issueDate).toLocaleDateString("hr-HR")}
+									</TableCell>
+									<TableCell className="text-right font-mono">
+										{invoice.totalAmount.toLocaleString("hr-HR", {
+											style: "currency",
+											currency: "EUR",
+										})}
+									</TableCell>
+									<TableCell className="text-right">
+										<Badge
+											className="ml-auto"
+											variant={`${
+												getEffectiveStatus(invoice).toLowerCase() as
+													| "paid"
+													| "issued"
+													| "draft"
+													| "overdue"
+											}`}
+										>
+											{statusLabels[getEffectiveStatus(invoice)]}
+										</Badge>
+									</TableCell>
+								</TableRow>
+							))}
 						</TableBody>
 					</Table>
 				</Card>
@@ -176,22 +241,51 @@ export default async function DashboardPage() {
 				<Card className="p-4">
 					<div className="font-semibold">Rokovi</div>
 					<ul className="mt-4 space-y-2">
-						<li className="flex items-center justify-between border-b border-border pb-2">
-							<div className="flex flex-col">
-								<span className="font-semibold">
-									Petra Vidović — račun 0040
-								</span>
-								<span className="text-muted text-xxs font-mono">
-									dospijeva 22.08.2026.
-								</span>
-							</div>
-							<span className="text-destructive bg-destructive-foreground px-2 py-1 text-sm rounded-xs">
-								3 dana
-							</span>
-						</li>
+						{dueInvoices?.map((invoice) => {
+							const today = new Date();
+							today.setHours(0, 0, 0, 0);
+							const dueDate = new Date(invoice.dueDate);
+							dueDate.setHours(0, 0, 0, 0);
+							const daysUntilDue = Math.ceil(
+								(dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+							);
+							const isOverdue = daysUntilDue < 0;
+							const daysLabel = isOverdue
+								? `${Math.abs(daysUntilDue)} ${Math.abs(daysUntilDue) === 1 ? "dan" : "dana"} u kašnjenju`
+								: daysUntilDue === 0
+									? "Danas"
+									: `${daysUntilDue} ${daysUntilDue === 1 ? "dan" : "dana"}`;
+
+							return (
+								<li
+									key={invoice.id}
+									className="flex items-center justify-between border-b border-border pb-2"
+								>
+									<div className="flex flex-col">
+										<span className="font-semibold">
+											{invoice.client.companyName} - račun{" "}
+											{invoice.invoiceNumber}
+										</span>
+										<span className="text-muted text-xxs font-mono">
+											{isOverdue ? "rok prošao" : "dospijeva"}{" "}
+											{invoice.dueDate.toLocaleDateString("hr-HR")}
+										</span>
+									</div>
+									<span
+										className={
+											isOverdue
+												? "text-destructive bg-destructive-foreground px-2 py-1 text-sm rounded"
+												: "text-warning bg-warning-foreground px-2 py-1 text-sm rounded"
+										}
+									>
+										{daysLabel}
+									</span>
+								</li>
+							);
+						})}
 					</ul>
 				</Card>
 			</div>
-		</div>
+		</>
 	);
 }

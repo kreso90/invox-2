@@ -15,7 +15,7 @@ export default function ArticleDeleteForm({
 }) {
 	const [state, formAction, isPending] = useActionState(deleteArticle, null);
 	return (
-		<form action={formAction} className="button-form">
+		<form action={formAction} className="no-wrapper">
 			<input type="hidden" name="articleId" value={articleId} />
 			<Button
 				variant={variant || "ghost"}

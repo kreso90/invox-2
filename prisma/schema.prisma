@@ -25,6 +25,7 @@ model User {
   business      Business?
   clients       Client[]
   articles      Article[]
+  invoices      Invoice[]
 
   @@unique([email])
   @@map("user")
@@ -119,9 +120,9 @@ model Business {
 }
 
 model Client {
-  id               String   @id @default(cuid())
+  id               String    @id @default(cuid())
   userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName      String
   oib              String?
   vatNumber        String?
@@ -134,21 +135,62 @@ model Client {
   phone            String?
   iban             String?
   note             String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  invoices         Invoice[]
 }
 
 model Article {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name        String
-  unit        Unit
-  price       Float
-  description String?
-  lastUsedAt  DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  unit         Unit
+  price        Float
+  description  String?
+  lastUsedAt   DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  invoiceItems InvoiceItem[]
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  invoiceNumber String
+  issueDate     DateTime
+  dueDate       DateTime
+  issuePlace    String?
+  paymentMethod PaymentType   @default(BANK_TRANSFER)
+  status        InvoiceStatus @default(DRAFT)
+  note          String?
+  totalAmount   Float         @default(0)
+  paidAt        DateTime?
+  sentAt        DateTime?
+  fiscalizedAt  DateTime?
+  pdfUrl        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  invoiceItems  InvoiceItem[]
+
+  @@unique([userId, invoiceNumber])
+}
+
+model InvoiceItem {
+  id        String  @id @default(cuid())
+  invoiceId String
+  itemId    String?
+  name      String
+  quantity  Float
+  unitPrice Float
+  amount    Float
+  sortOrder Int
+
+  invoice Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  item    Article? @relation(fields: [itemId], references: [id], onDelete: SetNull)
 }
 
 enum PaymentType {

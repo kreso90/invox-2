@@ -234,6 +234,37 @@ exports.Prisma.ArticleScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.InvoiceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  clientId: 'clientId',
+  invoiceNumber: 'invoiceNumber',
+  issueDate: 'issueDate',
+  dueDate: 'dueDate',
+  issuePlace: 'issuePlace',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  note: 'note',
+  totalAmount: 'totalAmount',
+  paidAt: 'paidAt',
+  sentAt: 'sentAt',
+  fiscalizedAt: 'fiscalizedAt',
+  pdfUrl: 'pdfUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InvoiceItemScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  itemId: 'itemId',
+  name: 'name',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  amount: 'amount',
+  sortOrder: 'sortOrder'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -258,6 +289,20 @@ exports.Unit = exports.$Enums.Unit = {
   KILOGRAM: 'KILOGRAM'
 };
 
+exports.PaymentType = exports.$Enums.PaymentType = {
+  CASH: 'CASH',
+  BANK_TRANSFER: 'BANK_TRANSFER'
+};
+
+exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
+  DRAFT: 'DRAFT',
+  ISSUED: 'ISSUED',
+  PAID: 'PAID',
+  OVERDUE: 'OVERDUE',
+  CANCELLED: 'CANCELLED',
+  PARTIALLY_PAID: 'PARTIALLY_PAID'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -267,7 +312,9 @@ exports.Prisma.ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   Business: 'Business',
   Client: 'Client',
-  Article: 'Article'
+  Article: 'Article',
+  Invoice: 'Invoice',
+  InvoiceItem: 'InvoiceItem'
 };
 
 /**
