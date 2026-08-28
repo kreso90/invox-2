@@ -148,8 +148,8 @@ export default function InvoiceForm({
 
 	const handleInvoiceItemChange = (
 		id: string,
-		field: "name" | "quantity" | "unitPrice",
-		value: string,
+		field: "name" | "quantity" | "unitPrice" | "unit",
+		value: string | undefined,
 	) => {
 		setInvoiceItems((current) =>
 			current.map((item) =>
@@ -186,6 +186,7 @@ export default function InvoiceForm({
 							...item,
 							itemId,
 							name: article.name,
+							unit: article.unit ?? undefined,
 							unitPrice: article.price.toString(),
 						}
 					: item,
