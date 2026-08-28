@@ -157,6 +157,8 @@ export default async function InvoicesPage({
 												| "issued"
 												| "draft"
 												| "overdue"
+												| "partially_paid"
+												| "cancelled"
 										}`}
 									>
 										{statusLabels[getEffectiveStatus(invoice)]}

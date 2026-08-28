@@ -7,7 +7,14 @@ export const invoiceSchema = z.object({
 	dueDate: z.coerce.date(),
 	clientId: z.string().min(1, "Klijent je obavezan"),
 	paymentMethod: z.enum(["CASH", "BANK_TRANSFER"]),
-	status: z.enum(["DRAFT", "ISSUED"]),
+	status: z.enum([
+		"DRAFT",
+		"ISSUED",
+		"CANCELLED",
+		"PAID",
+		"PARTIALLY_PAID",
+		"OVERDUE",
+	]),
 	issuePlace: z.string().min(1, "Mjesto izdavanja je obavezno"),
 	note: z.string().optional(),
 	items: z
@@ -32,6 +39,17 @@ export const invoiceSchema = z.object({
 						quantity: z.coerce
 							.number()
 							.positive("Količina mora biti veća od nule"),
+						unit: z
+							.enum([
+								"PIECE",
+								"HOUR",
+								"DAY",
+								"METER",
+								"SQUARE_METER",
+								"LITER",
+								"KILOGRAM",
+							])
+							.optional(),
 						unitPrice: z.coerce
 							.number()
 							.min(0, "Cijena ne može biti negativna"),

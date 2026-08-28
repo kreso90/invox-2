@@ -19,7 +19,7 @@ export async function createArticle(prevState: unknown, formData: FormData) {
 	});
 
 	if (!session?.user?.id) {
-		return { status: "error", message: "User not logged in" };
+		return { status: "error", message: "Korisnik nije logiran" };
 	}
 
 	if (!result.success) {

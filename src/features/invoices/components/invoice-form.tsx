@@ -22,11 +22,11 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Client } from "@/features/clients/types";
-import { PaymentType, User } from "@/generated/prisma";
+import { PaymentType, Unit, User } from "@/generated/prisma";
 import { useActionState, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { createInvoice } from "../actions";
+import { createInvoice, enterPayment } from "../actions";
 import InputSelect from "@/components/ui/input-select";
 import { Card } from "@/components/ui/card";
 import {
@@ -38,6 +38,22 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { getEffectiveStatus } from "../utils";
+import { statusLabels } from "../constants";
+import { Badge } from "@/components/ui/badge";
+import {
+	Progress,
+	ProgressLabel,
+	ProgressValue,
+} from "@/components/ui/progress";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+	InputGroupText,
+} from "@/components/ui/input-group";
+import { Fieldset } from "@base-ui/react";
+import { unitLabelsShort } from "@/features/articles/constants";
 
 const paymentLabels: Record<PaymentType, string> = {
 	BANK_TRANSFER: "Bankovni transfer",
@@ -58,6 +74,7 @@ type DraftInvoiceItem = {
 	itemId: string;
 	name: string;
 	quantity: string;
+	unit?: Unit;
 	unitPrice: string;
 };
 
@@ -74,6 +91,10 @@ export default function InvoiceForm({
 	lastInvoiceNumber,
 }: InvoiceFormProps) {
 	const [state, formAction, isPending] = useActionState(createInvoice, null);
+	const [paymentState, formPaymentAction, isPaymentPending] = useActionState(
+		enterPayment,
+		null,
+	);
 
 	const isEdit = Boolean(invoiceData);
 
@@ -103,18 +124,22 @@ export default function InvoiceForm({
 	const { formValues, setFormValues, handleInputChange } =
 		useFormValues(initialValues);
 
+	const [paymentEntry, setPaymentEntry] = useState(false);
+
 	const [invoiceItems, setInvoiceItems] = useState<DraftInvoiceItem[]>(
 		invoiceData?.invoiceItems.map((item) => ({
 			id: item.id,
 			itemId: item.itemId ?? "",
 			name: item.name,
 			quantity: item.quantity.toString(),
+			unit: item.unit ?? undefined,
 			unitPrice: item.unitPrice.toString(),
 		})) ?? [
 			{
 				id: crypto.randomUUID(),
 				itemId: "",
 				name: "",
+				unit: undefined,
 				quantity: "1",
 				unitPrice: "",
 			},
@@ -123,7 +148,7 @@ export default function InvoiceForm({
 
 	const handleInvoiceItemChange = (
 		id: string,
-		field: keyof DraftInvoiceItem,
+		field: "name" | "quantity" | "unitPrice",
 		value: string,
 	) => {
 		setInvoiceItems((current) =>
@@ -172,6 +197,12 @@ export default function InvoiceForm({
 		(client) => client.id === formValues.clientId,
 	);
 
+	const totalPaid =
+		invoiceData?.invoicePayments.reduce(
+			(sum, payment) => sum + payment.amount,
+			0,
+		) ?? 0;
+
 	return (
 		<>
 			<div className="flex justify-between items-end mb-8">
@@ -192,310 +223,390 @@ export default function InvoiceForm({
 					</span>
 				</div>
 				<div className="flex gap-2">
-					<Button
-						size="lg"
-						type="submit"
-						name="status"
-						value="DRAFT"
-						className="ml-auto"
-						disabled={isPending}
-						form="invoice-form"
-					>
-						Spremi nacrt
-					</Button>
-					<Button
-						size="lg"
-						type="submit"
-						name="status"
-						value="ISSUED"
-						className="ml-auto"
-						disabled={isPending}
-						form="invoice-form"
-					>
-						Izdaj račun
-					</Button>
+					{invoiceData &&
+						invoiceData?.status != "DRAFT" &&
+						invoiceData?.status != "CANCELLED" && (
+							<Button
+								size="lg"
+								type="submit"
+								variant="destructive"
+								name="status"
+								value="CANCELLED"
+								className="ml-auto"
+								disabled={isPending}
+								form="invoice-form"
+							>
+								Storniraj
+							</Button>
+						)}
+					{(invoiceData && invoiceData?.status === "DRAFT") ||
+						(!invoiceData && (
+							<Button
+								size="lg"
+								type="submit"
+								variant="outline"
+								name="status"
+								value="DRAFT"
+								className="ml-auto"
+								disabled={isPending}
+								form="invoice-form"
+							>
+								Spremi nacrt
+							</Button>
+						))}
+					{invoiceData?.status !== "PAID" && (
+						<Button
+							size="lg"
+							type="submit"
+							name="status"
+							value="ISSUED"
+							className="ml-auto"
+							disabled={isPending}
+							form="invoice-form"
+						>
+							{invoiceData?.status === "ISSUED" ||
+							invoiceData?.status === "PARTIALLY_PAID" ||
+							invoiceData?.status === "OVERDUE"
+								? "Izmijeni račun"
+								: "Izdaj račun"}
+						</Button>
+					)}
 				</div>
 			</div>
 
 			<div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-4">
-				<form action={formAction} className="w-full" id="invoice-form">
-					<input type="hidden" name="invoiceId" value={invoiceData?.id ?? ""} />
-					<input
-						type="hidden"
-						name="items"
-						value={JSON.stringify(invoiceItems)}
-					/>
-					<FieldSet className="w-full mb-8">
-						<FieldLegend variant="label" className="uppercase text-muted mb-2">
-							Podaci o računu
-						</FieldLegend>
-						<FieldGroup>
-							<div className="grid md:grid-cols-2 md:gap-4">
-								<Field>
-									<FieldLabel htmlFor="invoiceNumber">
-										Broj računa
-										<span className="text-destructive">*</span>
-									</FieldLabel>
-									<Input
-										id="invoiceNumber"
-										name="invoiceNumber"
-										type="text"
-										value={formValues.invoiceNumber}
-										required
-										readOnly
-									/>
-								</Field>
-								<Field>
-									<FieldLabel htmlFor="clientId">
-										Klijent <span className="text-destructive">*</span>
-									</FieldLabel>
-									<Select
-										id="clientId"
-										name="clientId"
-										value={formValues.clientId}
-										onValueChange={(clientId) =>
-											setFormValues((current) => ({
-												...current,
-												clientId: clientId ?? "",
-											}))
-										}
-									>
-										<SelectTrigger className="w-full">
-											<SelectValue placeholder="Odaberi klijenta">
-												{(clientId: string | null) => {
-													const client = clientsData.find(
-														(client) => client.id === clientId,
-													);
-
-													return client?.companyName ?? "Odaberi klijenta";
-												}}
-											</SelectValue>
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{clientsData?.map((client) => (
-													<SelectItem key={client.id} value={client.id}>
-														{client.companyName}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-									{formValues.clientId ? (
-										<FieldDescription>
-											Šalje se na:{" "}
-											{
-												clientsData.find(
-													(client) => client.id === formValues.clientId,
-												)?.email
+				<div>
+					<form action={formAction} className="w-full" id="invoice-form">
+						<input
+							type="hidden"
+							name="invoiceId"
+							value={invoiceData?.id ?? ""}
+						/>
+						<input
+							type="hidden"
+							name="items"
+							value={JSON.stringify(invoiceItems)}
+						/>
+						<FieldSet className="w-full mb-8">
+							<FieldLegend
+								variant="label"
+								className="uppercase text-muted mb-2"
+							>
+								Podaci o računu
+							</FieldLegend>
+							<FieldGroup>
+								<div className="grid md:grid-cols-2 md:gap-4">
+									<Field>
+										<FieldLabel htmlFor="invoiceNumber">
+											Broj računa
+											<span className="text-destructive">*</span>
+										</FieldLabel>
+										<Input
+											id="invoiceNumber"
+											name="invoiceNumber"
+											type="text"
+											value={formValues.invoiceNumber}
+											required
+											readOnly
+										/>
+									</Field>
+									<Field>
+										<FieldLabel htmlFor="clientId">
+											Klijent <span className="text-destructive">*</span>
+										</FieldLabel>
+										<Select
+											id="clientId"
+											name="clientId"
+											value={formValues.clientId}
+											onValueChange={(clientId) =>
+												setFormValues((current) => ({
+													...current,
+													clientId: clientId ?? "",
+												}))
 											}
-										</FieldDescription>
-									) : null}
-								</Field>
-								<Field>
-									<FieldLabel htmlFor="issueDate">
-										Datum izdavanja
-										<span className="text-destructive">*</span>
-									</FieldLabel>
-									<Input
-										id="issueDate"
-										name="issueDate"
-										type="date"
-										value={formValues.issueDate}
-										onChange={handleInputChange}
-										required
-									/>
-								</Field>
-								<Field>
-									<FieldLabel htmlFor="dueDate">
-										Dospijeće <span className="text-destructive">*</span>
-									</FieldLabel>
-									<Input
-										id="dueDate"
-										name="dueDate"
-										type="date"
-										value={formValues.dueDate}
-										onChange={handleInputChange}
-										required
-									/>
-								</Field>
+										>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Odaberi klijenta">
+													{(clientId: string | null) => {
+														const client = clientsData.find(
+															(client) => client.id === clientId,
+														);
 
-								<Field>
-									<FieldLabel htmlFor="paymentMethod">
-										Način plaćanja <span className="text-destructive">*</span>
-									</FieldLabel>
-									<Select
-										id="paymentMethod"
-										name="paymentMethod"
-										value={formValues.paymentMethod}
-										onValueChange={(paymentMethod) =>
-											setFormValues((current) => ({
-												...current,
-												paymentMethod: paymentMethod ?? "",
-											}))
-										}
-									>
-										<SelectTrigger className="w-full">
-											<SelectValue>
-												{(value: PaymentType | null) =>
-													value
-														? paymentLabels[value]
-														: "Odaberi način plaćanja"
+														return client?.companyName ?? "Odaberi klijenta";
+													}}
+												</SelectValue>
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{clientsData?.map((client) => (
+														<SelectItem key={client.id} value={client.id}>
+															{client.companyName}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+										{formValues.clientId ? (
+											<FieldDescription>
+												Šalje se na:{" "}
+												{
+													clientsData.find(
+														(client) => client.id === formValues.clientId,
+													)?.email
 												}
-											</SelectValue>
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{Object.values(PaymentType).map((unit) => (
-													<SelectItem key={unit} value={unit}>
-														{paymentLabels[unit]}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-								</Field>
-
-								<Field>
-									<FieldLabel htmlFor="issuePlace">
-										Mjesto izdavanja
-										<span className="text-destructive">*</span>
-									</FieldLabel>
-									<Input
-										id="issuePlace"
-										name="issuePlace"
-										type="text"
-										value={formValues.issuePlace}
-										onChange={handleInputChange}
-										required
-									/>
-								</Field>
-							</div>
-						</FieldGroup>
-					</FieldSet>
-
-					<FieldSet className="w-full mb-8">
-						<FieldLegend variant="label" className="uppercase text-muted mb-2">
-							Stavke
-						</FieldLegend>
-
-						<div className="border border-background rounded-lg">
-							<div className="grid grid-cols-[2.4fr_0.7fr_1fr_1fr_24px] rounded-t-lg tracking-wide bg-background text-accent-backgorund uppercase py-2.5 px-3 gap-2.5 text-xs font-medium">
-								<div>Naziv artikla / usluge</div>
-								<div>Kol.</div>
-								<div>Cijena (€)</div>
-								<div className="text-center">Iznos</div>
-								<div></div>
-							</div>
-							{invoiceItems?.map((item) => (
-								<FieldGroup
-									key={item.id}
-									className="grid lg:grid-cols-[2.4fr_0.7fr_1fr_1fr_24px] py-2.5 px-3 gap-2.5 border-b border-background last:border-0"
-								>
-									<Field>
-										<InputSelect
-											name="itemName"
-											options={articlesData.map((article) => ({
-												value: article.id,
-												label: article.name,
-											}))}
-											value={item.itemId}
-											onChange={(itemId) =>
-												handleArticleSelect(item.id, itemId)
-											}
-										/>
+											</FieldDescription>
+										) : null}
 									</Field>
 									<Field>
+										<FieldLabel htmlFor="issueDate">
+											Datum izdavanja
+											<span className="text-destructive">*</span>
+										</FieldLabel>
 										<Input
-											id="quantity"
-											name="quantity"
-											type="number"
-											value={item.quantity}
-											onChange={(e) =>
-												handleInvoiceItemChange(
-													item.id,
-													"quantity",
-													e.target.value,
-												)
-											}
+											id="issueDate"
+											name="issueDate"
+											type="date"
+											value={formValues.issueDate}
+											onChange={handleInputChange}
 											required
 										/>
 									</Field>
 									<Field>
+										<FieldLabel htmlFor="dueDate">
+											Dospijeće <span className="text-destructive">*</span>
+										</FieldLabel>
 										<Input
-											id="price"
-											name="price"
-											type="number"
-											step="0.01"
-											min="0"
-											value={item.unitPrice}
-											onChange={(e) =>
-												handleInvoiceItemChange(
-													item.id,
-													"unitPrice",
-													e.target.value,
-												)
-											}
+											id="dueDate"
+											name="dueDate"
+											type="date"
+											value={formValues.dueDate}
+											onChange={handleInputChange}
 											required
 										/>
 									</Field>
-									<div className="font-mono flex items-center justify-center text-sm">
-										{(
-											Number(item.quantity) * Number(item.unitPrice)
-										).toLocaleString("hr-HR", {
-											style: "currency",
-											currency: "EUR",
-										})}
-									</div>
-									<button
-										type="button"
-										onClick={() => handleRemoveInvoiceItem(item.id)}
-										className="text-destructive"
+
+									<Field>
+										<FieldLabel htmlFor="paymentMethod">
+											Način plaćanja <span className="text-destructive">*</span>
+										</FieldLabel>
+										<Select
+											id="paymentMethod"
+											name="paymentMethod"
+											value={formValues.paymentMethod}
+											onValueChange={(paymentMethod) =>
+												setFormValues((current) => ({
+													...current,
+													paymentMethod: paymentMethod ?? "",
+												}))
+											}
+										>
+											<SelectTrigger className="w-full">
+												<SelectValue>
+													{(value: PaymentType | null) =>
+														value
+															? paymentLabels[value]
+															: "Odaberi način plaćanja"
+													}
+												</SelectValue>
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{Object.values(PaymentType).map((unit) => (
+														<SelectItem key={unit} value={unit}>
+															{paymentLabels[unit]}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</Field>
+
+									<Field>
+										<FieldLabel htmlFor="issuePlace">
+											Mjesto izdavanja
+											<span className="text-destructive">*</span>
+										</FieldLabel>
+										<Input
+											id="issuePlace"
+											name="issuePlace"
+											type="text"
+											value={formValues.issuePlace}
+											onChange={handleInputChange}
+											required
+										/>
+									</Field>
+								</div>
+							</FieldGroup>
+						</FieldSet>
+
+						<FieldSet className="w-full mb-8">
+							<FieldLegend
+								variant="label"
+								className="uppercase text-muted mb-2"
+							>
+								Stavke
+							</FieldLegend>
+
+							<div className="border border-background rounded-lg">
+								<div className="grid grid-cols-[2.4fr_0.7fr_80px_1fr_1fr_24px] rounded-t-lg tracking-wide bg-background text-accent-backgorund uppercase py-2.5 px-3 gap-2.5 text-xs font-medium">
+									<div>Naziv artikla / usluge</div>
+									<div>Kol.</div>
+									<div>JM</div>
+									<div>Cijena (€)</div>
+									<div className="text-center">Iznos</div>
+									<div></div>
+								</div>
+								{invoiceItems?.map((item) => (
+									<FieldGroup
+										key={item.id}
+										className="grid lg:grid-cols-[2.4fr_0.7fr_80px_1fr_1fr_24px] py-2.5 px-3 gap-2.5 border-b border-background last:border-0"
 									>
-										<X />
-									</button>
-								</FieldGroup>
-							))}
-						</div>
-						<Button
-							size="lg"
-							type="button"
-							variant="outline"
-							onClick={handleAddInvoiceItem}
-							className="bg-transparent border-dashed! text-muted"
-						>
-							<Plus />
-							Dodaj stavku
-						</Button>
-					</FieldSet>
+										<Field>
+											<InputSelect
+												name="itemName"
+												options={articlesData.map((article) => ({
+													value: article.id,
+													label: article.name,
+												}))}
+												value={item.itemId}
+												onChange={(itemId) =>
+													handleArticleSelect(item.id, itemId)
+												}
+											/>
+										</Field>
+										<Field>
+											<Input
+												id="quantity"
+												name="quantity"
+												type="number"
+												value={item.quantity}
+												onChange={(e) =>
+													handleInvoiceItemChange(
+														item.id,
+														"quantity",
+														e.target.value,
+													)
+												}
+												required
+											/>
+										</Field>
+										<Field>
+											<Select
+												id={`unit-${item.id}`}
+												name="unit"
+												value={item.unit ?? null}
+												onValueChange={(unit) =>
+													setInvoiceItems((current) =>
+														current.map((currentItem) =>
+															currentItem.id === item.id
+																? {
+																		...currentItem,
+																		unit: (unit as Unit | null) ?? undefined,
+																	}
+																: currentItem,
+														),
+													)
+												}
+											>
+												<SelectTrigger className="w-full">
+													<SelectValue>
+														{(value: Unit | null) =>
+															value
+																? unitLabelsShort[value]
+																: "Odaberi jedinicu"
+														}
+													</SelectValue>
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														{Object.values(Unit).map((unit) => (
+															<SelectItem key={unit} value={unit}>
+																{unitLabelsShort[unit]}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												</SelectContent>
+											</Select>
+										</Field>
+										<Field>
+											<Input
+												id="price"
+												name="price"
+												type="number"
+												step="0.01"
+												min="0"
+												value={item.unitPrice}
+												onChange={(e) =>
+													handleInvoiceItemChange(
+														item.id,
+														"unitPrice",
+														e.target.value,
+													)
+												}
+												required
+											/>
+										</Field>
+										<div className="font-mono flex items-center justify-center text-sm">
+											{(
+												Number(item.quantity) * Number(item.unitPrice)
+											).toLocaleString("hr-HR", {
+												style: "currency",
+												currency: "EUR",
+											})}
+										</div>
+										<button
+											type="button"
+											onClick={() => handleRemoveInvoiceItem(item.id)}
+											className="text-destructive"
+										>
+											<X />
+										</button>
+									</FieldGroup>
+								))}
+							</div>
+							<Button
+								size="lg"
+								type="button"
+								variant="outline"
+								onClick={handleAddInvoiceItem}
+								className="bg-transparent border-dashed! text-muted"
+							>
+								<Plus />
+								Dodaj stavku
+							</Button>
+						</FieldSet>
 
-					<FieldSet className="w-full mt-6 mb-2">
-						<FieldLegend variant="label" className="uppercase text-muted mb-2">
-							Napomena
-						</FieldLegend>
-						<Field>
-							<Textarea
-								id="note"
-								name="note"
-								value={formValues.note}
-								onChange={handleInputChange}
-							/>
-						</Field>
-					</FieldSet>
-					{state?.status === "error" && state.messages && (
-						<div className="text-sm text-destructive mt-2 bg-destructive-foreground p-2 rounded-lg border border-destructive">
-							{state.messages.map((message, index) => (
-								<p key={index}>{message}</p>
-							))}
-						</div>
-					)}
+						<FieldSet className="w-full mt-6 mb-2">
+							<FieldLegend
+								variant="label"
+								className="uppercase text-muted mb-2"
+							>
+								Napomena
+							</FieldLegend>
+							<Field>
+								<Textarea
+									id="note"
+									name="note"
+									value={formValues.note}
+									onChange={handleInputChange}
+								/>
+							</Field>
+						</FieldSet>
+						{state?.status === "error" && state.messages && (
+							<div className="text-sm text-destructive mt-2 bg-destructive-foreground p-2 rounded-lg border border-destructive">
+								{state.messages.map((message, index) => (
+									<p key={index}>{message}</p>
+								))}
+							</div>
+						)}
 
-					{state?.status === "success" && (
-						<div className="text-sm text-success mt-2 bg-success-foreground p-2 rounded-lg border border-success">
-							<p>{state.message}</p>
-						</div>
-					)}
-				</form>
+						{state?.status === "success" && (
+							<div className="text-sm text-success mt-2 bg-success-foreground p-2 rounded-lg border border-success">
+								<p>{state.message}</p>
+							</div>
+						)}
+					</form>
+				</div>
 
 				<div>
 					<div className="text-xs tracking-wider uppercase mb-2 text-muted">
@@ -521,7 +632,7 @@ export default function InvoiceForm({
 									</span>
 								</div>
 							) : null}
-							<div>
+							<div className="relative">
 								<strong>Račun {formValues?.invoiceNumber}</strong>
 								<br />
 								<span className="text-muted font-mono text-xs">
@@ -547,6 +658,20 @@ export default function InvoiceForm({
 									{paymentLabels[formValues.paymentMethod as PaymentType] ||
 										"Nije odabrano"}
 								</span>
+								{invoiceData ? (
+									<Badge
+										className="ml-auto mt-5 bg-transparent"
+										variant={`${
+											getEffectiveStatus(invoiceData).toLowerCase() as
+												| "paid"
+												| "issued"
+												| "draft"
+												| "overdue"
+										}`}
+									>
+										{statusLabels[getEffectiveStatus(invoiceData)]}
+									</Badge>
+								) : null}
 							</div>
 						</div>
 						{selectedClient ? (
@@ -571,6 +696,7 @@ export default function InvoiceForm({
 										<TableRow className="uppercase text-xs!">
 											<TableHead className="w-3/5">Stavka</TableHead>
 											<TableHead>Kol.</TableHead>
+											<TableHead className="text-center">JM</TableHead>
 											<TableHead className="text-right">Iznos</TableHead>
 										</TableRow>
 									</TableHeader>
@@ -580,6 +706,9 @@ export default function InvoiceForm({
 												<TableCell>{items?.name}</TableCell>
 												<TableCell className="font-mono">
 													{items?.quantity}
+												</TableCell>
+												<TableCell className="font-mono text-center">
+													{items?.unit ? unitLabelsShort[items?.unit] : "-"}
 												</TableCell>
 												<TableCell className="font-mono text-right">
 													€{Number(items?.quantity) * Number(items?.unitPrice)}
@@ -606,6 +735,212 @@ export default function InvoiceForm({
 						) : null}
 						<div className="text-muted text-xs pb-6">{formValues.note}</div>
 					</Card>
+					{invoiceData && invoiceData?.status != "DRAFT" && (
+						<div className="mt-8">
+							<div className="text-xs tracking-wider uppercase mb-2 text-muted">
+								Pregled uplata
+							</div>
+							<Card className="p-4 gap-1">
+								<strong className="block mb-2">Praćenje uplata</strong>
+								<div className="flex justify-between border-b border-border pb-1">
+									<span>Ukupan iznos računa</span>
+									<span className="font-mono">
+										{invoiceData?.totalAmount.toLocaleString("hr-HR", {
+											style: "currency",
+											currency: "EUR",
+										})}
+									</span>
+								</div>
+								<div className="flex justify-between pb-1">
+									<span>Preostalo za platiti</span>
+									<span className="font-mono">
+										{(
+											(invoiceData?.totalAmount ?? 0) - totalPaid
+										).toLocaleString("hr-HR", {
+											style: "currency",
+											currency: "EUR",
+										})}
+									</span>
+								</div>
+
+								<Progress
+									value={
+										((totalPaid ?? 0) / (invoiceData?.totalAmount ?? 1)) * 100
+									}
+									locale="hr-HR"
+									className="mt-4"
+									trackClassName="h-2 relative"
+								>
+									<ProgressValue className="absolute left-0 -bottom-5" />
+								</Progress>
+
+								<div className="my-8">
+									<div className="tracking-wider uppercase text-muted text-xs mb-2">
+										Plaćeno do sada
+									</div>
+
+									<InputGroup className="w-full">
+										<InputGroupAddon>
+											<InputGroupText className="text-primary">
+												€
+											</InputGroupText>
+										</InputGroupAddon>
+										<InputGroupInput
+											placeholder="0.00"
+											value={totalPaid}
+											readOnly
+										/>
+										<InputGroupAddon align="inline-end">
+											<InputGroupText className="text-primary">
+												EUR
+											</InputGroupText>
+										</InputGroupAddon>
+									</InputGroup>
+									<span className="text-muted text-xs">
+										Status se automatski mijenja u "Plaćeno" kad uneseni iznos
+										dosegne ukupan iznos računa.
+									</span>
+								</div>
+
+								<div className="mb-4">
+									<div className="tracking-wider uppercase text-muted text-xs mb-2">
+										Povijest uplata
+									</div>
+									{invoiceData?.invoicePayments?.length ? (
+										<ul>
+											{invoiceData?.invoicePayments.map((payment) => (
+												<li
+													key={payment.id}
+													className="flex justify-between mb-2"
+												>
+													<div className="flex flex-col">
+														<span>Uplata na transakcijski račun</span>
+														<span className="text-muted text-xs">
+															{new Date(payment.paidAt).toLocaleDateString(
+																"hr-HR",
+															)}
+														</span>
+													</div>
+													<div className="font-mono">
+														{payment.amount.toLocaleString("hr-HR", {
+															style: "currency",
+															currency: "EUR",
+														})}
+													</div>
+												</li>
+											))}
+										</ul>
+									) : (
+										<p className="text-muted text-xs">Nema uplata za prikaz.</p>
+									)}
+								</div>
+								<Button
+									size="lg"
+									type="button"
+									variant="outline"
+									onClick={() => setPaymentEntry(true)}
+									className={`bg-transparent border-dashed! text-muted mt-4 ${!paymentEntry ? "flex" : "hidden"}`}
+								>
+									<Plus />
+									Dodaj uplatu
+								</Button>
+								<form
+									className={paymentEntry ? "block" : "hidden"}
+									action={formPaymentAction}
+								>
+									<input
+										type="hidden"
+										name="invoiceId"
+										value={invoiceData?.id ?? ""}
+									/>
+									<FieldSet>
+										<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+											<Field>
+												<FieldLabel htmlFor="issuePlace">
+													Datum
+													<span className="text-destructive">*</span>
+												</FieldLabel>
+												<Input
+													id="date"
+													name="date"
+													type="date"
+													defaultValue={new Date().toISOString().split("T")[0]}
+													required
+												/>
+											</Field>
+											<Field>
+												<FieldLabel htmlFor="paymentMethod">
+													Način plaćanja
+													<span className="text-destructive">*</span>
+												</FieldLabel>
+												<Select id="paymentMethod" name="paymentMethod">
+													<SelectTrigger className="w-full">
+														<SelectValue>
+															{(value: PaymentType | null) =>
+																value
+																	? paymentLabels[value]
+																	: "Odaberi način plaćanja"
+															}
+														</SelectValue>
+													</SelectTrigger>
+													<SelectContent>
+														<SelectGroup>
+															{Object.values(PaymentType).map((unit) => (
+																<SelectItem key={unit} value={unit}>
+																	{paymentLabels[unit]}
+																</SelectItem>
+															))}
+														</SelectGroup>
+													</SelectContent>
+												</Select>
+											</Field>
+											<Field>
+												<FieldLabel htmlFor="issuePlace">
+													Iznos
+													<span className="text-destructive">*</span>
+												</FieldLabel>
+												<InputGroup className="w-full h-10 bg-background">
+													<InputGroupAddon>
+														<InputGroupText className="text-primary">
+															€
+														</InputGroupText>
+													</InputGroupAddon>
+													<InputGroupInput
+														id="amount"
+														name="amount"
+														type="number"
+														step="0.01"
+														defaultValue={invoiceData?.totalAmount ?? 0}
+														required
+													/>
+													<InputGroupAddon align="inline-end">
+														<InputGroupText className="text-primary">
+															EUR
+														</InputGroupText>
+													</InputGroupAddon>
+												</InputGroup>
+											</Field>
+										</div>
+									</FieldSet>
+									<div className="flex justify-end gap-4 mt-2">
+										<Button
+											size="lg"
+											variant="outline"
+											type="button"
+											className="mt-4"
+											onClick={() => setPaymentEntry(false)}
+										>
+											Odustani
+										</Button>
+										<Button size="lg" type="submit" className="mt-4">
+											Dodaj uplatu
+										</Button>
+									</div>
+									{paymentState?.message}
+								</form>
+							</Card>
+						</div>
+					)}
 				</div>
 			</div>
 		</>

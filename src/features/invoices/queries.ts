@@ -15,7 +15,14 @@ export async function getUserInvoice(invoiceId: string) {
 
 	return prisma.invoice.findFirst({
 		where: { id: invoiceId, userId: session.user.id },
-		include: { invoiceItems: true },
+		include: {
+			invoiceItems: true,
+			invoicePayments: {
+				orderBy: {
+					paidAt: "desc",
+				},
+			},
+		},
 	});
 }
 

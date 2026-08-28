@@ -1,4 +1,3 @@
-import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -13,6 +12,8 @@ const badgeVariants = cva(
 				overdue:
 					"bg-destructive-foreground text-destructive border border-destructive",
 				draft: "bg-gray-200 text-gray-800 border border-gray-800",
+				partially_paid: "bg-blue-200 text-blue-800 border border-blue-800",
+				cancelled: "bg-gray-400 text-black-800 border border-black-800",
 			},
 		},
 		defaultVariants: {

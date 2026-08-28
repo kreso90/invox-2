@@ -260,9 +260,18 @@ exports.Prisma.InvoiceItemScalarFieldEnum = {
   itemId: 'itemId',
   name: 'name',
   quantity: 'quantity',
+  unit: 'unit',
   unitPrice: 'unitPrice',
   amount: 'amount',
   sortOrder: 'sortOrder'
+};
+
+exports.Prisma.InvoicePaymentScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  amount: 'amount',
+  method: 'method',
+  paidAt: 'paidAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -314,7 +323,8 @@ exports.Prisma.ModelName = {
   Client: 'Client',
   Article: 'Article',
   Invoice: 'Invoice',
-  InvoiceItem: 'InvoiceItem'
+  InvoiceItem: 'InvoiceItem',
+  InvoicePayment: 'InvoicePayment'
 };
 
 /**

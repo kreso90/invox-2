@@ -7,4 +7,6 @@ export const statusLabels: Partial<Record<InvoiceFilterStatus, string>> = {
 	ISSUED: "Dospijeva",
 	PAID: "Plaćeno",
 	OVERDUE: "Neplaćeno",
+	PARTIALLY_PAID: "Djelomično plaćeno",
+	CANCELLED: "Stornirano",
 };

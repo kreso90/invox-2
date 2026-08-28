@@ -1,7 +1,9 @@
 import type { InvoiceFilterStatus } from "./constants";
-import { Invoice } from "./types";
+import { InvoiceStatus } from "@/generated/prisma";
 
-export function getEffectiveStatus(invoice: Invoice): InvoiceFilterStatus {
+export function getEffectiveStatus(
+	invoice: Pick<{ status: InvoiceStatus; dueDate: Date }, "status" | "dueDate">,
+): InvoiceFilterStatus {
 	if (invoice.status === "ISSUED" && invoice.dueDate < new Date()) {
 		return "OVERDUE";
 	}

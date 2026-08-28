@@ -155,26 +155,27 @@ model Article {
 }
 
 model Invoice {
-  id            String        @id @default(cuid())
-  userId        String
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  clientId      String
-  client        Client        @relation(fields: [clientId], references: [id], onDelete: Restrict)
-  invoiceNumber String
-  issueDate     DateTime
-  dueDate       DateTime
-  issuePlace    String?
-  paymentMethod PaymentType   @default(BANK_TRANSFER)
-  status        InvoiceStatus @default(DRAFT)
-  note          String?
-  totalAmount   Float         @default(0)
-  paidAt        DateTime?
-  sentAt        DateTime?
-  fiscalizedAt  DateTime?
-  pdfUrl        String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  invoiceItems  InvoiceItem[]
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId        String
+  client          Client           @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  invoiceNumber   String
+  issueDate       DateTime
+  dueDate         DateTime
+  issuePlace      String?
+  paymentMethod   PaymentType      @default(BANK_TRANSFER)
+  status          InvoiceStatus    @default(DRAFT)
+  note            String?
+  totalAmount     Float            @default(0)
+  paidAt          DateTime?
+  sentAt          DateTime?
+  fiscalizedAt    DateTime?
+  pdfUrl          String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  invoiceItems    InvoiceItem[]
+  invoicePayments InvoicePayment[]
 
   @@unique([userId, invoiceNumber])
 }
@@ -185,12 +186,23 @@ model InvoiceItem {
   itemId    String?
   name      String
   quantity  Float
+  unit      Unit?
   unitPrice Float
   amount    Float
   sortOrder Int
 
   invoice Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   item    Article? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+}
+
+model InvoicePayment {
+  id        String      @id @default(cuid())
+  invoiceId String
+  amount    Float
+  method    PaymentType @default(BANK_TRANSFER)
+  paidAt    DateTime    @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 }
 
 enum PaymentType {
