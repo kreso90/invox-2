@@ -204,6 +204,7 @@ export async function enterPayment(prevState: any, formData: FormData) {
 }
 
 export async function deletePayment(prevState: any, formData: FormData) {
+	const invoiceId = formData.get("invoiceId") as string;
 	const paymentId = formData.get("paymentId") as string;
 
 	if (!paymentId) {
@@ -217,6 +218,5 @@ export async function deletePayment(prevState: any, formData: FormData) {
 		where: { id: paymentId },
 	});
 
-	revalidatePath("/invoices");
-	redirect("/invoices");
+	revalidatePath(`/invoices/${invoiceId}`);
 }

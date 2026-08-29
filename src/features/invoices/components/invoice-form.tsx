@@ -24,9 +24,9 @@ import { Button } from "@/components/ui/button";
 import { Client } from "@/features/clients/types";
 import { PaymentType, Unit, User } from "@/generated/prisma";
 import { useActionState, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { ArrowDownToLine, Plus, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { createInvoice, enterPayment } from "../actions";
+import { createInvoice, enterPayment, deletePayment } from "../actions";
 import InputSelect from "@/components/ui/input-select";
 import { Card } from "@/components/ui/card";
 import {
@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { getEffectiveStatus } from "../utils";
-import { statusLabels } from "../constants";
+import { statusLabels, paymentLabels } from "../constants";
 import { Badge } from "@/components/ui/badge";
 import {
 	Progress,
@@ -52,13 +52,16 @@ import {
 	InputGroupInput,
 	InputGroupText,
 } from "@/components/ui/input-group";
-import { Fieldset } from "@base-ui/react";
+import { DownloadInvoiceButton } from "@/features/invoices/components/invoice-pdf";
 import { unitLabelsShort } from "@/features/articles/constants";
-
-const paymentLabels: Record<PaymentType, string> = {
-	BANK_TRANSFER: "Bankovni transfer",
-	CASH: "Gotovina",
-};
+import {
+	Popover,
+	PopoverContent,
+	PopoverDescription,
+	PopoverHeader,
+	PopoverTitle,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface InvoiceFormProps {
 	invoiceData: Invoice | null;
@@ -95,6 +98,8 @@ export default function InvoiceForm({
 		enterPayment,
 		null,
 	);
+	const [deletePaymentState, formDeletePaymentAction, isDeletePaymentPending] =
+		useActionState(deletePayment, null);
 
 	const isEdit = Boolean(invoiceData);
 
@@ -272,6 +277,38 @@ export default function InvoiceForm({
 								: "Izdaj račun"}
 						</Button>
 					)}
+					{invoiceData &&
+						businessData &&
+						selectedClient &&
+						invoiceData?.status !== "DRAFT" &&
+						invoiceData?.status !== "CANCELLED" && (
+							<Popover>
+								<PopoverTrigger
+									render={
+										<Button size="lg" className="w-fit">
+											<ArrowDownToLine className="h-4 w-4" />
+											Preuzmi račun
+										</Button>
+									}
+								/>
+								<PopoverContent align="start" className="w-34">
+									<DownloadInvoiceButton
+										invoice={invoiceData}
+										business={businessData}
+										client={selectedClient}
+										user={userData}
+										language="hr"
+									/>
+									<DownloadInvoiceButton
+										invoice={invoiceData}
+										business={businessData}
+										client={selectedClient}
+										user={userData}
+										language="en"
+									/>
+								</PopoverContent>
+							</Popover>
+						)}
 				</div>
 			</div>
 
@@ -815,18 +852,47 @@ export default function InvoiceForm({
 													className="flex justify-between mb-2"
 												>
 													<div className="flex flex-col">
-														<span>Uplata na transakcijski račun</span>
+														<span>
+															{payment.method == "BANK_TRANSFER"
+																? "Uplata na transakcijski račun"
+																: "Gotovinska uplata"}
+														</span>
 														<span className="text-muted text-xs">
 															{new Date(payment.paidAt).toLocaleDateString(
 																"hr-HR",
 															)}
 														</span>
 													</div>
-													<div className="font-mono">
-														{payment.amount.toLocaleString("hr-HR", {
-															style: "currency",
-															currency: "EUR",
-														})}
+													<div className="flex gap-2">
+														<span className="font-mono">
+															{payment.amount.toLocaleString("hr-HR", {
+																style: "currency",
+																currency: "EUR",
+															})}
+														</span>
+
+														<form
+															action={formDeletePaymentAction}
+															className="no-wrapper"
+														>
+															<input
+																type="hidden"
+																name="paymentId"
+																value={payment.id}
+															/>
+															<input
+																type="hidden"
+																name="invoiceId"
+																value={invoiceData?.id ?? ""}
+															/>
+															<button
+																type="submit"
+																disabled={isDeletePaymentPending}
+																className="p-1 hover:bg-destructive/10 rounded cursor-pointer"
+															>
+																<X className="w-4 h-4 text-destructive" />
+															</button>
+														</form>
 													</div>
 												</li>
 											))}
