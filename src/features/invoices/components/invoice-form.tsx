@@ -130,6 +130,15 @@ export default function InvoiceForm({
 		useFormValues(initialValues);
 
 	const [paymentEntry, setPaymentEntry] = useState(false);
+	const [paymentMethod, setPaymentMethod] = useState<PaymentType>(
+		invoiceData?.paymentMethod ?? "BANK_TRANSFER",
+	);
+	const [paymentDate, setPaymentDate] = useState(
+		new Date().toISOString().split("T")[0],
+	);
+	const [paymentAmount, setPaymentAmount] = useState(
+		invoiceData?.totalAmount?.toString() ?? "0",
+	);
 
 	const [invoiceItems, setInvoiceItems] = useState<DraftInvoiceItem[]>(
 		invoiceData?.invoiceItems.map((item) => ({
@@ -931,7 +940,8 @@ export default function InvoiceForm({
 													id="date"
 													name="date"
 													type="date"
-													defaultValue={new Date().toISOString().split("T")[0]}
+														value={paymentDate}
+														onChange={(event) => setPaymentDate(event.target.value)}
 													required
 												/>
 											</Field>
@@ -940,7 +950,14 @@ export default function InvoiceForm({
 													Način plaćanja
 													<span className="text-destructive">*</span>
 												</FieldLabel>
-												<Select id="paymentMethod" name="paymentMethod">
+												<Select
+													id="paymentMethod"
+													name="paymentMethod"
+													value={paymentMethod}
+													onValueChange={(value) =>
+														setPaymentMethod(value as PaymentType)
+													}
+												>
 													<SelectTrigger className="w-full">
 														<SelectValue>
 															{(value: PaymentType | null) =>
@@ -977,7 +994,8 @@ export default function InvoiceForm({
 														name="amount"
 														type="number"
 														step="0.01"
-														defaultValue={invoiceData?.totalAmount ?? 0}
+														value={paymentAmount}
+														onChange={(event) => setPaymentAmount(event.target.value)}
 														required
 													/>
 													<InputGroupAddon align="inline-end">

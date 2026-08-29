@@ -58,7 +58,10 @@ const translations = {
     issuedBy: 'Issued by',
     reference: 'reference number',
     vatExemption: 'The business is not registered for VAT.',
-    paymentLabels,
+    paymentLabels: {
+      CASH: 'Cash',
+      BANK_TRANSFER: 'Bank transfer',
+    },
     unitLabelsShort: {
       PIECE: 'pcs',
       HOUR: 'hr',
