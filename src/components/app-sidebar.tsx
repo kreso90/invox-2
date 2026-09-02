@@ -15,14 +15,11 @@ import {
 } from "@/components/ui/sidebar";
 import {
 	Box,
-	Home,
+	CalendarClock,
 	House,
 	LogOut,
-	Plus,
 	ReceiptText,
 	Settings,
-	User,
-	User2,
 	Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -48,90 +45,111 @@ export function AppSidebar() {
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
-					<nav>
-						<SidebarMenu className="gap-2">
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									render={<Link href="/dashboard" />}
-									isActive={pathname === "/dashboard"}
-								>
-									<House
-										className={
-											pathname === "/dashboard"
-												? "text-(--sidebar-accent-icon-foreground)"
-												: ""
-										}
-										data-active={pathname === "/dashboard"}
-									/>
-									<span>Nadzorna ploča</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									render={<Link href="/invoices" />}
-									isActive={pathname === "/invoices"}
-								>
-									<ReceiptText
-										className={
-											pathname === "/invoices"
-												? "text-(--sidebar-accent-icon-foreground)"
-												: ""
-										}
-										data-active={pathname === "/invoices"}
-									/>
-									<span>Računi</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									render={<Link href="/clients" />}
-									isActive={pathname?.startsWith("/clients")}
-								>
-									<Users
-										className={
-											pathname?.startsWith("/clients")
-												? "text-(--sidebar-accent-icon-foreground)"
-												: ""
-										}
-										data-active={pathname?.startsWith("/clients")}
-									/>
-									<span>Klijenti</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									render={<Link href="/articles" />}
-									isActive={pathname?.startsWith("/articles")}
-								>
-									<Box
-										className={
-											pathname?.startsWith("/articles")
-												? "text-(--sidebar-accent-icon-foreground)"
-												: ""
-										}
-										data-active={pathname?.startsWith("/articles")}
-									/>
-									<span>Artikli i usluge</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									render={<Link href="/settings" />}
-									isActive={pathname === "/settings"}
-								>
-									<Settings
-										className={
-											pathname === "/settings"
-												? "text-(--sidebar-accent-icon-foreground)"
-												: ""
-										}
-										data-active={pathname === "/settings"}
-									/>
-									<span>Postavke</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						</SidebarMenu>
-					</nav>
+					<SidebarGroupLabel>PREGLED</SidebarGroupLabel>
+					<SidebarMenu className="gap-2">
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								render={<Link href="/dashboard" />}
+								isActive={pathname === "/dashboard"}
+							>
+								<House
+									className={
+										pathname === "/dashboard"
+											? "text-(--sidebar-accent-icon-foreground)"
+											: ""
+									}
+									data-active={pathname === "/dashboard"}
+								/>
+								<span>Nadzorna ploča</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								render={<Link href="/invoices" />}
+								isActive={pathname === "/invoices"}
+							>
+								<ReceiptText
+									className={
+										pathname === "/invoices"
+											? "text-(--sidebar-accent-icon-foreground)"
+											: ""
+									}
+									data-active={pathname === "/invoices"}
+								/>
+								<span>Računi</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								render={<Link href="/clients" />}
+								isActive={pathname?.startsWith("/clients")}
+							>
+								<Users
+									className={
+										pathname?.startsWith("/clients")
+											? "text-(--sidebar-accent-icon-foreground)"
+											: ""
+									}
+									data-active={pathname?.startsWith("/clients")}
+								/>
+								<span>Klijenti</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								render={<Link href="/articles" />}
+								isActive={pathname?.startsWith("/articles")}
+							>
+								<Box
+									className={
+										pathname?.startsWith("/articles")
+											? "text-(--sidebar-accent-icon-foreground)"
+											: ""
+									}
+									data-active={pathname?.startsWith("/articles")}
+								/>
+								<span>Artikli i usluge</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
+				</SidebarGroup>
+
+				<SidebarGroup>
+					<SidebarMenu className="gap-2">
+						<SidebarGroupLabel>OSTALO</SidebarGroupLabel>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								render={<Link href="/obligations" />}
+								isActive={pathname === "/obligations"}
+							>
+								<CalendarClock
+									className={
+										pathname === "/obligations"
+											? "text-(--sidebar-accent-icon-foreground)"
+											: ""
+									}
+									data-active={pathname === "/obligations"}
+								/>
+								<span>Obveze</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+						<SidebarMenuItem>
+							<SidebarMenuButton
+								render={<Link href="/settings" />}
+								isActive={pathname === "/settings"}
+							>
+								<Settings
+									className={
+										pathname === "/settings"
+											? "text-(--sidebar-accent-icon-foreground)"
+											: ""
+									}
+									data-active={pathname === "/settings"}
+								/>
+								<span>Postavke</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
 				</SidebarGroup>
 			</SidebarContent>
 
@@ -148,7 +166,7 @@ export function AppSidebar() {
 								className="group/avatar relative shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:text-xs "
 							/>
 							<div className="flex flex-col flex-1 opacity-100 delay-150 transition whitespace-nowrap group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:opacity-0">
-								<span className="font-semibold text-sm">Krešimir Šelendić</span>
+								<span className="font-semibold text-sm"></span>
 								<span className="text-xs text-muted">Obrt "KS Dev"</span>
 							</div>
 						</div>

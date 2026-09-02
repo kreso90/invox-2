@@ -61,9 +61,7 @@ export default function ClientForm({ clientData }: clientFormProps) {
 							/>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="oib">
-								OIB <span className="text-destructive">*</span>
-							</FieldLabel>
+							<FieldLabel htmlFor="oib">OIB</FieldLabel>
 							<Input
 								id="oib"
 								name="oib"
@@ -71,7 +69,6 @@ export default function ClientForm({ clientData }: clientFormProps) {
 								placeholder="12345678901"
 								value={formValues.oib}
 								onChange={handleInputChange}
-								required
 							/>
 						</Field>
 					</div>

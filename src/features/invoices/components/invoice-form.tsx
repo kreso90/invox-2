@@ -731,7 +731,12 @@ export default function InvoiceForm({
 									{selectedClient?.address},{selectedClient?.postalCode}{" "}
 									{selectedClient?.city}
 									<br />
-									OIB: {selectedClient?.oib}
+									{selectedClient?.oib && (
+										<>
+											OIB: {selectedClient?.oib}
+											<br />
+										</>
+									)}
 								</span>
 							</div>
 						) : null}
@@ -940,8 +945,10 @@ export default function InvoiceForm({
 													id="date"
 													name="date"
 													type="date"
-														value={paymentDate}
-														onChange={(event) => setPaymentDate(event.target.value)}
+													value={paymentDate}
+													onChange={(event) =>
+														setPaymentDate(event.target.value)
+													}
 													required
 												/>
 											</Field>
@@ -995,7 +1002,9 @@ export default function InvoiceForm({
 														type="number"
 														step="0.01"
 														value={paymentAmount}
-														onChange={(event) => setPaymentAmount(event.target.value)}
+														onChange={(event) =>
+															setPaymentAmount(event.target.value)
+														}
 														required
 													/>
 													<InputGroupAddon align="inline-end">

@@ -192,12 +192,20 @@ exports.Prisma.BusinessScalarFieldEnum = {
   country: 'country',
   email: 'email',
   phone: 'phone',
+  bankName: 'bankName',
+  swiftCode: 'swiftCode',
   iban: 'iban',
   description: 'description',
+  activity_name: 'activity_name',
   activity_code: 'activity_code',
   annual_threshold: 'annual_threshold',
   threshold_warning_pct: 'threshold_warning_pct',
   logo_url: 'logo_url',
+  taxClass: 'taxClass',
+  mio1MonthlyAmount: 'mio1MonthlyAmount',
+  mio2MonthlyAmount: 'mio2MonthlyAmount',
+  healthInsuranceMonthly: 'healthInsuranceMonthly',
+  incomeTaxQuarterly: 'incomeTaxQuarterly',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -274,6 +282,22 @@ exports.Prisma.InvoicePaymentScalarFieldEnum = {
   paidAt: 'paidAt'
 };
 
+exports.Prisma.ObligationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  kind: 'kind',
+  name: 'name',
+  periodLabel: 'periodLabel',
+  dueDate: 'dueDate',
+  amount: 'amount',
+  paymentModel: 'paymentModel',
+  paymentReference: 'paymentReference',
+  paymentDescription: 'paymentDescription',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -288,6 +312,16 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.TaxClass = exports.$Enums.TaxClass = {
+  CLASS_1: 'CLASS_1',
+  CLASS_2: 'CLASS_2',
+  CLASS_3: 'CLASS_3',
+  CLASS_4: 'CLASS_4',
+  CLASS_5: 'CLASS_5',
+  CLASS_6: 'CLASS_6',
+  CLASS_7: 'CLASS_7'
+};
+
 exports.Unit = exports.$Enums.Unit = {
   PIECE: 'PIECE',
   HOUR: 'HOUR',
@@ -312,6 +346,23 @@ exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
   PARTIALLY_PAID: 'PARTIALLY_PAID'
 };
 
+exports.ObligationKind = exports.$Enums.ObligationKind = {
+  MIO1: 'MIO1',
+  MIO2: 'MIO2',
+  HEALTH_INSURANCE: 'HEALTH_INSURANCE',
+  INCOME_TAX: 'INCOME_TAX',
+  PO_SD_FORM: 'PO_SD_FORM',
+  KPI_LEDGER: 'KPI_LEDGER',
+  PDV_FORM: 'PDV_FORM',
+  ZP_FORM: 'ZP_FORM',
+  OTHER: 'OTHER'
+};
+
+exports.ObligationStatus = exports.$Enums.ObligationStatus = {
+  PENDING: 'PENDING',
+  SUBMITTED: 'SUBMITTED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -324,7 +375,8 @@ exports.Prisma.ModelName = {
   Article: 'Article',
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
-  InvoicePayment: 'InvoicePayment'
+  InvoicePayment: 'InvoicePayment',
+  Obligation: 'Obligation'
 };
 
 /**

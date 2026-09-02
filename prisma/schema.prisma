@@ -13,7 +13,7 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String       @id
   name          String
   email         String
   emailVerified Boolean
@@ -26,6 +26,7 @@ model User {
   clients       Client[]
   articles      Article[]
   invoices      Invoice[]
+  obligations   Obligation[]
 
   @@unique([email])
   @@map("user")
@@ -97,26 +98,34 @@ model PasswordResetToken {
 }
 
 model Business {
-  id                    String   @id @default(cuid())
-  business_name         String
-  oib                   String
-  vatId                 String?
-  street                String
-  city                  String
-  postalCode            String
-  country               String   @default("HR")
-  email                 String
-  phone                 String?
-  iban                  String?
-  description           String?
-  activity_code         String?
-  annual_threshold      Float?
-  threshold_warning_pct Float?
-  logo_url              String?
-  user                  User     @relation(fields: [userId], references: [id])
-  userId                String   @unique
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                     String   @id @default(cuid())
+  business_name          String
+  oib                    String
+  vatId                  String?
+  street                 String
+  city                   String
+  postalCode             String
+  country                String   @default("HR")
+  email                  String
+  phone                  String?
+  bankName               String?
+  swiftCode              String?
+  iban                   String?
+  description            String?
+  activity_name          String?
+  activity_code          String?
+  annual_threshold       Float?
+  threshold_warning_pct  Float?
+  logo_url               String?
+  taxClass               TaxClass @default(CLASS_3)
+  mio1MonthlyAmount      Float    @default(119.58)
+  mio2MonthlyAmount      Float    @default(39.86)
+  healthInsuranceMonthly Float    @default(131.54)
+  incomeTaxQuarterly     Float    @default(137.70)
+  user                   User     @relation(fields: [userId], references: [id])
+  userId                 String   @unique
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 }
 
 model Client {
@@ -205,6 +214,29 @@ model InvoicePayment {
   invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 }
 
+model Obligation {
+  id                 String           @id @default(cuid())
+  userId             String
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind               ObligationKind
+  name               String
+  periodLabel        String
+  dueDate            DateTime
+  amount             Float?
+  paymentModel       String?
+  paymentReference   String?
+  paymentDescription String?
+  status             ObligationStatus @default(PENDING)
+  submittedAt        DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, kind, periodLabel])
+  @@index([userId, dueDate])
+}
+
+// Enums
+
 enum PaymentType {
   CASH
   BANK_TRANSFER
@@ -227,4 +259,31 @@ enum InvoiceStatus {
   OVERDUE
   CANCELLED
   PARTIALLY_PAID
+}
+
+enum TaxClass {
+  CLASS_1
+  CLASS_2
+  CLASS_3
+  CLASS_4
+  CLASS_5
+  CLASS_6
+  CLASS_7
+}
+
+enum ObligationKind {
+  MIO1
+  MIO2
+  HEALTH_INSURANCE
+  INCOME_TAX
+  PO_SD_FORM
+  KPI_LEDGER
+  PDV_FORM
+  ZP_FORM
+  OTHER
+}
+
+enum ObligationStatus {
+  PENDING
+  SUBMITTED
 }

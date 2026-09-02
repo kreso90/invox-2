@@ -193,7 +193,7 @@ export default async function DashboardPage() {
 							<TableRow className="uppercase pointer-events-none">
 								<TableHead className="w-25">Broj</TableHead>
 								<TableHead>Klijenti</TableHead>
-								<TableHead>Datum</TableHead>
+								<TableHead>Datum izdavanja</TableHead>
 								<TableHead className="text-right">Iznos</TableHead>
 								<TableHead className="text-right">Status</TableHead>
 							</TableRow>

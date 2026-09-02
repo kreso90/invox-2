@@ -31,6 +31,7 @@ export async function getInvoices(
 	page?: number,
 	pageSize?: number,
 	status?: InvoiceFilterStatus,
+	date?: Date,
 ) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -73,6 +74,14 @@ export async function getInvoices(
 			: status
 				? { status }
 				: {}),
+		...(date
+			? {
+					issueDate: {
+						gte: new Date(date.getFullYear(), date.getMonth(), 1),
+						lt: new Date(date.getFullYear(), date.getMonth() + 1, 1),
+					},
+				}
+			: {}),
 	};
 
 	const [invoices, total] = await Promise.all([
@@ -81,7 +90,7 @@ export async function getInvoices(
 			skip: ((page ?? 1) - 1) * (pageSize ?? 10),
 			take: pageSize ?? 10,
 			orderBy: { createdAt: "desc" },
-			include: { invoiceItems: true, client: true },
+			include: { invoiceItems: true, client: true, invoicePayments: true },
 		}),
 		prisma.invoice.count({ where }),
 	]);
@@ -93,7 +102,7 @@ export async function getInvoices(
 	};
 }
 
-export async function getInvoicesAmounts() {
+export async function getInvoicesAmounts(date?: Date) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -153,12 +162,32 @@ export async function getInvoicesAmounts() {
 		},
 	});
 
+	const selectedMonth = date ?? new Date();
+	const selectedMonthPaidAmount = await prisma.invoice.aggregate({
+		where: {
+			userId: session.user.id,
+			status: { in: ["PAID", "ISSUED"] },
+			issueDate: {
+				gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1),
+				lt: new Date(
+					selectedMonth.getFullYear(),
+					selectedMonth.getMonth() + 1,
+					1,
+				),
+			},
+		},
+		_sum: {
+			totalAmount: true,
+		},
+	});
+
 	return {
 		unpaidAmount: unpaid._sum.totalAmount ?? 0,
 		invoiceUnpaid: unpaid._count.totalAmount ?? 0,
 		paidAmount: paidAmount._sum.totalAmount ?? 0,
 		currentMonthPaidAmount: currentMonthPaidAmount._sum.totalAmount ?? 0,
 		previousMonthPaidAmount: previousMonthPaidAmount._sum.totalAmount ?? 0,
+		selectedMonthPaidAmount: selectedMonthPaidAmount._sum.totalAmount ?? 0,
 	};
 }
 

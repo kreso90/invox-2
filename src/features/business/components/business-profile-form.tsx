@@ -8,7 +8,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { createBusiness } from "@/features/business/actions";
-import { useActionState } from "react";
+import { act, useActionState } from "react";
 import { Business } from "@/features/business/types";
 import { useFormValues } from "@/hooks/use-form-values";
 
@@ -30,9 +30,12 @@ export default function BusinessProfileForm({
 		city: businessData?.city || "",
 		postalCode: businessData?.postalCode || "",
 		businessCode: businessData?.activity_code || "",
+		activityName: businessData?.activity_name || "",
 		vatNumber: businessData?.vatId || "",
 		email: businessData?.email || "",
 		iban: businessData?.iban || "",
+		bankName: businessData?.bankName || "",
+		swiftCode: businessData?.swiftCode || "",
 	};
 	const { formValues, handleInputChange } = useFormValues(initialValues);
 
@@ -45,17 +48,31 @@ export default function BusinessProfileForm({
 
 			<FieldSet className="w-full">
 				<FieldGroup>
+					<Field>
+						<FieldLabel htmlFor="businessName">
+							Naziv obrta <span className="text-destructive">*</span>
+						</FieldLabel>
+						<Input
+							id="businessName"
+							name="businessName"
+							type="text"
+							placeholder="Maks"
+							value={formValues.businessName}
+							onChange={handleInputChange}
+							required
+						/>
+					</Field>
 					<div className="grid md:grid-cols-2 md:gap-4">
 						<Field>
-							<FieldLabel htmlFor="businessName">
-								Naziv obrta <span className="text-destructive">*</span>
+							<FieldLabel htmlFor="email">
+								Email <span className="text-destructive">*</span>
 							</FieldLabel>
 							<Input
-								id="businessName"
-								name="businessName"
+								id="email"
+								name="email"
 								type="text"
-								placeholder="Maks"
-								value={formValues.businessName}
+								placeholder="example@example.com"
+								value={formValues.email}
 								onChange={handleInputChange}
 								required
 							/>
@@ -121,7 +138,21 @@ export default function BusinessProfileForm({
 						</Field>
 					</div>
 
-					<div className="grid md:grid-cols-2 md:gap-4">
+					<div className="grid md:grid-cols-3 md:gap-4">
+						<Field>
+							<FieldLabel htmlFor="activityName">
+								Naziv djelatnosti <span className="text-destructive">*</span>
+							</FieldLabel>
+							<Input
+								id="activityName"
+								name="activityName"
+								type="text"
+								placeholder="Naziv djelatnosti"
+								value={formValues.activityName}
+								onChange={handleInputChange}
+								required
+							/>
+						</Field>
 						<Field>
 							<FieldLabel htmlFor="businessCode">
 								Šifra djelatnosti <span className="text-destructive">*</span>
@@ -130,7 +161,7 @@ export default function BusinessProfileForm({
 								id="businessCode"
 								name="businessCode"
 								type="text"
-								placeholder="Maks"
+								placeholder="Šifra djelatnosti"
 								value={formValues.businessCode}
 								onChange={handleInputChange}
 								required
@@ -149,19 +180,16 @@ export default function BusinessProfileForm({
 						</Field>
 					</div>
 
-					<div className="grid md:grid-cols-2 md:gap-4">
+					<div className="grid md:grid-cols-3 md:gap-4">
 						<Field>
-							<FieldLabel htmlFor="email">
-								Email <span className="text-destructive">*</span>
-							</FieldLabel>
+							<FieldLabel htmlFor="bankName">Naziv banke</FieldLabel>
 							<Input
-								id="email"
-								name="email"
+								id="bankName"
+								name="bankName"
 								type="text"
-								placeholder="example@example.com"
-								value={formValues.email}
+								value={formValues.bankName}
 								onChange={handleInputChange}
-								required
+								placeholder="Zagrebačka banka"
 							/>
 						</Field>
 						<Field>
@@ -173,6 +201,17 @@ export default function BusinessProfileForm({
 								value={formValues.iban}
 								onChange={handleInputChange}
 								placeholder="HR1234567890123456789"
+							/>
+						</Field>
+						<Field>
+							<FieldLabel htmlFor="swiftCode">SWIFT</FieldLabel>
+							<Input
+								id="swiftCode"
+								name="swiftCode"
+								type="text"
+								value={formValues.swiftCode}
+								onChange={handleInputChange}
+								placeholder="ABCDHR2X"
 							/>
 						</Field>
 					</div>

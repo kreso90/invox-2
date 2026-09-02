@@ -7,8 +7,6 @@ import {
   Font,
   PDFDownloadLink,
 } from '@react-pdf/renderer';
-import { Button } from "@/components/ui/button";
-import { ArrowDownToLine } from "lucide-react";
 import { paymentLabels } from "../constants";
 import { unitLabelsShort } from "../../articles/constants";
 
