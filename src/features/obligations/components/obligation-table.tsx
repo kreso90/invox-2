@@ -61,6 +61,17 @@ export function ObligationTable({
 	const [selectedFormObligationId, setSelectedFormObligationId] = useState<
 		string | null
 	>(null);
+	const currentMonth = new Intl.DateTimeFormat("hr-HR", {
+		month: "2-digit",
+		year: "numeric",
+	}).format(new Date());
+
+	const [selectedMonths, setSelectedMonths] = useState<
+		Record<string, string | null>
+	>({
+		obligations: currentMonth,
+		otherObligations: currentMonth,
+	});
 	return (
 		<>
 			<Card className="p-4 mb-4">
@@ -119,6 +130,69 @@ export function ObligationTable({
 						1. i 2. mirovinski stup, zdravstveno osiguranje
 					</span>
 				</div>
+				<div className="flex gap-2 mb-2">
+					<Button
+						variant="outline"
+						className={
+							selectedMonths.obligations ===
+							new Intl.DateTimeFormat("hr-HR", {
+								month: "2-digit",
+								year: "numeric",
+							}).format(new Date())
+								? "bg-primary text-white"
+								: ""
+						}
+						onClick={() =>
+							setSelectedMonths((prev) => ({
+								...prev,
+								obligations: new Intl.DateTimeFormat("hr-HR", {
+									month: "2-digit",
+									year: "numeric",
+								}).format(new Date()),
+							}))
+						}
+					>
+						Ovaj mjesec
+					</Button>
+					<Button
+						variant="outline"
+						className={
+							selectedMonths.obligations ===
+							new Intl.DateTimeFormat("hr-HR", {
+								month: "2-digit",
+								year: "numeric",
+							}).format(
+								new Date(new Date().getFullYear(), new Date().getMonth() - 1),
+							)
+								? "bg-primary text-white"
+								: ""
+						}
+						onClick={() =>
+							setSelectedMonths((prev) => ({
+								...prev,
+								obligations: new Intl.DateTimeFormat("hr-HR", {
+									month: "2-digit",
+									year: "numeric",
+								}).format(
+									new Date(new Date().getFullYear(), new Date().getMonth() - 1),
+								),
+							}))
+						}
+					>
+						Prošli mjesec
+					</Button>
+					<Button
+						variant="outline"
+						className={
+							selectedMonths.obligations === null ? "bg-primary text-white" : ""
+						}
+						onClick={() =>
+							setSelectedMonths((prev) => ({ ...prev, obligations: null }))
+						}
+					>
+						Svi mjeseci
+					</Button>
+				</div>
 				<Table>
 					<TableHeader>
 						<TableRow className="uppercase hover:bg-transparent">
@@ -130,64 +204,77 @@ export function ObligationTable({
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{obligations?.map((obligation) => {
-							return (
-								<TableRow key={obligation.id} className="hover:bg-transparent">
-									<TableCell className="font-medium font-mono text-muted text-xs">
-										{(() => {
-											const [month, year] = obligation.periodLabel.split("/");
+						{obligations
+							?.filter((obligation) => {
+								if (!selectedMonths.obligations) return true;
+								const [month, year] = obligation.periodLabel.split("/");
+								const obligationMonth = new Intl.DateTimeFormat("hr-HR", {
+									month: "2-digit",
+									year: "numeric",
+								}).format(new Date(Number(year), Number(month) - 1));
+								return obligationMonth === selectedMonths.obligations;
+							})
+							.map((obligation) => {
+								return (
+									<TableRow
+										key={obligation.id}
+										className="hover:bg-transparent"
+									>
+										<TableCell className="font-medium font-mono text-muted text-xs">
+											{(() => {
+												const [month, year] = obligation.periodLabel.split("/");
 
-											return new Intl.DateTimeFormat("hr-HR", {
-												month: "long",
-												year: "numeric",
-											}).format(new Date(Number(year), Number(month) - 1));
-										})()}
-									</TableCell>
-									<TableCell className="font-medium text-sm">
-										{obligationLabels[obligation.kind as ObligationKind]}
-									</TableCell>
-									<TableCell className="font-mono text-sm">
-										{obligation.dueDate
-											? new Intl.DateTimeFormat("hr-HR", {
-													day: "numeric",
-													month: "numeric",
+												return new Intl.DateTimeFormat("hr-HR", {
+													month: "long",
 													year: "numeric",
-												}).format(new Date(obligation.dueDate))
-											: "N/A"}
-									</TableCell>
-									<TableCell className="font-mono font-medium text-sm">
-										{obligation.amount
-											? new Intl.NumberFormat("hr-HR", {
-													style: "currency",
-													currency: "EUR",
-												}).format(obligation.amount)
-											: "N/A"}
-									</TableCell>
-									<TableCell>
-										<Badge
-											variant={
-												obligation.status === "PENDING" ? "draft" : "paid"
-											}
-										>
-											{
-												obligationStatusLabels[
-													obligation.status as ObligationStatus
-												]
-											}
-										</Badge>
-									</TableCell>
-									<TableCell className="text-right">
-										<Button
-											onClick={() => setSelectedObligationId(obligation.id)}
-											className="bg-accent-foreground"
-										>
-											<QrCode />
-											QR
-										</Button>
-									</TableCell>
-								</TableRow>
-							);
-						})}
+												}).format(new Date(Number(year), Number(month) - 1));
+											})()}
+										</TableCell>
+										<TableCell className="font-medium text-sm">
+											{obligationLabels[obligation.kind as ObligationKind]}
+										</TableCell>
+										<TableCell className="font-mono text-sm">
+											{obligation.dueDate
+												? new Intl.DateTimeFormat("hr-HR", {
+														day: "numeric",
+														month: "numeric",
+														year: "numeric",
+													}).format(new Date(obligation.dueDate))
+												: "N/A"}
+										</TableCell>
+										<TableCell className="font-mono font-medium text-sm">
+											{obligation.amount
+												? new Intl.NumberFormat("hr-HR", {
+														style: "currency",
+														currency: "EUR",
+													}).format(obligation.amount)
+												: "N/A"}
+										</TableCell>
+										<TableCell>
+											<Badge
+												variant={
+													obligation.status === "PENDING" ? "draft" : "paid"
+												}
+											>
+												{
+													obligationStatusLabels[
+														obligation.status as ObligationStatus
+													]
+												}
+											</Badge>
+										</TableCell>
+										<TableCell className="text-right">
+											<Button
+												onClick={() => setSelectedObligationId(obligation.id)}
+												className="bg-accent-foreground"
+											>
+												<QrCode />
+												QR
+											</Button>
+										</TableCell>
+									</TableRow>
+								);
+							})}
 					</TableBody>
 				</Table>
 			</Card>
@@ -277,6 +364,71 @@ export function ObligationTable({
 					<span className="font-medium">PDV i EU izvještavanje</span>
 					<span className="font-medium">samo ako imaš B2B klijente iz EU</span>
 				</div>
+				<div className="flex gap-2 mb-2">
+					<Button
+						variant="outline"
+						className={
+							selectedMonths.otherObligations ===
+							new Intl.DateTimeFormat("hr-HR", {
+								month: "2-digit",
+								year: "numeric",
+							}).format(new Date())
+								? "bg-primary text-white"
+								: ""
+						}
+						onClick={() =>
+							setSelectedMonths((prev) => ({
+								...prev,
+								otherObligations: new Intl.DateTimeFormat("hr-HR", {
+									month: "2-digit",
+									year: "numeric",
+								}).format(new Date()),
+							}))
+						}
+					>
+						Ovaj mjesec
+					</Button>
+					<Button
+						variant="outline"
+						className={
+							selectedMonths.otherObligations ===
+							new Intl.DateTimeFormat("hr-HR", {
+								month: "2-digit",
+								year: "numeric",
+							}).format(
+								new Date(new Date().getFullYear(), new Date().getMonth() - 1),
+							)
+								? "bg-primary text-white"
+								: ""
+						}
+						onClick={() =>
+							setSelectedMonths((prev) => ({
+								...prev,
+								otherObligations: new Intl.DateTimeFormat("hr-HR", {
+									month: "2-digit",
+									year: "numeric",
+								}).format(
+									new Date(new Date().getFullYear(), new Date().getMonth() - 1),
+								),
+							}))
+						}
+					>
+						Prošli mjesec
+					</Button>
+					<Button
+						variant="outline"
+						className={
+							selectedMonths.otherObligations === null
+								? "bg-primary text-white"
+								: ""
+						}
+						onClick={() =>
+							setSelectedMonths((prev) => ({ ...prev, otherObligations: null }))
+						}
+					>
+						Svi mjeseci
+					</Button>
+				</div>
 				<Table>
 					<TableHeader>
 						<TableRow className="uppercase hover:bg-transparent">
@@ -288,66 +440,81 @@ export function ObligationTable({
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{formsObligations?.map((obligation) => {
-							return (
-								<TableRow key={obligation.id} className="hover:bg-transparent">
-									<TableCell className="font-medium font-mono text-muted text-xs">
-										{(() => {
-											const [month, year] = obligation.periodLabel.split("/");
+						{formsObligations
+							?.filter((obligation) => {
+								if (!selectedMonths.otherObligations) return true;
+								const [month, year] = obligation.periodLabel.split("/");
+								const obligationMonth = new Intl.DateTimeFormat("hr-HR", {
+									month: "2-digit",
+									year: "numeric",
+								}).format(new Date(Number(year), Number(month) - 1));
+								return obligationMonth === selectedMonths.otherObligations;
+							})
+							.map((obligation) => {
+								return (
+									<TableRow
+										key={obligation.id}
+										className="hover:bg-transparent"
+									>
+										<TableCell className="font-medium font-mono text-muted text-xs">
+											{(() => {
+												const [month, year] = obligation.periodLabel.split("/");
 
-											return new Intl.DateTimeFormat("hr-HR", {
-												month: "long",
-												year: "numeric",
-											}).format(new Date(Number(year), Number(month) - 1));
-										})()}
-									</TableCell>
-									<TableCell className="font-medium text-sm">
-										{obligationLabels[obligation.kind as ObligationKind]}
-									</TableCell>
-									<TableCell className="font-mono text-sm">
-										{obligation.dueDate
-											? new Intl.DateTimeFormat("hr-HR", {
-													day: "numeric",
-													month: "numeric",
+												return new Intl.DateTimeFormat("hr-HR", {
+													month: "long",
 													year: "numeric",
-												}).format(new Date(obligation.dueDate))
-											: "N/A"}
-									</TableCell>
-									<TableCell className="font-mono font-medium text-sm">
-										{invoicesAmountsByPeriod[obligation.periodLabel]
-											? new Intl.NumberFormat("hr-HR", {
-													style: "currency",
-													currency: "EUR",
-												}).format(
-													invoicesAmountsByPeriod[obligation.periodLabel],
-												)
-											: "N/A"}
-									</TableCell>
-									<TableCell>
-										<Badge
-											variant={
-												obligation.status === "PENDING" ? "draft" : "paid"
-											}
-										>
-											{
-												obligationStatusLabels[
-													obligation.status as ObligationStatus
-												]
-											}
-										</Badge>
-									</TableCell>
-									<TableCell className="text-right">
-										<Button
-											onClick={() => setSelectedFormObligationId(obligation.id)}
-											className="bg-accent-foreground"
-										>
-											<FileText />
-											Obrazac
-										</Button>
-									</TableCell>
-								</TableRow>
-							);
-						})}
+												}).format(new Date(Number(year), Number(month) - 1));
+											})()}
+										</TableCell>
+										<TableCell className="font-medium text-sm">
+											{obligationLabels[obligation.kind as ObligationKind]}
+										</TableCell>
+										<TableCell className="font-mono text-sm">
+											{obligation.dueDate
+												? new Intl.DateTimeFormat("hr-HR", {
+														day: "numeric",
+														month: "numeric",
+														year: "numeric",
+													}).format(new Date(obligation.dueDate))
+												: "N/A"}
+										</TableCell>
+										<TableCell className="font-mono font-medium text-sm">
+											{invoicesAmountsByPeriod[obligation.periodLabel]
+												? new Intl.NumberFormat("hr-HR", {
+														style: "currency",
+														currency: "EUR",
+													}).format(
+														invoicesAmountsByPeriod[obligation.periodLabel],
+													)
+												: "N/A"}
+										</TableCell>
+										<TableCell>
+											<Badge
+												variant={
+													obligation.status === "PENDING" ? "draft" : "paid"
+												}
+											>
+												{
+													obligationStatusLabels[
+														obligation.status as ObligationStatus
+													]
+												}
+											</Badge>
+										</TableCell>
+										<TableCell className="text-right">
+											<Button
+												onClick={() =>
+													setSelectedFormObligationId(obligation.id)
+												}
+												className="bg-accent-foreground"
+											>
+												<FileText />
+												Obrazac
+											</Button>
+										</TableCell>
+									</TableRow>
+								);
+							})}
 					</TableBody>
 				</Table>
 			</Card>

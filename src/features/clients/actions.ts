@@ -35,6 +35,7 @@ export async function createClient(prevState: unknown, formData: FormData) {
 		companyName: get("companyName")!,
 		oib: get("oib") || null,
 		vatNumber: get("vatNumber") || null,
+		vatCountryCode: get("vatCountryCode") || null,
 		address: get("address")!,
 		city: get("city")!,
 		postalCode: get("postalCode")!,

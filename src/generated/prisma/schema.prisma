@@ -138,6 +138,7 @@ model Client {
   companyName      String
   oib              String?
   vatNumber        String?
+  vatCountryCode   String?
   address          String?
   city             String?
   postalCode       String?

@@ -28,8 +28,13 @@ import Image from "next/image";
 import { signOut } from "@/features/auth/actions";
 import { Separator } from "./ui/separator";
 import { AvatarPlaceholder } from "./ui/avatar-placeholder";
+import { Business } from "@/generated/prisma";
 
-export function AppSidebar() {
+interface AppSidebarProps {
+	business: Business | null;
+}
+
+export function AppSidebar({ business }: AppSidebarProps) {
 	const pathname = usePathname();
 
 	return (
@@ -161,13 +166,15 @@ export function AppSidebar() {
 					<SidebarMenuItem>
 						<div className="flex items-center gap-3 mb-4">
 							<AvatarPlaceholder
-								firstname="K"
-								surname="Šelendić"
+								firstname={business?.ownerFirstName ?? ""}
+								surname={business?.ownerLastName ?? ""}
 								className="group/avatar relative shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:text-xs "
 							/>
 							<div className="flex flex-col flex-1 opacity-100 delay-150 transition whitespace-nowrap group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:opacity-0">
 								<span className="font-semibold text-sm"></span>
-								<span className="text-xs text-muted">Obrt "KS Dev"</span>
+								<span className="text-xs text-muted">
+									Obrt "{business?.business_name ?? ""}"
+								</span>
 							</div>
 						</div>
 					</SidebarMenuItem>

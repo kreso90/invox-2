@@ -3,12 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardContentRow } from "@/components/ui/card";
 import { getUserClients } from "@/features/clients/queries";
 import { getInvoices } from "@/features/invoices/queries";
+import { Invoice } from "@/features/invoices/types";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
 export default async function ClientsPage() {
-	const clients = await getUserClients();
-	const clientInvoices = await getInvoices();
+	const [clients, invoices] = await Promise.all([
+		getUserClients(),
+		getInvoices(),
+	]);
+
+	const invoicesByClient = new Map<string, Invoice[]>();
+	for (const invoice of invoices.invoices as Invoice[]) {
+		const clientInvoices = invoicesByClient.get(invoice.clientId) ?? [];
+		clientInvoices.push(invoice);
+		invoicesByClient.set(invoice.clientId, clientInvoices);
+	}
 
 	return (
 		<>
@@ -29,53 +39,78 @@ export default async function ClientsPage() {
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				{clients?.map((client) => (
-					<Link key={client.id} href={`/clients/${client.id}`}>
-						<Card key={client.id}>
-							<CardContent>
-								<div className="flex items-center gap-2">
-									<AvatarPlaceholder
-										firstname={client.contactFirstName || ""}
-										surname={client.contactLastName || ""}
-										className="rounded-lg bg-primary text-white"
-									/>
-									<div className="flex flex-col">
-										<p className="text-sm font-semibold">
-											{client.companyName}
-										</p>
-										{client.oib && (
-											<span className="text-muted text-xs font-mono">
-												OIB: {client.oib}
-											</span>
-										)}
+				{clients?.map((client) => {
+					const clientInvoices = invoicesByClient.get(client.id) ?? [];
+					const totalAmount = clientInvoices.reduce(
+						(total, invoice) => total + invoice.totalAmount,
+						0,
+					);
+					const lastInvoice = [...clientInvoices].sort(
+						(a, b) =>
+							new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime(),
+					)[0];
+
+					return (
+						<Link key={client.id} href={`/clients/${client.id}`}>
+							<Card key={client.id}>
+								<CardContent>
+									<div className="flex items-center gap-2">
+										<AvatarPlaceholder
+											firstname={client.contactFirstName || ""}
+											surname={client.contactLastName || ""}
+											className="rounded-lg bg-primary text-white"
+										/>
+										<div className="flex flex-col">
+											<p className="text-sm font-semibold">
+												{client.companyName}
+											</p>
+											{client.oib && (
+												<span className="text-muted text-xs font-mono">
+													OIB: {client.oib}
+												</span>
+											)}
+										</div>
 									</div>
-								</div>
-								<div className="mt-4">
-									<CardContentRow>
-										<span className="text-muted text-sm">
-											Ukupno fakturirano
-										</span>
-										<span className="text-sm font-mono">5.340,00 €</span>
-									</CardContentRow>
-									<CardContentRow>
-										<span className="text-muted text-sm">Kontakt osoba</span>
-										<span className="text-sm font-mono">
-											{client.contactFirstName} {client.contactLastName}
-										</span>
-									</CardContentRow>
-									<CardContentRow>
-										<span className="text-muted text-sm">Zadnji račun</span>
-										<span className="text-sm font-mono">14.08.2026.</span>
-									</CardContentRow>
-									<CardContentRow>
-										<span className="text-muted text-sm">Broj računa</span>
-										<span className="text-sm font-mono">7</span>
-									</CardContentRow>
-								</div>
-							</CardContent>
-						</Card>
-					</Link>
-				))}
+									<div className="mt-4">
+										<CardContentRow>
+											<span className="text-muted text-sm">
+												Ukupno fakturirano
+											</span>
+											<span className="text-sm font-mono">
+												{totalAmount.toLocaleString("hr-HR", {
+													style: "currency",
+													currency: "EUR",
+												})}
+											</span>{" "}
+										</CardContentRow>
+										<CardContentRow>
+											<span className="text-muted text-sm">Kontakt osoba</span>
+											<span className="text-sm font-mono">
+												{client.contactFirstName} {client.contactLastName}
+											</span>
+										</CardContentRow>
+										<CardContentRow>
+											<span className="text-muted text-sm">Zadnji račun</span>
+											<span className="text-sm font-mono">
+												{lastInvoice
+													? new Date(lastInvoice.issueDate).toLocaleDateString(
+															"hr-HR",
+														)
+													: "-"}
+											</span>
+										</CardContentRow>
+										<CardContentRow>
+											<span className="text-muted text-sm">Broj računa</span>
+											<span className="text-sm font-mono">
+												{clientInvoices.length}
+											</span>
+										</CardContentRow>
+									</div>
+								</CardContent>
+							</Card>
+						</Link>
+					);
+				})}
 			</div>
 		</>
 	);

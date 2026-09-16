@@ -10252,6 +10252,7 @@ export namespace Prisma {
     companyName: string | null
     oib: string | null
     vatNumber: string | null
+    vatCountryCode: string | null
     address: string | null
     city: string | null
     postalCode: string | null
@@ -10271,6 +10272,7 @@ export namespace Prisma {
     companyName: string | null
     oib: string | null
     vatNumber: string | null
+    vatCountryCode: string | null
     address: string | null
     city: string | null
     postalCode: string | null
@@ -10290,6 +10292,7 @@ export namespace Prisma {
     companyName: number
     oib: number
     vatNumber: number
+    vatCountryCode: number
     address: number
     city: number
     postalCode: number
@@ -10311,6 +10314,7 @@ export namespace Prisma {
     companyName?: true
     oib?: true
     vatNumber?: true
+    vatCountryCode?: true
     address?: true
     city?: true
     postalCode?: true
@@ -10330,6 +10334,7 @@ export namespace Prisma {
     companyName?: true
     oib?: true
     vatNumber?: true
+    vatCountryCode?: true
     address?: true
     city?: true
     postalCode?: true
@@ -10349,6 +10354,7 @@ export namespace Prisma {
     companyName?: true
     oib?: true
     vatNumber?: true
+    vatCountryCode?: true
     address?: true
     city?: true
     postalCode?: true
@@ -10441,6 +10447,7 @@ export namespace Prisma {
     companyName: string
     oib: string | null
     vatNumber: string | null
+    vatCountryCode: string | null
     address: string | null
     city: string | null
     postalCode: string | null
@@ -10477,6 +10484,7 @@ export namespace Prisma {
     companyName?: boolean
     oib?: boolean
     vatNumber?: boolean
+    vatCountryCode?: boolean
     address?: boolean
     city?: boolean
     postalCode?: boolean
@@ -10499,6 +10507,7 @@ export namespace Prisma {
     companyName?: boolean
     oib?: boolean
     vatNumber?: boolean
+    vatCountryCode?: boolean
     address?: boolean
     city?: boolean
     postalCode?: boolean
@@ -10519,6 +10528,7 @@ export namespace Prisma {
     companyName?: boolean
     oib?: boolean
     vatNumber?: boolean
+    vatCountryCode?: boolean
     address?: boolean
     city?: boolean
     postalCode?: boolean
@@ -10539,6 +10549,7 @@ export namespace Prisma {
     companyName?: boolean
     oib?: boolean
     vatNumber?: boolean
+    vatCountryCode?: boolean
     address?: boolean
     city?: boolean
     postalCode?: boolean
@@ -10552,7 +10563,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "companyName" | "oib" | "vatNumber" | "address" | "city" | "postalCode" | "contactFirstName" | "contactLastName" | "email" | "phone" | "iban" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+  export type ClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "companyName" | "oib" | "vatNumber" | "vatCountryCode" | "address" | "city" | "postalCode" | "contactFirstName" | "contactLastName" | "email" | "phone" | "iban" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
   export type ClientInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     invoices?: boolean | Client$invoicesArgs<ExtArgs>
@@ -10577,6 +10588,7 @@ export namespace Prisma {
       companyName: string
       oib: string | null
       vatNumber: string | null
+      vatCountryCode: string | null
       address: string | null
       city: string | null
       postalCode: string | null
@@ -11018,6 +11030,7 @@ export namespace Prisma {
     readonly companyName: FieldRef<"Client", 'String'>
     readonly oib: FieldRef<"Client", 'String'>
     readonly vatNumber: FieldRef<"Client", 'String'>
+    readonly vatCountryCode: FieldRef<"Client", 'String'>
     readonly address: FieldRef<"Client", 'String'>
     readonly city: FieldRef<"Client", 'String'>
     readonly postalCode: FieldRef<"Client", 'String'>
@@ -17591,6 +17604,7 @@ export namespace Prisma {
     companyName: 'companyName',
     oib: 'oib',
     vatNumber: 'vatNumber',
+    vatCountryCode: 'vatCountryCode',
     address: 'address',
     city: 'city',
     postalCode: 'postalCode',
@@ -18467,6 +18481,7 @@ export namespace Prisma {
     companyName?: StringFilter<"Client"> | string
     oib?: StringNullableFilter<"Client"> | string | null
     vatNumber?: StringNullableFilter<"Client"> | string | null
+    vatCountryCode?: StringNullableFilter<"Client"> | string | null
     address?: StringNullableFilter<"Client"> | string | null
     city?: StringNullableFilter<"Client"> | string | null
     postalCode?: StringNullableFilter<"Client"> | string | null
@@ -18488,6 +18503,7 @@ export namespace Prisma {
     companyName?: SortOrder
     oib?: SortOrderInput | SortOrder
     vatNumber?: SortOrderInput | SortOrder
+    vatCountryCode?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     postalCode?: SortOrderInput | SortOrder
@@ -18512,6 +18528,7 @@ export namespace Prisma {
     companyName?: StringFilter<"Client"> | string
     oib?: StringNullableFilter<"Client"> | string | null
     vatNumber?: StringNullableFilter<"Client"> | string | null
+    vatCountryCode?: StringNullableFilter<"Client"> | string | null
     address?: StringNullableFilter<"Client"> | string | null
     city?: StringNullableFilter<"Client"> | string | null
     postalCode?: StringNullableFilter<"Client"> | string | null
@@ -18533,6 +18550,7 @@ export namespace Prisma {
     companyName?: SortOrder
     oib?: SortOrderInput | SortOrder
     vatNumber?: SortOrderInput | SortOrder
+    vatCountryCode?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     postalCode?: SortOrderInput | SortOrder
@@ -18558,6 +18576,7 @@ export namespace Prisma {
     companyName?: StringWithAggregatesFilter<"Client"> | string
     oib?: StringNullableWithAggregatesFilter<"Client"> | string | null
     vatNumber?: StringNullableWithAggregatesFilter<"Client"> | string | null
+    vatCountryCode?: StringNullableWithAggregatesFilter<"Client"> | string | null
     address?: StringNullableWithAggregatesFilter<"Client"> | string | null
     city?: StringNullableWithAggregatesFilter<"Client"> | string | null
     postalCode?: StringNullableWithAggregatesFilter<"Client"> | string | null
@@ -19701,6 +19720,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -19722,6 +19742,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -19741,6 +19762,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19762,6 +19784,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19782,6 +19805,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -19800,6 +19824,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19819,6 +19844,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20909,6 +20935,7 @@ export namespace Prisma {
     companyName?: SortOrder
     oib?: SortOrder
     vatNumber?: SortOrder
+    vatCountryCode?: SortOrder
     address?: SortOrder
     city?: SortOrder
     postalCode?: SortOrder
@@ -20928,6 +20955,7 @@ export namespace Prisma {
     companyName?: SortOrder
     oib?: SortOrder
     vatNumber?: SortOrder
+    vatCountryCode?: SortOrder
     address?: SortOrder
     city?: SortOrder
     postalCode?: SortOrder
@@ -20947,6 +20975,7 @@ export namespace Prisma {
     companyName?: SortOrder
     oib?: SortOrder
     vatNumber?: SortOrder
+    vatCountryCode?: SortOrder
     address?: SortOrder
     city?: SortOrder
     postalCode?: SortOrder
@@ -22547,6 +22576,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -22566,6 +22596,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -22882,6 +22913,7 @@ export namespace Prisma {
     companyName?: StringFilter<"Client"> | string
     oib?: StringNullableFilter<"Client"> | string | null
     vatNumber?: StringNullableFilter<"Client"> | string | null
+    vatCountryCode?: StringNullableFilter<"Client"> | string | null
     address?: StringNullableFilter<"Client"> | string | null
     city?: StringNullableFilter<"Client"> | string | null
     postalCode?: StringNullableFilter<"Client"> | string | null
@@ -23573,6 +23605,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -23593,6 +23626,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -23726,6 +23760,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23746,6 +23781,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24177,6 +24213,7 @@ export namespace Prisma {
     companyName: string
     oib?: string | null
     vatNumber?: string | null
+    vatCountryCode?: string | null
     address?: string | null
     city?: string | null
     postalCode?: string | null
@@ -24318,6 +24355,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24337,6 +24375,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24356,6 +24395,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     oib?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    vatCountryCode?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null

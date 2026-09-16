@@ -57,7 +57,17 @@ export default async function ClientPage({
 							<div className="mt-4">
 								<CardContentRow>
 									<span className="text-muted text-sm">Ukupno fakturirano</span>
-									<span className="text-sm font-mono">5.340,00 €</span>
+									<span className="text-sm font-mono">
+										{client?.invoices
+											.reduce(
+												(total, invoice) => total + invoice.totalAmount,
+												0,
+											)
+											.toLocaleString("hr-HR", {
+												style: "currency",
+												currency: "EUR",
+											})}
+									</span>
 								</CardContentRow>
 								<CardContentRow>
 									<span className="text-muted text-sm">Kontakt osoba</span>
@@ -67,11 +77,19 @@ export default async function ClientPage({
 								</CardContentRow>
 								<CardContentRow>
 									<span className="text-muted text-sm">Zadnji račun</span>
-									<span className="text-sm font-mono">14.08.2026.</span>
+									<span className="text-sm font-mono">
+										{client?.invoices.length
+											? new Date(
+													client.invoices[client.invoices.length - 1].issueDate,
+												).toLocaleDateString("hr-HR")
+											: "-"}
+									</span>
 								</CardContentRow>
 								<CardContentRow>
 									<span className="text-muted text-sm">Broj računa</span>
-									<span className="text-sm font-mono">7</span>
+									<span className="text-sm font-mono">
+										{client?.invoices.length || 0}
+									</span>
 								</CardContentRow>
 							</div>
 						</CardContent>

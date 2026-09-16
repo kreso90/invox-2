@@ -1,3 +1,7 @@
-import type { Client as PrismaClient } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
 
-export type Client = PrismaClient;
+export type Client = Prisma.ClientGetPayload<{
+	include: {
+		invoices: true;
+	};
+}>;

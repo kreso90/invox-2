@@ -220,6 +220,7 @@ exports.Prisma.ClientScalarFieldEnum = {
   companyName: 'companyName',
   oib: 'oib',
   vatNumber: 'vatNumber',
+  vatCountryCode: 'vatCountryCode',
   address: 'address',
   city: 'city',
   postalCode: 'postalCode',
