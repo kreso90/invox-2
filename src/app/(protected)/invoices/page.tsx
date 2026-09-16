@@ -125,21 +125,21 @@ export default async function InvoicesPage({
 									{invoice.client.companyName}
 								</TableCell>
 								<TableCell className="font-mono">
-									{invoice.dueDate
-										? new Intl.DateTimeFormat("hr-HR", {
-												day: "numeric",
-												month: "numeric",
-												year: "numeric",
-											}).format(new Date(invoice.dueDate))
-										: "N/A"}
-								</TableCell>
-								<TableCell className="font-mono">
 									{invoice.issueDate
 										? new Intl.DateTimeFormat("hr-HR", {
 												day: "numeric",
 												month: "numeric",
 												year: "numeric",
 											}).format(new Date(invoice.issueDate))
+										: "N/A"}
+								</TableCell>
+								<TableCell className="font-mono">
+									{invoice.dueDate
+										? new Intl.DateTimeFormat("hr-HR", {
+												day: "numeric",
+												month: "numeric",
+												year: "numeric",
+											}).format(new Date(invoice.dueDate))
 										: "N/A"}
 								</TableCell>
 								<TableCell className="font-mono font-medium">
@@ -203,7 +203,9 @@ export default async function InvoicesPage({
 						<Link
 							key={index}
 							href={`?page=${index + 1}${status ? `&status=${status}` : ""}${search ? `&search=${encodeURIComponent(search)}` : ""}`}
-							className="px-3 py-1 border rounded hover:bg-white"
+							className={`px-3 py-1 border rounded hover:bg-white ${
+								page === index + 1 ? "bg-white" : ""
+							}`}
 						>
 							{index + 1}
 						</Link>

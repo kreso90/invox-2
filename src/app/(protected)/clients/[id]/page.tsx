@@ -44,11 +44,14 @@ export default async function ClientPage({
 									surname={client?.contactLastName || ""}
 									className="rounded-lg bg-primary text-white"
 								/>
+
 								<div className="flex flex-col">
 									<p className="text-sm font-semibold">{client?.companyName}</p>
-									<span className="text-muted text-xs font-mono">
-										OIB: {client?.oib}
-									</span>
+									{client?.oib && (
+										<span className="text-muted text-xs font-mono">
+											OIB: {client?.oib}
+										</span>
+									)}
 								</div>
 							</div>
 							<div className="mt-4">

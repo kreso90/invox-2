@@ -32,6 +32,7 @@ export async function getInvoices(
 	pageSize?: number,
 	status?: InvoiceFilterStatus,
 	date?: Date,
+	clientId?: string,
 ) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -44,6 +45,7 @@ export async function getInvoices(
 	const normalizedSearch = search?.trim();
 	const where: Prisma.InvoiceWhereInput = {
 		userId: session.user.id,
+		...(clientId ? { clientId } : {}),
 		...(normalizedSearch
 			? {
 					OR: [

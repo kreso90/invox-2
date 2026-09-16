@@ -737,6 +737,12 @@ export default function InvoiceForm({
 											<br />
 										</>
 									)}
+									{selectedClient?.vatNumber && (
+										<>
+											PDV: {selectedClient?.vatNumber}
+											<br />
+										</>
+									)}
 								</span>
 							</div>
 						) : null}

@@ -115,12 +115,6 @@ export async function createBusiness(prevState: unknown, formData: FormData) {
 
 	const get = (key: string) => (data[key] as string) || undefined;
 
-	const annualRevenue = Number(get("annualRevenue"));
-	const mio1MonthlyAmount = Number(get("mio1MonthlyAmount"));
-	const mio2MonthlyAmount = Number(get("mio2MonthlyAmount"));
-	const healthInsuranceMonthly = Number(get("healthInsuranceMonthly"));
-	const incomeTaxQuarterly = Number(get("incomeTaxQuarterly"));
-
 	try {
 		const business = await prisma.business.upsert({
 			where: {
@@ -128,6 +122,9 @@ export async function createBusiness(prevState: unknown, formData: FormData) {
 			},
 			update: {
 				business_name: get("businessName")!,
+				ownerFirstName: get("ownerFirstName")!,
+				ownerLastName: get("ownerLastName")!,
+				houseNumber: get("houseNumber")!,
 				oib: get("oib")!,
 				vatId: get("vatNumber") || null,
 				street: get("address")!,
@@ -137,26 +134,14 @@ export async function createBusiness(prevState: unknown, formData: FormData) {
 				activity_name: get("activityName") || null,
 				email: get("email")!,
 				iban: get("iban") || null,
-				annual_threshold: annualRevenue
-					? parseFloat(get("annualRevenue")!)
-					: null,
 				bankName: get("bankName") || null,
 				swiftCode: get("swiftCode") || null,
-				mio1MonthlyAmount: mio1MonthlyAmount
-					? parseFloat(get("mio1MonthlyAmount")!)
-					: 0,
-				mio2MonthlyAmount: mio2MonthlyAmount
-					? parseFloat(get("mio2MonthlyAmount")!)
-					: 0,
-				healthInsuranceMonthly: healthInsuranceMonthly
-					? parseFloat(get("healthInsuranceMonthly")!)
-					: 0,
-				incomeTaxQuarterly: incomeTaxQuarterly
-					? parseFloat(get("incomeTaxQuarterly")!)
-					: 0,
 			},
 			create: {
 				business_name: get("businessName")!,
+				ownerFirstName: get("ownerFirstName")!,
+				ownerLastName: get("ownerLastName")!,
+				houseNumber: get("houseNumber")!,
 				oib: get("oib")!,
 				vatId: get("vatNumber") || null,
 				street: get("address")!,
@@ -165,9 +150,6 @@ export async function createBusiness(prevState: unknown, formData: FormData) {
 				activity_code: get("businessCode") || null,
 				activity_name: get("activityName") || null,
 				email: get("email")!,
-				annual_threshold: annualRevenue
-					? parseFloat(get("annualRevenue")!)
-					: null,
 				iban: get("iban") || null,
 				bankName: get("bankName") || null,
 				swiftCode: get("swiftCode") || null,

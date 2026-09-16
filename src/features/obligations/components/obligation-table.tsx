@@ -382,6 +382,7 @@ export function ObligationTable({
 					return invoicePeriodLabel === selectedObligation.periodLabel;
 				})}
 				business={business}
+				user={user}
 				onClose={() => setSelectedFormObligationId(null)}
 			/>
 		</>

@@ -2,11 +2,13 @@ import { AvatarPlaceholder } from "@/components/ui/avatar-placeholder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardContentRow } from "@/components/ui/card";
 import { getUserClients } from "@/features/clients/queries";
+import { getInvoices } from "@/features/invoices/queries";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
 export default async function ClientsPage() {
 	const clients = await getUserClients();
+	const clientInvoices = await getInvoices();
 
 	return (
 		<>
@@ -41,9 +43,11 @@ export default async function ClientsPage() {
 										<p className="text-sm font-semibold">
 											{client.companyName}
 										</p>
-										<span className="text-muted text-xs font-mono">
-											OIB: {client.oib}
-										</span>
+										{client.oib && (
+											<span className="text-muted text-xs font-mono">
+												OIB: {client.oib}
+											</span>
+										)}
 									</div>
 								</div>
 								<div className="mt-4">

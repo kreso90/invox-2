@@ -100,9 +100,12 @@ model PasswordResetToken {
 model Business {
   id                     String   @id @default(cuid())
   business_name          String
+  ownerFirstName         String?
+  ownerLastName          String?
   oib                    String
   vatId                  String?
   street                 String
+  houseNumber            String?
   city                   String
   postalCode             String
   country                String   @default("HR")

@@ -184,9 +184,12 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
 exports.Prisma.BusinessScalarFieldEnum = {
   id: 'id',
   business_name: 'business_name',
+  ownerFirstName: 'ownerFirstName',
+  ownerLastName: 'ownerLastName',
   oib: 'oib',
   vatId: 'vatId',
   street: 'street',
+  houseNumber: 'houseNumber',
   city: 'city',
   postalCode: 'postalCode',
   country: 'country',

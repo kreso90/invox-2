@@ -214,8 +214,10 @@ export function InvoicePDF({ invoice, business, client, user, language }) {
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.toName}>{client.companyName}</Text>
-            <Text>{[client.address, [client.postalCode, client.city].filter(Boolean).join(' ')].filter(Boolean).join(', ')}</Text>
-            <Text><Text style={styles.label}>OIB:</Text> {client.oib ?? '-'}</Text>
+            <Text>{client.address},</Text>
+            <Text style={{ marginBottom: 4 }}>{client.postalCode} {''} {client.city}</Text>
+            
+            {client.oib && <Text><Text style={styles.label}>OIB:</Text> {client.oib ?? '-'}</Text>}
             {client.vatNumber && <Text><Text style={styles.label}>{labels.vatNumber}:</Text> {client.vatNumber}</Text>}
           </View>
       

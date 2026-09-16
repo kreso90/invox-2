@@ -8827,9 +8827,12 @@ export namespace Prisma {
   export type BusinessMinAggregateOutputType = {
     id: string | null
     business_name: string | null
+    ownerFirstName: string | null
+    ownerLastName: string | null
     oib: string | null
     vatId: string | null
     street: string | null
+    houseNumber: string | null
     city: string | null
     postalCode: string | null
     country: string | null
@@ -8857,9 +8860,12 @@ export namespace Prisma {
   export type BusinessMaxAggregateOutputType = {
     id: string | null
     business_name: string | null
+    ownerFirstName: string | null
+    ownerLastName: string | null
     oib: string | null
     vatId: string | null
     street: string | null
+    houseNumber: string | null
     city: string | null
     postalCode: string | null
     country: string | null
@@ -8887,9 +8893,12 @@ export namespace Prisma {
   export type BusinessCountAggregateOutputType = {
     id: number
     business_name: number
+    ownerFirstName: number
+    ownerLastName: number
     oib: number
     vatId: number
     street: number
+    houseNumber: number
     city: number
     postalCode: number
     country: number
@@ -8937,9 +8946,12 @@ export namespace Prisma {
   export type BusinessMinAggregateInputType = {
     id?: true
     business_name?: true
+    ownerFirstName?: true
+    ownerLastName?: true
     oib?: true
     vatId?: true
     street?: true
+    houseNumber?: true
     city?: true
     postalCode?: true
     country?: true
@@ -8967,9 +8979,12 @@ export namespace Prisma {
   export type BusinessMaxAggregateInputType = {
     id?: true
     business_name?: true
+    ownerFirstName?: true
+    ownerLastName?: true
     oib?: true
     vatId?: true
     street?: true
+    houseNumber?: true
     city?: true
     postalCode?: true
     country?: true
@@ -8997,9 +9012,12 @@ export namespace Prisma {
   export type BusinessCountAggregateInputType = {
     id?: true
     business_name?: true
+    ownerFirstName?: true
+    ownerLastName?: true
     oib?: true
     vatId?: true
     street?: true
+    houseNumber?: true
     city?: true
     postalCode?: true
     country?: true
@@ -9114,9 +9132,12 @@ export namespace Prisma {
   export type BusinessGroupByOutputType = {
     id: string
     business_name: string
+    ownerFirstName: string | null
+    ownerLastName: string | null
     oib: string
     vatId: string | null
     street: string
+    houseNumber: string | null
     city: string
     postalCode: string
     country: string
@@ -9163,9 +9184,12 @@ export namespace Prisma {
   export type BusinessSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     business_name?: boolean
+    ownerFirstName?: boolean
+    ownerLastName?: boolean
     oib?: boolean
     vatId?: boolean
     street?: boolean
+    houseNumber?: boolean
     city?: boolean
     postalCode?: boolean
     country?: boolean
@@ -9194,9 +9218,12 @@ export namespace Prisma {
   export type BusinessSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     business_name?: boolean
+    ownerFirstName?: boolean
+    ownerLastName?: boolean
     oib?: boolean
     vatId?: boolean
     street?: boolean
+    houseNumber?: boolean
     city?: boolean
     postalCode?: boolean
     country?: boolean
@@ -9225,9 +9252,12 @@ export namespace Prisma {
   export type BusinessSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     business_name?: boolean
+    ownerFirstName?: boolean
+    ownerLastName?: boolean
     oib?: boolean
     vatId?: boolean
     street?: boolean
+    houseNumber?: boolean
     city?: boolean
     postalCode?: boolean
     country?: boolean
@@ -9256,9 +9286,12 @@ export namespace Prisma {
   export type BusinessSelectScalar = {
     id?: boolean
     business_name?: boolean
+    ownerFirstName?: boolean
+    ownerLastName?: boolean
     oib?: boolean
     vatId?: boolean
     street?: boolean
+    houseNumber?: boolean
     city?: boolean
     postalCode?: boolean
     country?: boolean
@@ -9283,7 +9316,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type BusinessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "business_name" | "oib" | "vatId" | "street" | "city" | "postalCode" | "country" | "email" | "phone" | "bankName" | "swiftCode" | "iban" | "description" | "activity_name" | "activity_code" | "annual_threshold" | "threshold_warning_pct" | "logo_url" | "taxClass" | "mio1MonthlyAmount" | "mio2MonthlyAmount" | "healthInsuranceMonthly" | "incomeTaxQuarterly" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["business"]>
+  export type BusinessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "business_name" | "ownerFirstName" | "ownerLastName" | "oib" | "vatId" | "street" | "houseNumber" | "city" | "postalCode" | "country" | "email" | "phone" | "bankName" | "swiftCode" | "iban" | "description" | "activity_name" | "activity_code" | "annual_threshold" | "threshold_warning_pct" | "logo_url" | "taxClass" | "mio1MonthlyAmount" | "mio2MonthlyAmount" | "healthInsuranceMonthly" | "incomeTaxQuarterly" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["business"]>
   export type BusinessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -9302,9 +9335,12 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       business_name: string
+      ownerFirstName: string | null
+      ownerLastName: string | null
       oib: string
       vatId: string | null
       street: string
+      houseNumber: string | null
       city: string
       postalCode: string
       country: string
@@ -9753,9 +9789,12 @@ export namespace Prisma {
   interface BusinessFieldRefs {
     readonly id: FieldRef<"Business", 'String'>
     readonly business_name: FieldRef<"Business", 'String'>
+    readonly ownerFirstName: FieldRef<"Business", 'String'>
+    readonly ownerLastName: FieldRef<"Business", 'String'>
     readonly oib: FieldRef<"Business", 'String'>
     readonly vatId: FieldRef<"Business", 'String'>
     readonly street: FieldRef<"Business", 'String'>
+    readonly houseNumber: FieldRef<"Business", 'String'>
     readonly city: FieldRef<"Business", 'String'>
     readonly postalCode: FieldRef<"Business", 'String'>
     readonly country: FieldRef<"Business", 'String'>
@@ -17513,9 +17552,12 @@ export namespace Prisma {
   export const BusinessScalarFieldEnum: {
     id: 'id',
     business_name: 'business_name',
+    ownerFirstName: 'ownerFirstName',
+    ownerLastName: 'ownerLastName',
     oib: 'oib',
     vatId: 'vatId',
     street: 'street',
+    houseNumber: 'houseNumber',
     city: 'city',
     postalCode: 'postalCode',
     country: 'country',
@@ -18240,9 +18282,12 @@ export namespace Prisma {
     NOT?: BusinessWhereInput | BusinessWhereInput[]
     id?: StringFilter<"Business"> | string
     business_name?: StringFilter<"Business"> | string
+    ownerFirstName?: StringNullableFilter<"Business"> | string | null
+    ownerLastName?: StringNullableFilter<"Business"> | string | null
     oib?: StringFilter<"Business"> | string
     vatId?: StringNullableFilter<"Business"> | string | null
     street?: StringFilter<"Business"> | string
+    houseNumber?: StringNullableFilter<"Business"> | string | null
     city?: StringFilter<"Business"> | string
     postalCode?: StringFilter<"Business"> | string
     country?: StringFilter<"Business"> | string
@@ -18271,9 +18316,12 @@ export namespace Prisma {
   export type BusinessOrderByWithRelationInput = {
     id?: SortOrder
     business_name?: SortOrder
+    ownerFirstName?: SortOrderInput | SortOrder
+    ownerLastName?: SortOrderInput | SortOrder
     oib?: SortOrder
     vatId?: SortOrderInput | SortOrder
     street?: SortOrder
+    houseNumber?: SortOrderInput | SortOrder
     city?: SortOrder
     postalCode?: SortOrder
     country?: SortOrder
@@ -18306,9 +18354,12 @@ export namespace Prisma {
     OR?: BusinessWhereInput[]
     NOT?: BusinessWhereInput | BusinessWhereInput[]
     business_name?: StringFilter<"Business"> | string
+    ownerFirstName?: StringNullableFilter<"Business"> | string | null
+    ownerLastName?: StringNullableFilter<"Business"> | string | null
     oib?: StringFilter<"Business"> | string
     vatId?: StringNullableFilter<"Business"> | string | null
     street?: StringFilter<"Business"> | string
+    houseNumber?: StringNullableFilter<"Business"> | string | null
     city?: StringFilter<"Business"> | string
     postalCode?: StringFilter<"Business"> | string
     country?: StringFilter<"Business"> | string
@@ -18336,9 +18387,12 @@ export namespace Prisma {
   export type BusinessOrderByWithAggregationInput = {
     id?: SortOrder
     business_name?: SortOrder
+    ownerFirstName?: SortOrderInput | SortOrder
+    ownerLastName?: SortOrderInput | SortOrder
     oib?: SortOrder
     vatId?: SortOrderInput | SortOrder
     street?: SortOrder
+    houseNumber?: SortOrderInput | SortOrder
     city?: SortOrder
     postalCode?: SortOrder
     country?: SortOrder
@@ -18374,9 +18428,12 @@ export namespace Prisma {
     NOT?: BusinessScalarWhereWithAggregatesInput | BusinessScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Business"> | string
     business_name?: StringWithAggregatesFilter<"Business"> | string
+    ownerFirstName?: StringNullableWithAggregatesFilter<"Business"> | string | null
+    ownerLastName?: StringNullableWithAggregatesFilter<"Business"> | string | null
     oib?: StringWithAggregatesFilter<"Business"> | string
     vatId?: StringNullableWithAggregatesFilter<"Business"> | string | null
     street?: StringWithAggregatesFilter<"Business"> | string
+    houseNumber?: StringNullableWithAggregatesFilter<"Business"> | string | null
     city?: StringWithAggregatesFilter<"Business"> | string
     postalCode?: StringWithAggregatesFilter<"Business"> | string
     country?: StringWithAggregatesFilter<"Business"> | string
@@ -19412,9 +19469,12 @@ export namespace Prisma {
   export type BusinessCreateInput = {
     id?: string
     business_name: string
+    ownerFirstName?: string | null
+    ownerLastName?: string | null
     oib: string
     vatId?: string | null
     street: string
+    houseNumber?: string | null
     city: string
     postalCode: string
     country?: string
@@ -19442,9 +19502,12 @@ export namespace Prisma {
   export type BusinessUncheckedCreateInput = {
     id?: string
     business_name: string
+    ownerFirstName?: string | null
+    ownerLastName?: string | null
     oib: string
     vatId?: string | null
     street: string
+    houseNumber?: string | null
     city: string
     postalCode: string
     country?: string
@@ -19472,9 +19535,12 @@ export namespace Prisma {
   export type BusinessUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
+    ownerFirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerLastName?: NullableStringFieldUpdateOperationsInput | string | null
     oib?: StringFieldUpdateOperationsInput | string
     vatId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
     city?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
@@ -19502,9 +19568,12 @@ export namespace Prisma {
   export type BusinessUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
+    ownerFirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerLastName?: NullableStringFieldUpdateOperationsInput | string | null
     oib?: StringFieldUpdateOperationsInput | string
     vatId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
     city?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
@@ -19532,9 +19601,12 @@ export namespace Prisma {
   export type BusinessCreateManyInput = {
     id?: string
     business_name: string
+    ownerFirstName?: string | null
+    ownerLastName?: string | null
     oib: string
     vatId?: string | null
     street: string
+    houseNumber?: string | null
     city: string
     postalCode: string
     country?: string
@@ -19562,9 +19634,12 @@ export namespace Prisma {
   export type BusinessUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
+    ownerFirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerLastName?: NullableStringFieldUpdateOperationsInput | string | null
     oib?: StringFieldUpdateOperationsInput | string
     vatId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
     city?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
@@ -19591,9 +19666,12 @@ export namespace Prisma {
   export type BusinessUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
+    ownerFirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerLastName?: NullableStringFieldUpdateOperationsInput | string | null
     oib?: StringFieldUpdateOperationsInput | string
     vatId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
     city?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
@@ -20669,9 +20747,12 @@ export namespace Prisma {
   export type BusinessCountOrderByAggregateInput = {
     id?: SortOrder
     business_name?: SortOrder
+    ownerFirstName?: SortOrder
+    ownerLastName?: SortOrder
     oib?: SortOrder
     vatId?: SortOrder
     street?: SortOrder
+    houseNumber?: SortOrder
     city?: SortOrder
     postalCode?: SortOrder
     country?: SortOrder
@@ -20708,9 +20789,12 @@ export namespace Prisma {
   export type BusinessMaxOrderByAggregateInput = {
     id?: SortOrder
     business_name?: SortOrder
+    ownerFirstName?: SortOrder
+    ownerLastName?: SortOrder
     oib?: SortOrder
     vatId?: SortOrder
     street?: SortOrder
+    houseNumber?: SortOrder
     city?: SortOrder
     postalCode?: SortOrder
     country?: SortOrder
@@ -20738,9 +20822,12 @@ export namespace Prisma {
   export type BusinessMinOrderByAggregateInput = {
     id?: SortOrder
     business_name?: SortOrder
+    ownerFirstName?: SortOrder
+    ownerLastName?: SortOrder
     oib?: SortOrder
     vatId?: SortOrder
     street?: SortOrder
+    houseNumber?: SortOrder
     city?: SortOrder
     postalCode?: SortOrder
     country?: SortOrder
@@ -22389,9 +22476,12 @@ export namespace Prisma {
   export type BusinessCreateWithoutUserInput = {
     id?: string
     business_name: string
+    ownerFirstName?: string | null
+    ownerLastName?: string | null
     oib: string
     vatId?: string | null
     street: string
+    houseNumber?: string | null
     city: string
     postalCode: string
     country?: string
@@ -22418,9 +22508,12 @@ export namespace Prisma {
   export type BusinessUncheckedCreateWithoutUserInput = {
     id?: string
     business_name: string
+    ownerFirstName?: string | null
+    ownerLastName?: string | null
     oib: string
     vatId?: string | null
     street: string
+    houseNumber?: string | null
     city: string
     postalCode: string
     country?: string
@@ -22703,9 +22796,12 @@ export namespace Prisma {
   export type BusinessUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
+    ownerFirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerLastName?: NullableStringFieldUpdateOperationsInput | string | null
     oib?: StringFieldUpdateOperationsInput | string
     vatId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
     city?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
@@ -22732,9 +22828,12 @@ export namespace Prisma {
   export type BusinessUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
+    ownerFirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerLastName?: NullableStringFieldUpdateOperationsInput | string | null
     oib?: StringFieldUpdateOperationsInput | string
     vatId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
     city?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
     country?: StringFieldUpdateOperationsInput | string
