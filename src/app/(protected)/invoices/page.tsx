@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { getCurrentSettings } from "@/features/settings/queries";
 import {
 	Table,
 	TableBody,
@@ -22,11 +16,12 @@ import {
 	statusLabels,
 } from "@/features/invoices/constants";
 import { getInvoices } from "@/features/invoices/queries";
-import { Edit2, MoreHorizontalIcon, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
-import InvoiceDeleteForm from "@/features/invoices/components/invoice-delete-form";
 import { Badge } from "@/components/ui/badge";
 import { getEffectiveStatus } from "@/features/invoices/utils";
+import { InvoiceActions } from "@/features/invoices/components/invoice-actions";
+import { getCurrentBusiness } from "@/features/business/queries";
 
 export default async function InvoicesPage({
 	searchParams,
@@ -41,7 +36,8 @@ export default async function InvoicesPage({
 	const page = Math.max(Number((await searchParams).page) || 1, 1);
 
 	const result = await getInvoices(search, page, 10, status);
-	const clients = await getUserClients();
+	const settingsData = await getCurrentSettings();
+	const businessData = await getCurrentBusiness();
 
 	return (
 		<>
@@ -165,38 +161,18 @@ export default async function InvoicesPage({
 									</Badge>
 								</TableCell>
 								<TableCell className="text-right">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" className="size-8">
-													<MoreHorizontalIcon />
-													<span className="sr-only">Open menu</span>
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end">
-											<DropdownMenuItem>
-												<Link
-													href={`/invoices/${invoice.id}`}
-													className="flex w-full"
-												>
-													<Edit2 className="mr-2" />
-													Uredi
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuSeparator />
-											<InvoiceDeleteForm
-												invoiceId={invoice.id}
-												variant="ghost"
-											/>
-										</DropdownMenuContent>
-									</DropdownMenu>
+									<InvoiceActions
+										invoiceData={invoice}
+										settingsData={settingsData}
+										businessData={businessData}
+									/>
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
 			</Card>
+
 			{(result.totalPages ?? 1) > 1 && (
 				<div className="flex justify-center mt-8 gap-2">
 					{Array.from({ length: result.totalPages ?? 0 }).map((_, index) => (

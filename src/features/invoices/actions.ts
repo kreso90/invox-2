@@ -8,6 +8,12 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { PaymentType, ObligationKind } from "@/generated/prisma";
+import { Resend } from "resend";
+import { createElement } from "react";
+import { renderToBuffer } from "@react-pdf/renderer";
+import { InvoicePDF } from "./components/invoice-pdf";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const EU_COUNTRY_CODES = [
 	"AT",
@@ -335,4 +341,141 @@ export async function deletePayment(prevState: any, formData: FormData) {
 	});
 
 	revalidatePath(`/invoices/${invoiceId}`);
+}
+
+export async function sendInvoiceEmail(prevState: any, formData: FormData) {
+	const invoiceId = formData.get("invoiceId") as string;
+	const emailRecipient = (
+		formData.get("emailRecipient") as string | null
+	)?.trim();
+	const emailSenderName = (
+		formData.get("emailSenderName") as string | null
+	)?.trim();
+	const emailReplyTo = (formData.get("emailReplyTo") as string | null)?.trim();
+	const emailSubjectTemplate = (
+		formData.get("emailSubjectTemplate") as string | null
+	)?.trim();
+	const emailBodyTemplate = (
+		formData.get("emailBodyTemplate") as string | null
+	)?.trim();
+
+	const files = formData
+		.getAll("file")
+		.filter((file): file is File => file instanceof File && file.size > 0);
+	console.log("Files to be attached:", files);
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session?.user?.id) {
+		return {
+			status: "error",
+			message: "Korisnik nije logiran",
+		};
+	}
+
+	if (!invoiceId) {
+		return {
+			status: "error",
+			message: "Račun nije pronađen",
+		};
+	}
+
+	if (!emailRecipient || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRecipient)) {
+		return {
+			status: "error",
+			message: "Unesite valjanu email adresu",
+		};
+	}
+
+	const invoice = await prisma.invoice.findFirst({
+		where: {
+			id: invoiceId,
+			userId: session.user.id,
+		},
+		include: {
+			client: true,
+			invoiceItems: true,
+			user: {
+				select: {
+					name: true,
+					business: true,
+				},
+			},
+		},
+	});
+
+	if (!invoice || !invoice.user.business) {
+		return {
+			status: "error",
+			message: "Račun ili podaci poslovanja nisu pronađeni",
+		};
+	}
+
+	try {
+		const business = invoice.user.business;
+
+		const pdf = await renderToBuffer(
+			createElement(InvoicePDF, {
+				invoice,
+				client: invoice.client,
+				business: {
+					...business,
+					bank: business.bankName,
+					swift: business.swiftCode,
+				},
+				user: invoice.user,
+				language: "hr",
+			}),
+		);
+
+		const invoiceFilename = `racun-${invoice.invoiceNumber.replace(
+			/[\/:*?"<>|]/g,
+			"-",
+		)}.pdf`;
+
+		const attachments = [
+			{
+				filename: invoiceFilename,
+				content: pdf,
+				contentType: "application/pdf",
+			},
+			...(await Promise.all(
+				files.map(async (file) => ({
+					filename: file.name,
+					content: Buffer.from(await file.arrayBuffer()),
+					contentType: file.type || "application/octet-stream",
+				})),
+			)),
+		];
+
+		const { error } = await resend.emails.send({
+			from: "onboarding@resend.dev",
+			to: [emailRecipient],
+			subject: emailSubjectTemplate ?? "",
+			html: emailBodyTemplate ?? "",
+			attachments,
+		});
+
+		if (error) {
+			console.error("Resend error:", error);
+
+			return {
+				status: "error",
+				message: "Slanje emaila nije uspjelo",
+			};
+		}
+
+		return {
+			status: "success",
+			message: "Email je poslan",
+		};
+	} catch (error) {
+		console.error("Send invoice email error:", error);
+
+		return {
+			status: "error",
+			message: "Slanje emaila nije uspjelo",
+		};
+	}
 }

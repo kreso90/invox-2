@@ -6,6 +6,7 @@ import { getCurrentBusiness } from "@/features/business/queries";
 import { getCurrentSettings } from "@/features/settings/queries";
 import { userAgentFromString } from "next/server";
 import { headers } from "next/headers";
+import EmailSettingsForm from "@/features/settings/components/email-settings-form";
 
 export default async function SettingsPage() {
 	const [settingsData, businessData] = await Promise.all([
@@ -36,6 +37,7 @@ export default async function SettingsPage() {
 					<TabsTrigger value="business_profile">Podaci o obrtu</TabsTrigger>
 					<TabsTrigger value="tax">Paušalno oporezivanje</TabsTrigger>
 					<TabsTrigger value="invoice">Postavke računa</TabsTrigger>
+					<TabsTrigger value="email">Postavke emaila</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value="business_profile">
@@ -45,7 +47,10 @@ export default async function SettingsPage() {
 					<TaxForm businessData={businessData} />
 				</TabsContent>
 				<TabsContent value="invoice">
-					<InvoiceSettingsForm currentSettings={settingsData} />
+					<InvoiceSettingsForm settingsData={settingsData} />
+				</TabsContent>
+				<TabsContent value="email">
+					<EmailSettingsForm settingsData={settingsData} />
 				</TabsContent>
 			</Tabs>
 		</>

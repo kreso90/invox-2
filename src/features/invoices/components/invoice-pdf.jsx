@@ -71,20 +71,26 @@ const translations = {
     },
   },
 };
+
+const fontSource = (fileName) =>
+  typeof window === 'undefined'
+    ? `${process.cwd()}/public/fonts/${fileName}`
+    : `/fonts/${fileName}`;
+
 Font.register({
   family: 'IBM Plex Sans',
   fonts: [
-    { src: '/fonts/IBMPlexSans-Regular.ttf', fontWeight: 400 },
-    { src: '/fonts/IBMPlexSans-SemiBold.ttf', fontWeight: 600 },
-    { src: '/fonts/IBMPlexSans-Bold.ttf', fontWeight: 700 },
+    { src: fontSource('IBMPlexSans-Regular.ttf'), fontWeight: 400 },
+    { src: fontSource('IBMPlexSans-SemiBold.ttf'), fontWeight: 600 },
+    { src: fontSource('IBMPlexSans-Bold.ttf'), fontWeight: 700 },
   ],
 });
 
 Font.register({
   family: 'IBM Plex Mono',
   fonts: [
-    { src: '/fonts/IBMPlexMono-Regular.ttf', fontWeight: 400 },
-    { src: '/fonts/IBMPlexMono-SemiBold.ttf', fontWeight: 600 },
+    { src: fontSource('IBMPlexMono-Regular.ttf'), fontWeight: 400 },
+    { src: fontSource('IBMPlexMono-SemiBold.ttf'), fontWeight: 600 },
   ],
 });
 
@@ -218,7 +224,7 @@ export function InvoicePDF({ invoice, business, client, user, language }) {
             <Text style={{ marginBottom: 4 }}>{client.postalCode} {''} {client.city}</Text>
             
             {client.oib && <Text><Text style={styles.label}>OIB:</Text> {client.oib ?? '-'}</Text>}
-            {client.vatNumber && <Text><Text style={styles.label}>{labels.vatNumber}:</Text> {client.vatNumber}</Text>}
+            {client.vatNumber && <Text><Text style={styles.label}>{labels.vatNumber}:</Text>{client.vatCountryCode}{client.vatNumber}</Text>}
           </View>
       
           <View>

@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Client } from "@/features/clients/types";
-import { PaymentType, Unit, User } from "@/generated/prisma";
+import { PaymentType, Prisma, Unit, User } from "@/generated/prisma";
 import { useActionState, useEffect, useState } from "react";
 import { ArrowDownToLine, Plus, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,11 +42,7 @@ import Link from "next/link";
 import { getEffectiveStatus } from "../utils";
 import { statusLabels, paymentLabels } from "../constants";
 import { Badge } from "@/components/ui/badge";
-import {
-	Progress,
-	ProgressLabel,
-	ProgressValue,
-} from "@/components/ui/progress";
+import { Progress, ProgressValue } from "@/components/ui/progress";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -58,14 +54,11 @@ import { unitLabelsShort } from "@/features/articles/constants";
 import {
 	Popover,
 	PopoverContent,
-	PopoverDescription,
-	PopoverHeader,
-	PopoverTitle,
 	PopoverTrigger,
 } from "@/components/ui/popover";
 
 interface InvoiceFormProps {
-	invoiceData: Invoice | null;
+	invoiceData: InvoiceWithClient | null;
 	clientsData: Client[];
 	articlesData: Article[];
 	businessData: Business | null;
@@ -81,6 +74,10 @@ type DraftInvoiceItem = {
 	unit?: Unit;
 	unitPrice: string;
 };
+
+type InvoiceWithClient = Prisma.InvoiceGetPayload<{
+	include: { client: true; invoicePayments: true; invoiceItems: true };
+}>;
 
 function formatDateInput(value: Date | string | undefined) {
 	return value ? new Date(value).toISOString().split("T")[0] : "";

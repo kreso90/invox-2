@@ -31,6 +31,7 @@ export default async function InvoicePage({
 			articlesData={articles ?? []}
 			businessData={business}
 			userData={user}
+			settingsData={null}
 		/>
 	);
 }

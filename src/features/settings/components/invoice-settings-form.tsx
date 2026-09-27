@@ -31,28 +31,28 @@ import { paymentLabels } from "@/features/invoices/constants";
 import { PaymentType, Settings } from "@/generated/prisma";
 import { Textarea } from "@/components/ui/textarea";
 
-interface InvoiceSettingsFormProps {
-	currentSettings: Settings | null;
+interface SettingsFormProps {
+	settingsData: Settings | null;
 }
 
 export default function InvoiceSettingsForm({
-	currentSettings,
-}: InvoiceSettingsFormProps) {
+	settingsData,
+}: SettingsFormProps) {
 	const [state, fromAction, isPending] = useActionState(updateSettings, null);
 
 	const initialValues = {
-		nextInvoiceNumber: currentSettings?.nextInvoiceNumber || "",
-		nextQuoteNumber: currentSettings?.nextQuoteNumber || "",
-		defaultDueDays: currentSettings?.defaultDueDays?.toString() || "",
-		defaultIssuePlace: currentSettings?.defaultIssuePlace || "",
-		defaultPaymentMethod: currentSettings?.defaultPaymentMethod || "",
-		defaultFooterNote: currentSettings?.defaultFooterNote || "",
+		nextInvoiceNumber: settingsData?.nextInvoiceNumber || "",
+		nextQuoteNumber: settingsData?.nextQuoteNumber || "",
+		defaultDueDays: settingsData?.defaultDueDays?.toString() || "",
+		defaultIssuePlace: settingsData?.defaultIssuePlace || "",
+		defaultPaymentMethod: settingsData?.defaultPaymentMethod || "",
+		defaultFooterNote: settingsData?.defaultFooterNote || "",
 	};
 	const { formValues, setFormValues, handleInputChange } =
 		useFormValues(initialValues);
 
 	const [paymentMethod, setPaymentMethod] = useState<PaymentType>(
-		currentSettings?.defaultPaymentMethod ?? "BANK_TRANSFER",
+		settingsData?.defaultPaymentMethod ?? "BANK_TRANSFER",
 	);
 
 	return (

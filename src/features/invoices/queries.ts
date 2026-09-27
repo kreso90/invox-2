@@ -17,6 +17,7 @@ export async function getUserInvoice(invoiceId: string) {
 		where: { id: invoiceId, userId: session.user.id },
 		include: {
 			invoiceItems: true,
+			client: true,
 			invoicePayments: {
 				orderBy: {
 					paidAt: "desc",
