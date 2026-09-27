@@ -83,7 +83,7 @@ export function FormsModal({
 									{groupedInvoices[0]?.client?.companyName ?? ""}
 								</TableCell>
 								<TableCell>
-									{groupedInvoices[0]?.client?.vatNumber?.slice(0, 2) ?? ""}
+									{groupedInvoices[0]?.client?.vatCountryCode ?? ""}
 								</TableCell>
 								<TableCell>{vatId.slice(2)}</TableCell>
 								<TableCell className="font-mono text-right">

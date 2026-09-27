@@ -8,7 +8,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { createBusiness } from "@/features/business/actions";
-import { act, useActionState } from "react";
+import { useActionState } from "react";
 import { Business } from "@/features/business/types";
 import { useFormValues } from "@/hooks/use-form-values";
 import { Card } from "@/components/ui/card";
@@ -20,8 +20,6 @@ interface businessProfileFormProps {
 export default function BusinessProfileForm({
 	businessData,
 }: businessProfileFormProps) {
-	const isEditMode = Boolean(businessData);
-
 	const [state, fromAction, isPending] = useActionState(createBusiness, null);
 
 	const initialValues = {

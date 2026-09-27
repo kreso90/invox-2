@@ -7,6 +7,9 @@ export async function getClientsByUserId(userId: string) {
 		where: {
 			userId,
 		},
+		include: {
+			invoices: true,
+		},
 	});
 }
 

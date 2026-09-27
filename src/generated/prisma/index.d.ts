@@ -78,6 +78,11 @@ export type InvoicePayment = $Result.DefaultSelection<Prisma.$InvoicePaymentPayl
  * 
  */
 export type Obligation = $Result.DefaultSelection<Prisma.$ObligationPayload>
+/**
+ * Model Settings
+ * 
+ */
+export type Settings = $Result.DefaultSelection<Prisma.$SettingsPayload>
 
 /**
  * Enums
@@ -427,6 +432,16 @@ export class PrismaClient<
     * ```
     */
   get obligation(): Prisma.ObligationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.settings`: Exposes CRUD operations for the **Settings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Settings
+    * const settings = await prisma.settings.findMany()
+    * ```
+    */
+  get settings(): Prisma.SettingsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -886,7 +901,8 @@ export namespace Prisma {
     Invoice: 'Invoice',
     InvoiceItem: 'InvoiceItem',
     InvoicePayment: 'InvoicePayment',
-    Obligation: 'Obligation'
+    Obligation: 'Obligation',
+    Settings: 'Settings'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -902,7 +918,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "verificationToken" | "passwordResetToken" | "business" | "client" | "article" | "invoice" | "invoiceItem" | "invoicePayment" | "obligation"
+      modelProps: "user" | "session" | "account" | "verification" | "verificationToken" | "passwordResetToken" | "business" | "client" | "article" | "invoice" | "invoiceItem" | "invoicePayment" | "obligation" | "settings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1868,6 +1884,80 @@ export namespace Prisma {
           }
         }
       }
+      Settings: {
+        payload: Prisma.$SettingsPayload<ExtArgs>
+        fields: Prisma.SettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.SettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>
+          }
+          findMany: {
+            args: Prisma.SettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>[]
+          }
+          create: {
+            args: Prisma.SettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>
+          }
+          createMany: {
+            args: Prisma.SettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.SettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>
+          }
+          update: {
+            args: Prisma.SettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.SettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.SettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.SettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSettings>
+          }
+          groupBy: {
+            args: Prisma.SettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<SettingsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2004,6 +2094,7 @@ export namespace Prisma {
     invoiceItem?: InvoiceItemOmit
     invoicePayment?: InvoicePaymentOmit
     obligation?: ObligationOmit
+    settings?: SettingsOmit
   }
 
   /* Types for Logging */
@@ -2448,6 +2539,7 @@ export namespace Prisma {
     articles?: boolean | User$articlesArgs<ExtArgs>
     invoices?: boolean | User$invoicesArgs<ExtArgs>
     obligations?: boolean | User$obligationsArgs<ExtArgs>
+    settings?: boolean | User$settingsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2490,6 +2582,7 @@ export namespace Prisma {
     articles?: boolean | User$articlesArgs<ExtArgs>
     invoices?: boolean | User$invoicesArgs<ExtArgs>
     obligations?: boolean | User$obligationsArgs<ExtArgs>
+    settings?: boolean | User$settingsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2505,6 +2598,7 @@ export namespace Prisma {
       articles: Prisma.$ArticlePayload<ExtArgs>[]
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
       obligations: Prisma.$ObligationPayload<ExtArgs>[]
+      settings: Prisma.$SettingsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2915,6 +3009,7 @@ export namespace Prisma {
     articles<T extends User$articlesArgs<ExtArgs> = {}>(args?: Subset<T, User$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invoices<T extends User$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, User$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     obligations<T extends User$obligationsArgs<ExtArgs> = {}>(args?: Subset<T, User$obligationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ObligationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    settings<T extends User$settingsArgs<ExtArgs> = {}>(args?: Subset<T, User$settingsArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3504,6 +3599,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ObligationScalarFieldEnum | ObligationScalarFieldEnum[]
+  }
+
+  /**
+   * User.settings
+   */
+  export type User$settingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    where?: SettingsWhereInput
   }
 
   /**
@@ -17470,6 +17584,1220 @@ export namespace Prisma {
 
 
   /**
+   * Model Settings
+   */
+
+  export type AggregateSettings = {
+    _count: SettingsCountAggregateOutputType | null
+    _avg: SettingsAvgAggregateOutputType | null
+    _sum: SettingsSumAggregateOutputType | null
+    _min: SettingsMinAggregateOutputType | null
+    _max: SettingsMaxAggregateOutputType | null
+  }
+
+  export type SettingsAvgAggregateOutputType = {
+    defaultDueDays: number | null
+  }
+
+  export type SettingsSumAggregateOutputType = {
+    defaultDueDays: number | null
+  }
+
+  export type SettingsMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    nextInvoiceNumber: string | null
+    nextQuoteNumber: string | null
+    defaultDueDays: number | null
+    defaultIssuePlace: string | null
+    defaultPaymentMethod: $Enums.PaymentType | null
+    defaultFooterNote: string | null
+    emailSenderName: string | null
+    emailReplyTo: string | null
+    emailSubjectTemplate: string | null
+    emailBodyTemplate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SettingsMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    nextInvoiceNumber: string | null
+    nextQuoteNumber: string | null
+    defaultDueDays: number | null
+    defaultIssuePlace: string | null
+    defaultPaymentMethod: $Enums.PaymentType | null
+    defaultFooterNote: string | null
+    emailSenderName: string | null
+    emailReplyTo: string | null
+    emailSubjectTemplate: string | null
+    emailBodyTemplate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SettingsCountAggregateOutputType = {
+    id: number
+    userId: number
+    nextInvoiceNumber: number
+    nextQuoteNumber: number
+    defaultDueDays: number
+    defaultIssuePlace: number
+    defaultPaymentMethod: number
+    defaultFooterNote: number
+    emailSenderName: number
+    emailReplyTo: number
+    emailSubjectTemplate: number
+    emailBodyTemplate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SettingsAvgAggregateInputType = {
+    defaultDueDays?: true
+  }
+
+  export type SettingsSumAggregateInputType = {
+    defaultDueDays?: true
+  }
+
+  export type SettingsMinAggregateInputType = {
+    id?: true
+    userId?: true
+    nextInvoiceNumber?: true
+    nextQuoteNumber?: true
+    defaultDueDays?: true
+    defaultIssuePlace?: true
+    defaultPaymentMethod?: true
+    defaultFooterNote?: true
+    emailSenderName?: true
+    emailReplyTo?: true
+    emailSubjectTemplate?: true
+    emailBodyTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SettingsMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    nextInvoiceNumber?: true
+    nextQuoteNumber?: true
+    defaultDueDays?: true
+    defaultIssuePlace?: true
+    defaultPaymentMethod?: true
+    defaultFooterNote?: true
+    emailSenderName?: true
+    emailReplyTo?: true
+    emailSubjectTemplate?: true
+    emailBodyTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SettingsCountAggregateInputType = {
+    id?: true
+    userId?: true
+    nextInvoiceNumber?: true
+    nextQuoteNumber?: true
+    defaultDueDays?: true
+    defaultIssuePlace?: true
+    defaultPaymentMethod?: true
+    defaultFooterNote?: true
+    emailSenderName?: true
+    emailReplyTo?: true
+    emailSubjectTemplate?: true
+    emailBodyTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Settings to aggregate.
+     */
+    where?: SettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settings to fetch.
+     */
+    orderBy?: SettingsOrderByWithRelationInput | SettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Settings
+    **/
+    _count?: true | SettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SettingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SettingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SettingsMaxAggregateInputType
+  }
+
+  export type GetSettingsAggregateType<T extends SettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSettings[P]>
+      : GetScalarType<T[P], AggregateSettings[P]>
+  }
+
+
+
+
+  export type SettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SettingsWhereInput
+    orderBy?: SettingsOrderByWithAggregationInput | SettingsOrderByWithAggregationInput[]
+    by: SettingsScalarFieldEnum[] | SettingsScalarFieldEnum
+    having?: SettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SettingsCountAggregateInputType | true
+    _avg?: SettingsAvgAggregateInputType
+    _sum?: SettingsSumAggregateInputType
+    _min?: SettingsMinAggregateInputType
+    _max?: SettingsMaxAggregateInputType
+  }
+
+  export type SettingsGroupByOutputType = {
+    id: string
+    userId: string
+    nextInvoiceNumber: string
+    nextQuoteNumber: string
+    defaultDueDays: number
+    defaultIssuePlace: string | null
+    defaultPaymentMethod: $Enums.PaymentType
+    defaultFooterNote: string | null
+    emailSenderName: string | null
+    emailReplyTo: string | null
+    emailSubjectTemplate: string | null
+    emailBodyTemplate: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SettingsCountAggregateOutputType | null
+    _avg: SettingsAvgAggregateOutputType | null
+    _sum: SettingsSumAggregateOutputType | null
+    _min: SettingsMinAggregateOutputType | null
+    _max: SettingsMaxAggregateOutputType | null
+  }
+
+  type GetSettingsGroupByPayload<T extends SettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], SettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    nextInvoiceNumber?: boolean
+    nextQuoteNumber?: boolean
+    defaultDueDays?: boolean
+    defaultIssuePlace?: boolean
+    defaultPaymentMethod?: boolean
+    defaultFooterNote?: boolean
+    emailSenderName?: boolean
+    emailReplyTo?: boolean
+    emailSubjectTemplate?: boolean
+    emailBodyTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["settings"]>
+
+  export type SettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    nextInvoiceNumber?: boolean
+    nextQuoteNumber?: boolean
+    defaultDueDays?: boolean
+    defaultIssuePlace?: boolean
+    defaultPaymentMethod?: boolean
+    defaultFooterNote?: boolean
+    emailSenderName?: boolean
+    emailReplyTo?: boolean
+    emailSubjectTemplate?: boolean
+    emailBodyTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["settings"]>
+
+  export type SettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    nextInvoiceNumber?: boolean
+    nextQuoteNumber?: boolean
+    defaultDueDays?: boolean
+    defaultIssuePlace?: boolean
+    defaultPaymentMethod?: boolean
+    defaultFooterNote?: boolean
+    emailSenderName?: boolean
+    emailReplyTo?: boolean
+    emailSubjectTemplate?: boolean
+    emailBodyTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["settings"]>
+
+  export type SettingsSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    nextInvoiceNumber?: boolean
+    nextQuoteNumber?: boolean
+    defaultDueDays?: boolean
+    defaultIssuePlace?: boolean
+    defaultPaymentMethod?: boolean
+    defaultFooterNote?: boolean
+    emailSenderName?: boolean
+    emailReplyTo?: boolean
+    emailSubjectTemplate?: boolean
+    emailBodyTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "nextInvoiceNumber" | "nextQuoteNumber" | "defaultDueDays" | "defaultIssuePlace" | "defaultPaymentMethod" | "defaultFooterNote" | "emailSenderName" | "emailReplyTo" | "emailSubjectTemplate" | "emailBodyTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["settings"]>
+  export type SettingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SettingsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SettingsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Settings"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      nextInvoiceNumber: string
+      nextQuoteNumber: string
+      defaultDueDays: number
+      defaultIssuePlace: string | null
+      defaultPaymentMethod: $Enums.PaymentType
+      defaultFooterNote: string | null
+      emailSenderName: string | null
+      emailReplyTo: string | null
+      emailSubjectTemplate: string | null
+      emailBodyTemplate: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["settings"]>
+    composites: {}
+  }
+
+  type SettingsGetPayload<S extends boolean | null | undefined | SettingsDefaultArgs> = $Result.GetResult<Prisma.$SettingsPayload, S>
+
+  type SettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SettingsCountAggregateInputType | true
+    }
+
+  export interface SettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Settings'], meta: { name: 'Settings' } }
+    /**
+     * Find zero or one Settings that matches the filter.
+     * @param {SettingsFindUniqueArgs} args - Arguments to find a Settings
+     * @example
+     * // Get one Settings
+     * const settings = await prisma.settings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SettingsFindUniqueArgs>(args: SelectSubset<T, SettingsFindUniqueArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Settings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SettingsFindUniqueOrThrowArgs} args - Arguments to find a Settings
+     * @example
+     * // Get one Settings
+     * const settings = await prisma.settings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, SettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsFindFirstArgs} args - Arguments to find a Settings
+     * @example
+     * // Get one Settings
+     * const settings = await prisma.settings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SettingsFindFirstArgs>(args?: SelectSubset<T, SettingsFindFirstArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Settings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsFindFirstOrThrowArgs} args - Arguments to find a Settings
+     * @example
+     * // Get one Settings
+     * const settings = await prisma.settings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, SettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Settings
+     * const settings = await prisma.settings.findMany()
+     * 
+     * // Get first 10 Settings
+     * const settings = await prisma.settings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const settingsWithIdOnly = await prisma.settings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SettingsFindManyArgs>(args?: SelectSubset<T, SettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Settings.
+     * @param {SettingsCreateArgs} args - Arguments to create a Settings.
+     * @example
+     * // Create one Settings
+     * const Settings = await prisma.settings.create({
+     *   data: {
+     *     // ... data to create a Settings
+     *   }
+     * })
+     * 
+     */
+    create<T extends SettingsCreateArgs>(args: SelectSubset<T, SettingsCreateArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Settings.
+     * @param {SettingsCreateManyArgs} args - Arguments to create many Settings.
+     * @example
+     * // Create many Settings
+     * const settings = await prisma.settings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SettingsCreateManyArgs>(args?: SelectSubset<T, SettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Settings and returns the data saved in the database.
+     * @param {SettingsCreateManyAndReturnArgs} args - Arguments to create many Settings.
+     * @example
+     * // Create many Settings
+     * const settings = await prisma.settings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Settings and only return the `id`
+     * const settingsWithIdOnly = await prisma.settings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, SettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Settings.
+     * @param {SettingsDeleteArgs} args - Arguments to delete one Settings.
+     * @example
+     * // Delete one Settings
+     * const Settings = await prisma.settings.delete({
+     *   where: {
+     *     // ... filter to delete one Settings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SettingsDeleteArgs>(args: SelectSubset<T, SettingsDeleteArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Settings.
+     * @param {SettingsUpdateArgs} args - Arguments to update one Settings.
+     * @example
+     * // Update one Settings
+     * const settings = await prisma.settings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SettingsUpdateArgs>(args: SelectSubset<T, SettingsUpdateArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Settings.
+     * @param {SettingsDeleteManyArgs} args - Arguments to filter Settings to delete.
+     * @example
+     * // Delete a few Settings
+     * const { count } = await prisma.settings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SettingsDeleteManyArgs>(args?: SelectSubset<T, SettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Settings
+     * const settings = await prisma.settings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SettingsUpdateManyArgs>(args: SelectSubset<T, SettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Settings and returns the data updated in the database.
+     * @param {SettingsUpdateManyAndReturnArgs} args - Arguments to update many Settings.
+     * @example
+     * // Update many Settings
+     * const settings = await prisma.settings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Settings and only return the `id`
+     * const settingsWithIdOnly = await prisma.settings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, SettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Settings.
+     * @param {SettingsUpsertArgs} args - Arguments to update or create a Settings.
+     * @example
+     * // Update or create a Settings
+     * const settings = await prisma.settings.upsert({
+     *   create: {
+     *     // ... data to create a Settings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Settings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SettingsUpsertArgs>(args: SelectSubset<T, SettingsUpsertArgs<ExtArgs>>): Prisma__SettingsClient<$Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsCountArgs} args - Arguments to filter Settings to count.
+     * @example
+     * // Count the number of Settings
+     * const count = await prisma.settings.count({
+     *   where: {
+     *     // ... the filter for the Settings we want to count
+     *   }
+     * })
+    **/
+    count<T extends SettingsCountArgs>(
+      args?: Subset<T, SettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SettingsAggregateArgs>(args: Subset<T, SettingsAggregateArgs>): Prisma.PrismaPromise<GetSettingsAggregateType<T>>
+
+    /**
+     * Group by Settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SettingsGroupByArgs['orderBy'] }
+        : { orderBy?: SettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Settings model
+   */
+  readonly fields: SettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Settings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Settings model
+   */
+  interface SettingsFieldRefs {
+    readonly id: FieldRef<"Settings", 'String'>
+    readonly userId: FieldRef<"Settings", 'String'>
+    readonly nextInvoiceNumber: FieldRef<"Settings", 'String'>
+    readonly nextQuoteNumber: FieldRef<"Settings", 'String'>
+    readonly defaultDueDays: FieldRef<"Settings", 'Int'>
+    readonly defaultIssuePlace: FieldRef<"Settings", 'String'>
+    readonly defaultPaymentMethod: FieldRef<"Settings", 'PaymentType'>
+    readonly defaultFooterNote: FieldRef<"Settings", 'String'>
+    readonly emailSenderName: FieldRef<"Settings", 'String'>
+    readonly emailReplyTo: FieldRef<"Settings", 'String'>
+    readonly emailSubjectTemplate: FieldRef<"Settings", 'String'>
+    readonly emailBodyTemplate: FieldRef<"Settings", 'String'>
+    readonly createdAt: FieldRef<"Settings", 'DateTime'>
+    readonly updatedAt: FieldRef<"Settings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Settings findUnique
+   */
+  export type SettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which Settings to fetch.
+     */
+    where: SettingsWhereUniqueInput
+  }
+
+  /**
+   * Settings findUniqueOrThrow
+   */
+  export type SettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which Settings to fetch.
+     */
+    where: SettingsWhereUniqueInput
+  }
+
+  /**
+   * Settings findFirst
+   */
+  export type SettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which Settings to fetch.
+     */
+    where?: SettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settings to fetch.
+     */
+    orderBy?: SettingsOrderByWithRelationInput | SettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Settings.
+     */
+    cursor?: SettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settings.
+     */
+    distinct?: SettingsScalarFieldEnum | SettingsScalarFieldEnum[]
+  }
+
+  /**
+   * Settings findFirstOrThrow
+   */
+  export type SettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which Settings to fetch.
+     */
+    where?: SettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settings to fetch.
+     */
+    orderBy?: SettingsOrderByWithRelationInput | SettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Settings.
+     */
+    cursor?: SettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settings.
+     */
+    distinct?: SettingsScalarFieldEnum | SettingsScalarFieldEnum[]
+  }
+
+  /**
+   * Settings findMany
+   */
+  export type SettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which Settings to fetch.
+     */
+    where?: SettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Settings to fetch.
+     */
+    orderBy?: SettingsOrderByWithRelationInput | SettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Settings.
+     */
+    cursor?: SettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settings.
+     */
+    distinct?: SettingsScalarFieldEnum | SettingsScalarFieldEnum[]
+  }
+
+  /**
+   * Settings create
+   */
+  export type SettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Settings.
+     */
+    data: XOR<SettingsCreateInput, SettingsUncheckedCreateInput>
+  }
+
+  /**
+   * Settings createMany
+   */
+  export type SettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Settings.
+     */
+    data: SettingsCreateManyInput | SettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Settings createManyAndReturn
+   */
+  export type SettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many Settings.
+     */
+    data: SettingsCreateManyInput | SettingsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Settings update
+   */
+  export type SettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Settings.
+     */
+    data: XOR<SettingsUpdateInput, SettingsUncheckedUpdateInput>
+    /**
+     * Choose, which Settings to update.
+     */
+    where: SettingsWhereUniqueInput
+  }
+
+  /**
+   * Settings updateMany
+   */
+  export type SettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Settings.
+     */
+    data: XOR<SettingsUpdateManyMutationInput, SettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which Settings to update
+     */
+    where?: SettingsWhereInput
+    /**
+     * Limit how many Settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Settings updateManyAndReturn
+   */
+  export type SettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update Settings.
+     */
+    data: XOR<SettingsUpdateManyMutationInput, SettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which Settings to update
+     */
+    where?: SettingsWhereInput
+    /**
+     * Limit how many Settings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Settings upsert
+   */
+  export type SettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Settings to update in case it exists.
+     */
+    where: SettingsWhereUniqueInput
+    /**
+     * In case the Settings found by the `where` argument doesn't exist, create a new Settings with this data.
+     */
+    create: XOR<SettingsCreateInput, SettingsUncheckedCreateInput>
+    /**
+     * In case the Settings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SettingsUpdateInput, SettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * Settings delete
+   */
+  export type SettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+    /**
+     * Filter which Settings to delete.
+     */
+    where: SettingsWhereUniqueInput
+  }
+
+  /**
+   * Settings deleteMany
+   */
+  export type SettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Settings to delete
+     */
+    where?: SettingsWhereInput
+    /**
+     * Limit how many Settings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Settings without action
+   */
+  export type SettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Settings
+     */
+    select?: SettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Settings
+     */
+    omit?: SettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SettingsInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17704,6 +19032,26 @@ export namespace Prisma {
   export type ObligationScalarFieldEnum = (typeof ObligationScalarFieldEnum)[keyof typeof ObligationScalarFieldEnum]
 
 
+  export const SettingsScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    nextInvoiceNumber: 'nextInvoiceNumber',
+    nextQuoteNumber: 'nextQuoteNumber',
+    defaultDueDays: 'defaultDueDays',
+    defaultIssuePlace: 'defaultIssuePlace',
+    defaultPaymentMethod: 'defaultPaymentMethod',
+    defaultFooterNote: 'defaultFooterNote',
+    emailSenderName: 'emailSenderName',
+    emailReplyTo: 'emailReplyTo',
+    emailSubjectTemplate: 'emailSubjectTemplate',
+    emailBodyTemplate: 'emailBodyTemplate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -17901,6 +19249,7 @@ export namespace Prisma {
     articles?: ArticleListRelationFilter
     invoices?: InvoiceListRelationFilter
     obligations?: ObligationListRelationFilter
+    settings?: XOR<SettingsNullableScalarRelationFilter, SettingsWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17918,6 +19267,7 @@ export namespace Prisma {
     articles?: ArticleOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
     obligations?: ObligationOrderByRelationAggregateInput
+    settings?: SettingsOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -17938,6 +19288,7 @@ export namespace Prisma {
     articles?: ArticleListRelationFilter
     invoices?: InvoiceListRelationFilter
     obligations?: ObligationListRelationFilter
+    settings?: XOR<SettingsNullableScalarRelationFilter, SettingsWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -19032,6 +20383,108 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Obligation"> | Date | string
   }
 
+  export type SettingsWhereInput = {
+    AND?: SettingsWhereInput | SettingsWhereInput[]
+    OR?: SettingsWhereInput[]
+    NOT?: SettingsWhereInput | SettingsWhereInput[]
+    id?: StringFilter<"Settings"> | string
+    userId?: StringFilter<"Settings"> | string
+    nextInvoiceNumber?: StringFilter<"Settings"> | string
+    nextQuoteNumber?: StringFilter<"Settings"> | string
+    defaultDueDays?: IntFilter<"Settings"> | number
+    defaultIssuePlace?: StringNullableFilter<"Settings"> | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFilter<"Settings"> | $Enums.PaymentType
+    defaultFooterNote?: StringNullableFilter<"Settings"> | string | null
+    emailSenderName?: StringNullableFilter<"Settings"> | string | null
+    emailReplyTo?: StringNullableFilter<"Settings"> | string | null
+    emailSubjectTemplate?: StringNullableFilter<"Settings"> | string | null
+    emailBodyTemplate?: StringNullableFilter<"Settings"> | string | null
+    createdAt?: DateTimeFilter<"Settings"> | Date | string
+    updatedAt?: DateTimeFilter<"Settings"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type SettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    nextInvoiceNumber?: SortOrder
+    nextQuoteNumber?: SortOrder
+    defaultDueDays?: SortOrder
+    defaultIssuePlace?: SortOrderInput | SortOrder
+    defaultPaymentMethod?: SortOrder
+    defaultFooterNote?: SortOrderInput | SortOrder
+    emailSenderName?: SortOrderInput | SortOrder
+    emailReplyTo?: SortOrderInput | SortOrder
+    emailSubjectTemplate?: SortOrderInput | SortOrder
+    emailBodyTemplate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type SettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: SettingsWhereInput | SettingsWhereInput[]
+    OR?: SettingsWhereInput[]
+    NOT?: SettingsWhereInput | SettingsWhereInput[]
+    nextInvoiceNumber?: StringFilter<"Settings"> | string
+    nextQuoteNumber?: StringFilter<"Settings"> | string
+    defaultDueDays?: IntFilter<"Settings"> | number
+    defaultIssuePlace?: StringNullableFilter<"Settings"> | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFilter<"Settings"> | $Enums.PaymentType
+    defaultFooterNote?: StringNullableFilter<"Settings"> | string | null
+    emailSenderName?: StringNullableFilter<"Settings"> | string | null
+    emailReplyTo?: StringNullableFilter<"Settings"> | string | null
+    emailSubjectTemplate?: StringNullableFilter<"Settings"> | string | null
+    emailBodyTemplate?: StringNullableFilter<"Settings"> | string | null
+    createdAt?: DateTimeFilter<"Settings"> | Date | string
+    updatedAt?: DateTimeFilter<"Settings"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type SettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    nextInvoiceNumber?: SortOrder
+    nextQuoteNumber?: SortOrder
+    defaultDueDays?: SortOrder
+    defaultIssuePlace?: SortOrderInput | SortOrder
+    defaultPaymentMethod?: SortOrder
+    defaultFooterNote?: SortOrderInput | SortOrder
+    emailSenderName?: SortOrderInput | SortOrder
+    emailReplyTo?: SortOrderInput | SortOrder
+    emailSubjectTemplate?: SortOrderInput | SortOrder
+    emailBodyTemplate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SettingsCountOrderByAggregateInput
+    _avg?: SettingsAvgOrderByAggregateInput
+    _max?: SettingsMaxOrderByAggregateInput
+    _min?: SettingsMinOrderByAggregateInput
+    _sum?: SettingsSumOrderByAggregateInput
+  }
+
+  export type SettingsScalarWhereWithAggregatesInput = {
+    AND?: SettingsScalarWhereWithAggregatesInput | SettingsScalarWhereWithAggregatesInput[]
+    OR?: SettingsScalarWhereWithAggregatesInput[]
+    NOT?: SettingsScalarWhereWithAggregatesInput | SettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Settings"> | string
+    userId?: StringWithAggregatesFilter<"Settings"> | string
+    nextInvoiceNumber?: StringWithAggregatesFilter<"Settings"> | string
+    nextQuoteNumber?: StringWithAggregatesFilter<"Settings"> | string
+    defaultDueDays?: IntWithAggregatesFilter<"Settings"> | number
+    defaultIssuePlace?: StringNullableWithAggregatesFilter<"Settings"> | string | null
+    defaultPaymentMethod?: EnumPaymentTypeWithAggregatesFilter<"Settings"> | $Enums.PaymentType
+    defaultFooterNote?: StringNullableWithAggregatesFilter<"Settings"> | string | null
+    emailSenderName?: StringNullableWithAggregatesFilter<"Settings"> | string | null
+    emailReplyTo?: StringNullableWithAggregatesFilter<"Settings"> | string | null
+    emailSubjectTemplate?: StringNullableWithAggregatesFilter<"Settings"> | string | null
+    emailBodyTemplate?: StringNullableWithAggregatesFilter<"Settings"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Settings"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Settings"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -19047,6 +20500,7 @@ export namespace Prisma {
     articles?: ArticleCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -19064,6 +20518,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -19081,6 +20536,7 @@ export namespace Prisma {
     articles?: ArticleUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -19098,6 +20554,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -20339,6 +21796,124 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SettingsCreateInput = {
+    id?: string
+    nextInvoiceNumber?: string
+    nextQuoteNumber?: string
+    defaultDueDays?: number
+    defaultIssuePlace?: string | null
+    defaultPaymentMethod?: $Enums.PaymentType
+    defaultFooterNote?: string | null
+    emailSenderName?: string | null
+    emailReplyTo?: string | null
+    emailSubjectTemplate?: string | null
+    emailBodyTemplate?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutSettingsInput
+  }
+
+  export type SettingsUncheckedCreateInput = {
+    id?: string
+    userId: string
+    nextInvoiceNumber?: string
+    nextQuoteNumber?: string
+    defaultDueDays?: number
+    defaultIssuePlace?: string | null
+    defaultPaymentMethod?: $Enums.PaymentType
+    defaultFooterNote?: string | null
+    emailSenderName?: string | null
+    emailReplyTo?: string | null
+    emailSubjectTemplate?: string | null
+    emailBodyTemplate?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nextInvoiceNumber?: StringFieldUpdateOperationsInput | string
+    nextQuoteNumber?: StringFieldUpdateOperationsInput | string
+    defaultDueDays?: IntFieldUpdateOperationsInput | number
+    defaultIssuePlace?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    defaultFooterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSenderName?: NullableStringFieldUpdateOperationsInput | string | null
+    emailReplyTo?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSubjectTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailBodyTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSettingsNestedInput
+  }
+
+  export type SettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    nextInvoiceNumber?: StringFieldUpdateOperationsInput | string
+    nextQuoteNumber?: StringFieldUpdateOperationsInput | string
+    defaultDueDays?: IntFieldUpdateOperationsInput | number
+    defaultIssuePlace?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    defaultFooterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSenderName?: NullableStringFieldUpdateOperationsInput | string | null
+    emailReplyTo?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSubjectTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailBodyTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettingsCreateManyInput = {
+    id?: string
+    userId: string
+    nextInvoiceNumber?: string
+    nextQuoteNumber?: string
+    defaultDueDays?: number
+    defaultIssuePlace?: string | null
+    defaultPaymentMethod?: $Enums.PaymentType
+    defaultFooterNote?: string | null
+    emailSenderName?: string | null
+    emailReplyTo?: string | null
+    emailSubjectTemplate?: string | null
+    emailBodyTemplate?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nextInvoiceNumber?: StringFieldUpdateOperationsInput | string
+    nextQuoteNumber?: StringFieldUpdateOperationsInput | string
+    defaultDueDays?: IntFieldUpdateOperationsInput | number
+    defaultIssuePlace?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    defaultFooterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSenderName?: NullableStringFieldUpdateOperationsInput | string | null
+    emailReplyTo?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSubjectTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailBodyTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    nextInvoiceNumber?: StringFieldUpdateOperationsInput | string
+    nextQuoteNumber?: StringFieldUpdateOperationsInput | string
+    defaultDueDays?: IntFieldUpdateOperationsInput | number
+    defaultIssuePlace?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    defaultFooterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSenderName?: NullableStringFieldUpdateOperationsInput | string | null
+    emailReplyTo?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSubjectTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailBodyTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20424,6 +21999,11 @@ export namespace Prisma {
     every?: ObligationWhereInput
     some?: ObligationWhereInput
     none?: ObligationWhereInput
+  }
+
+  export type SettingsNullableScalarRelationFilter = {
+    is?: SettingsWhereInput | null
+    isNot?: SettingsWhereInput | null
   }
 
   export type SortOrderInput = {
@@ -21414,6 +22994,65 @@ export namespace Prisma {
     _max?: NestedEnumObligationStatusFilter<$PrismaModel>
   }
 
+  export type SettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    nextInvoiceNumber?: SortOrder
+    nextQuoteNumber?: SortOrder
+    defaultDueDays?: SortOrder
+    defaultIssuePlace?: SortOrder
+    defaultPaymentMethod?: SortOrder
+    defaultFooterNote?: SortOrder
+    emailSenderName?: SortOrder
+    emailReplyTo?: SortOrder
+    emailSubjectTemplate?: SortOrder
+    emailBodyTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SettingsAvgOrderByAggregateInput = {
+    defaultDueDays?: SortOrder
+  }
+
+  export type SettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    nextInvoiceNumber?: SortOrder
+    nextQuoteNumber?: SortOrder
+    defaultDueDays?: SortOrder
+    defaultIssuePlace?: SortOrder
+    defaultPaymentMethod?: SortOrder
+    defaultFooterNote?: SortOrder
+    emailSenderName?: SortOrder
+    emailReplyTo?: SortOrder
+    emailSubjectTemplate?: SortOrder
+    emailBodyTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    nextInvoiceNumber?: SortOrder
+    nextQuoteNumber?: SortOrder
+    defaultDueDays?: SortOrder
+    defaultIssuePlace?: SortOrder
+    defaultPaymentMethod?: SortOrder
+    defaultFooterNote?: SortOrder
+    emailSenderName?: SortOrder
+    emailReplyTo?: SortOrder
+    emailSubjectTemplate?: SortOrder
+    emailBodyTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SettingsSumOrderByAggregateInput = {
+    defaultDueDays?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -21462,6 +23101,12 @@ export namespace Prisma {
     connect?: ObligationWhereUniqueInput | ObligationWhereUniqueInput[]
   }
 
+  export type SettingsCreateNestedOneWithoutUserInput = {
+    create?: XOR<SettingsCreateWithoutUserInput, SettingsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutUserInput
+    connect?: SettingsWhereUniqueInput
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -21508,6 +23153,12 @@ export namespace Prisma {
     connectOrCreate?: ObligationCreateOrConnectWithoutUserInput | ObligationCreateOrConnectWithoutUserInput[]
     createMany?: ObligationCreateManyUserInputEnvelope
     connect?: ObligationWhereUniqueInput | ObligationWhereUniqueInput[]
+  }
+
+  export type SettingsUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<SettingsCreateWithoutUserInput, SettingsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutUserInput
+    connect?: SettingsWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -21620,6 +23271,16 @@ export namespace Prisma {
     deleteMany?: ObligationScalarWhereInput | ObligationScalarWhereInput[]
   }
 
+  export type SettingsUpdateOneWithoutUserNestedInput = {
+    create?: XOR<SettingsCreateWithoutUserInput, SettingsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutUserInput
+    upsert?: SettingsUpsertWithoutUserInput
+    disconnect?: SettingsWhereInput | boolean
+    delete?: SettingsWhereInput | boolean
+    connect?: SettingsWhereUniqueInput
+    update?: XOR<XOR<SettingsUpdateToOneWithWhereWithoutUserInput, SettingsUpdateWithoutUserInput>, SettingsUncheckedUpdateWithoutUserInput>
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -21712,6 +23373,16 @@ export namespace Prisma {
     update?: ObligationUpdateWithWhereUniqueWithoutUserInput | ObligationUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ObligationUpdateManyWithWhereWithoutUserInput | ObligationUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ObligationScalarWhereInput | ObligationScalarWhereInput[]
+  }
+
+  export type SettingsUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<SettingsCreateWithoutUserInput, SettingsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SettingsCreateOrConnectWithoutUserInput
+    upsert?: SettingsUpsertWithoutUserInput
+    disconnect?: SettingsWhereInput | boolean
+    delete?: SettingsWhereInput | boolean
+    connect?: SettingsWhereUniqueInput
+    update?: XOR<XOR<SettingsUpdateToOneWithWhereWithoutUserInput, SettingsUpdateWithoutUserInput>, SettingsUncheckedUpdateWithoutUserInput>
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -22092,6 +23763,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutObligationsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutObligationsInput, UserUpdateWithoutObligationsInput>, UserUncheckedUpdateWithoutObligationsInput>
+  }
+
+  export type UserCreateNestedOneWithoutSettingsInput = {
+    create?: XOR<UserCreateWithoutSettingsInput, UserUncheckedCreateWithoutSettingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettingsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSettingsNestedInput = {
+    create?: XOR<UserCreateWithoutSettingsInput, UserUncheckedCreateWithoutSettingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettingsInput
+    upsert?: UserUpsertWithoutSettingsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSettingsInput, UserUpdateWithoutSettingsInput>, UserUncheckedUpdateWithoutSettingsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -22747,6 +24432,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SettingsCreateWithoutUserInput = {
+    id?: string
+    nextInvoiceNumber?: string
+    nextQuoteNumber?: string
+    defaultDueDays?: number
+    defaultIssuePlace?: string | null
+    defaultPaymentMethod?: $Enums.PaymentType
+    defaultFooterNote?: string | null
+    emailSenderName?: string | null
+    emailReplyTo?: string | null
+    emailSubjectTemplate?: string | null
+    emailBodyTemplate?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SettingsUncheckedCreateWithoutUserInput = {
+    id?: string
+    nextInvoiceNumber?: string
+    nextQuoteNumber?: string
+    defaultDueDays?: number
+    defaultIssuePlace?: string | null
+    defaultPaymentMethod?: $Enums.PaymentType
+    defaultFooterNote?: string | null
+    emailSenderName?: string | null
+    emailReplyTo?: string | null
+    emailSubjectTemplate?: string | null
+    emailBodyTemplate?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SettingsCreateOrConnectWithoutUserInput = {
+    where: SettingsWhereUniqueInput
+    create: XOR<SettingsCreateWithoutUserInput, SettingsUncheckedCreateWithoutUserInput>
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -23032,6 +24754,49 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Obligation"> | Date | string
   }
 
+  export type SettingsUpsertWithoutUserInput = {
+    update: XOR<SettingsUpdateWithoutUserInput, SettingsUncheckedUpdateWithoutUserInput>
+    create: XOR<SettingsCreateWithoutUserInput, SettingsUncheckedCreateWithoutUserInput>
+    where?: SettingsWhereInput
+  }
+
+  export type SettingsUpdateToOneWithWhereWithoutUserInput = {
+    where?: SettingsWhereInput
+    data: XOR<SettingsUpdateWithoutUserInput, SettingsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SettingsUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nextInvoiceNumber?: StringFieldUpdateOperationsInput | string
+    nextQuoteNumber?: StringFieldUpdateOperationsInput | string
+    defaultDueDays?: IntFieldUpdateOperationsInput | number
+    defaultIssuePlace?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    defaultFooterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSenderName?: NullableStringFieldUpdateOperationsInput | string | null
+    emailReplyTo?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSubjectTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailBodyTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SettingsUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nextInvoiceNumber?: StringFieldUpdateOperationsInput | string
+    nextQuoteNumber?: StringFieldUpdateOperationsInput | string
+    defaultDueDays?: IntFieldUpdateOperationsInput | number
+    defaultIssuePlace?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultPaymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    defaultFooterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSenderName?: NullableStringFieldUpdateOperationsInput | string | null
+    emailReplyTo?: NullableStringFieldUpdateOperationsInput | string | null
+    emailSubjectTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailBodyTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -23046,6 +24811,7 @@ export namespace Prisma {
     articles?: ArticleCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -23062,6 +24828,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -23094,6 +24861,7 @@ export namespace Prisma {
     articles?: ArticleUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -23110,6 +24878,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -23126,6 +24895,7 @@ export namespace Prisma {
     articles?: ArticleCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -23142,6 +24912,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -23174,6 +24945,7 @@ export namespace Prisma {
     articles?: ArticleUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -23190,6 +24962,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBusinessInput = {
@@ -23206,6 +24979,7 @@ export namespace Prisma {
     articles?: ArticleCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBusinessInput = {
@@ -23222,6 +24996,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBusinessInput = {
@@ -23254,6 +25029,7 @@ export namespace Prisma {
     articles?: ArticleUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBusinessInput = {
@@ -23270,6 +25046,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutClientsInput = {
@@ -23286,6 +25063,7 @@ export namespace Prisma {
     articles?: ArticleCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutClientsInput = {
@@ -23302,6 +25080,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutClientsInput = {
@@ -23386,6 +25165,7 @@ export namespace Prisma {
     articles?: ArticleUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutClientsInput = {
@@ -23402,6 +25182,7 @@ export namespace Prisma {
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type InvoiceUpsertWithWhereUniqueWithoutClientInput = {
@@ -23434,6 +25215,7 @@ export namespace Prisma {
     clients?: ClientCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutArticlesInput = {
@@ -23450,6 +25232,7 @@ export namespace Prisma {
     clients?: ClientUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutArticlesInput = {
@@ -23514,6 +25297,7 @@ export namespace Prisma {
     clients?: ClientUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutArticlesInput = {
@@ -23530,6 +25314,7 @@ export namespace Prisma {
     clients?: ClientUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type InvoiceItemUpsertWithWhereUniqueWithoutItemInput = {
@@ -23577,6 +25362,7 @@ export namespace Prisma {
     clients?: ClientCreateNestedManyWithoutUserInput
     articles?: ArticleCreateNestedManyWithoutUserInput
     obligations?: ObligationCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvoicesInput = {
@@ -23593,6 +25379,7 @@ export namespace Prisma {
     clients?: ClientUncheckedCreateNestedManyWithoutUserInput
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvoicesInput = {
@@ -23726,6 +25513,7 @@ export namespace Prisma {
     clients?: ClientUpdateManyWithoutUserNestedInput
     articles?: ArticleUpdateManyWithoutUserNestedInput
     obligations?: ObligationUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvoicesInput = {
@@ -23742,6 +25530,7 @@ export namespace Prisma {
     clients?: ClientUncheckedUpdateManyWithoutUserNestedInput
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ClientUpsertWithoutInvoicesInput = {
@@ -24116,6 +25905,7 @@ export namespace Prisma {
     clients?: ClientCreateNestedManyWithoutUserInput
     articles?: ArticleCreateNestedManyWithoutUserInput
     invoices?: InvoiceCreateNestedManyWithoutUserInput
+    settings?: SettingsCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutObligationsInput = {
@@ -24132,6 +25922,7 @@ export namespace Prisma {
     clients?: ClientUncheckedCreateNestedManyWithoutUserInput
     articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
+    settings?: SettingsUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutObligationsInput = {
@@ -24164,6 +25955,7 @@ export namespace Prisma {
     clients?: ClientUpdateManyWithoutUserNestedInput
     articles?: ArticleUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUpdateManyWithoutUserNestedInput
+    settings?: SettingsUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutObligationsInput = {
@@ -24180,6 +25972,91 @@ export namespace Prisma {
     clients?: ClientUncheckedUpdateManyWithoutUserNestedInput
     articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
+    settings?: SettingsUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutSettingsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    createdAt: Date | string
+    updatedAt: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    business?: BusinessCreateNestedOneWithoutUserInput
+    clients?: ClientCreateNestedManyWithoutUserInput
+    articles?: ArticleCreateNestedManyWithoutUserInput
+    invoices?: InvoiceCreateNestedManyWithoutUserInput
+    obligations?: ObligationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSettingsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    createdAt: Date | string
+    updatedAt: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    business?: BusinessUncheckedCreateNestedOneWithoutUserInput
+    clients?: ClientUncheckedCreateNestedManyWithoutUserInput
+    articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutUserInput
+    obligations?: ObligationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSettingsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSettingsInput, UserUncheckedCreateWithoutSettingsInput>
+  }
+
+  export type UserUpsertWithoutSettingsInput = {
+    update: XOR<UserUpdateWithoutSettingsInput, UserUncheckedUpdateWithoutSettingsInput>
+    create: XOR<UserCreateWithoutSettingsInput, UserUncheckedCreateWithoutSettingsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSettingsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSettingsInput, UserUncheckedUpdateWithoutSettingsInput>
+  }
+
+  export type UserUpdateWithoutSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    business?: BusinessUpdateOneWithoutUserNestedInput
+    clients?: ClientUpdateManyWithoutUserNestedInput
+    articles?: ArticleUpdateManyWithoutUserNestedInput
+    invoices?: InvoiceUpdateManyWithoutUserNestedInput
+    obligations?: ObligationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    business?: BusinessUncheckedUpdateOneWithoutUserNestedInput
+    clients?: ClientUncheckedUpdateManyWithoutUserNestedInput
+    articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutUserNestedInput
+    obligations?: ObligationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {

@@ -2,6 +2,7 @@
 import { Invoice } from "../types";
 import { Article } from "@/features/articles/types";
 import { Business } from "@/features/business/types";
+import { Settings } from "@/features/settings/types";
 import { useFormValues } from "@/hooks/use-form-values";
 import {
 	Field,
@@ -23,7 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Client } from "@/features/clients/types";
 import { PaymentType, Unit, User } from "@/generated/prisma";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { ArrowDownToLine, Plus, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { createInvoice, enterPayment, deletePayment } from "../actions";
@@ -69,7 +70,7 @@ interface InvoiceFormProps {
 	articlesData: Article[];
 	businessData: Business | null;
 	userData: User | null;
-	lastInvoiceNumber?: string | null;
+	settingsData: Settings | null;
 }
 
 type DraftInvoiceItem = {
@@ -91,7 +92,7 @@ export default function InvoiceForm({
 	articlesData,
 	businessData,
 	userData,
-	lastInvoiceNumber,
+	settingsData,
 }: InvoiceFormProps) {
 	const [state, formAction, isPending] = useActionState(createInvoice, null);
 	const [paymentState, formPaymentAction, isPaymentPending] = useActionState(
@@ -103,39 +104,45 @@ export default function InvoiceForm({
 
 	const isEdit = Boolean(invoiceData);
 
-	const nextInvoiceNumber =
-		invoiceData?.invoiceNumber ??
-		(() => {
-			const year = new Date().getFullYear();
-			const lastNumber = lastInvoiceNumber?.startsWith(`${year}-`)
-				? Number(lastInvoiceNumber.slice(5))
-				: 0;
+	const [paymentMethod, setPaymentMethod] = useState<PaymentType>(
+		(invoiceData?.paymentMethod || settingsData?.defaultPaymentMethod) ??
+			"BANK_TRANSFER",
+	);
 
-			return `${year}-${String(lastNumber + 1).padStart(4, "0")}`;
-		})();
+	const [dueDate, setDueDate] = useState(
+		invoiceData?.dueDate
+			? formatDateInput(invoiceData.dueDate)
+			: new Date(
+					Date.now() +
+						(settingsData?.defaultDueDays ?? 0) * 24 * 60 * 60 * 1000,
+				)
+					.toISOString()
+					.split("T")[0],
+	);
 
 	const initialValues = {
 		clientId: invoiceData?.clientId || "",
-		invoiceNumber: nextInvoiceNumber,
-		issueDate: formatDateInput(invoiceData?.issueDate),
-		dueDate: formatDateInput(invoiceData?.dueDate),
+		invoiceNumber:
+			(invoiceData?.invoiceNumber || settingsData?.nextInvoiceNumber) ??
+			"1/1/1",
+		issueDate:
+			formatDateInput(invoiceData?.issueDate) ||
+			new Date().toISOString().split("T")[0],
+		dueDate: dueDate,
 		status: invoiceData?.status || "",
 		totalAmount: invoiceData?.totalAmount?.toString() || "",
-		note: invoiceData?.note || "",
-		paymentMethod: invoiceData?.paymentMethod || "",
-		issuePlace: invoiceData?.issuePlace || "",
+		note: invoiceData?.note || settingsData?.defaultFooterNote || "",
+		paymentMethod: paymentMethod || "",
+		issuePlace:
+			settingsData?.defaultIssuePlace || invoiceData?.issuePlace || "",
 	};
 
 	const { formValues, setFormValues, handleInputChange } =
 		useFormValues(initialValues);
 
 	const [paymentEntry, setPaymentEntry] = useState(false);
-	const [paymentMethod, setPaymentMethod] = useState<PaymentType>(
-		invoiceData?.paymentMethod ?? "BANK_TRANSFER",
-	);
-	const [paymentDate, setPaymentDate] = useState(
-		new Date().toISOString().split("T")[0],
-	);
+
+	const [paymentDate, setPaymentDate] = useState("");
 	const [paymentAmount, setPaymentAmount] = useState(
 		invoiceData?.totalAmount?.toString() ?? "0",
 	);
@@ -150,7 +157,7 @@ export default function InvoiceForm({
 			unitPrice: item.unitPrice.toString(),
 		})) ?? [
 			{
-				id: crypto.randomUUID(),
+				id: "draft-item-0",
 				itemId: "",
 				name: "",
 				unit: undefined,
@@ -159,6 +166,10 @@ export default function InvoiceForm({
 			},
 		],
 	);
+
+	useEffect(() => {
+		setPaymentDate(new Date().toISOString().split("T")[0]);
+	}, []);
 
 	const handleInvoiceItemChange = (
 		id: string,
@@ -414,7 +425,17 @@ export default function InvoiceForm({
 											name="issueDate"
 											type="date"
 											value={formValues.issueDate}
-											onChange={handleInputChange}
+											onChange={(e) => {
+												handleInputChange(e);
+												setDueDate(
+													new Date(
+														new Date(e.target.value).getTime() +
+															15 * 24 * 60 * 60 * 1000,
+													)
+														.toISOString()
+														.split("T")[0],
+												);
+											}}
 											required
 										/>
 									</Field>
@@ -426,8 +447,8 @@ export default function InvoiceForm({
 											id="dueDate"
 											name="dueDate"
 											type="date"
-											value={formValues.dueDate}
-											onChange={handleInputChange}
+											value={dueDate}
+											onChange={(e) => setDueDate(e.target.value)}
 											required
 										/>
 									</Field>
@@ -439,12 +460,10 @@ export default function InvoiceForm({
 										<Select
 											id="paymentMethod"
 											name="paymentMethod"
-											value={formValues.paymentMethod}
+											value={paymentMethod}
 											onValueChange={(paymentMethod) =>
-												setFormValues((current) => ({
-													...current,
-													paymentMethod: paymentMethod ?? "",
-												}))
+												paymentMethod &&
+												setPaymentMethod(paymentMethod as PaymentType)
 											}
 										>
 											<SelectTrigger className="w-full">

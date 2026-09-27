@@ -6,7 +6,37 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { PaymentType } from "@/generated/prisma";
+
+import { PaymentType, ObligationKind } from "@/generated/prisma";
+
+const EU_COUNTRY_CODES = [
+	"AT",
+	"BE",
+	"BG",
+	"CY",
+	"CZ",
+	"DE",
+	"DK",
+	"EE",
+	"ES",
+	"FI",
+	"FR",
+	"GR",
+	"HU",
+	"IE",
+	"IT",
+	"LT",
+	"LU",
+	"LV",
+	"MT",
+	"NL",
+	"PL",
+	"PT",
+	"RO",
+	"SE",
+	"SI",
+	"SK",
+];
 
 export async function createInvoice(prevState: unknown, formData: FormData) {
 	const data = Object.fromEntries(formData);
@@ -18,7 +48,10 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 	});
 
 	if (!session?.user?.id) {
-		return { status: "error", message: "Korisnik nije logiran" };
+		return {
+			status: "error",
+			message: "Korisnik nije logiran",
+		};
 	}
 
 	if (!result.success) {
@@ -29,12 +62,19 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 	}
 
 	const { invoiceId, items, ...invoiceData } = result.data;
+
 	const client = await prisma.client.findFirst({
-		where: { id: invoiceData.clientId, userId: session.user.id },
+		where: {
+			id: invoiceData.clientId,
+			userId: session.user.id,
+		},
 	});
 
 	if (!client) {
-		return { status: "error", messages: ["Klijent nije pronađen"] };
+		return {
+			status: "error",
+			messages: ["Klijent nije pronađen"],
+		};
 	}
 
 	const invoiceItems = items.map((item, sortOrder) => ({
@@ -44,61 +84,135 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 		sortOrder,
 	}));
 
-	let invoiceNumber = invoiceData.invoiceNumber;
-
-	if (!invoiceId) {
-		const year = invoiceData.issueDate.getFullYear();
-		const prefix = `${year}-`;
-		const lastInvoice = await prisma.invoice.findFirst({
-			where: {
-				userId: session.user.id,
-				invoiceNumber: { startsWith: prefix },
-			},
-			orderBy: { invoiceNumber: "desc" },
-		});
-		const lastNumber = lastInvoice
-			? Number(lastInvoice.invoiceNumber.slice(prefix.length))
-			: 0;
-		const nextNumber = lastNumber + 1;
-
-		invoiceNumber = `${prefix}${String(nextNumber).padStart(4, "0")}`;
-	}
-
 	const totalAmount = invoiceItems.reduce(
 		(total, item) => total + item.amount,
 		0,
 	);
-	const invoiceValues = {
-		...invoiceData,
-		invoiceNumber,
-		totalAmount,
-		invoiceItems: { create: invoiceItems },
-	};
 
 	let invoice;
 
 	try {
-		invoice = invoiceId
-			? await prisma.invoice.update({
+		invoice = await prisma.$transaction(async (tx) => {
+			let invoiceNumber = invoiceData.invoiceNumber;
+
+			if (!invoiceId) {
+				const settings = await tx.settings.findUnique({
 					where: {
-						id: invoiceId,
 						userId: session.user.id,
 					},
-					data: {
-						...invoiceValues,
-						invoiceItems: {
-							deleteMany: {},
-							create: invoiceItems,
-						},
-					},
-				})
-			: await prisma.invoice.create({
-					data: {
-						...invoiceValues,
-						userId: session.user.id,
+					select: {
+						nextInvoiceNumber: true,
 					},
 				});
-	} catch (err: any) {
+
+				invoiceNumber = settings?.nextInvoiceNumber ?? "1/1/1";
+			}
+
+			const invoiceValues = {
+				...invoiceData,
+				invoiceNumber,
+				totalAmount,
+				invoiceItems: {
+					create: invoiceItems,
+				},
+			};
+
+			const savedInvoice = invoiceId
+				? await tx.invoice.update({
+						where: {
+							id: invoiceId,
+							userId: session.user.id,
+						},
+						data: {
+							...invoiceValues,
+							invoiceItems: {
+								deleteMany: {},
+								create: invoiceItems,
+							},
+						},
+					})
+				: await tx.invoice.create({
+						data: {
+							...invoiceValues,
+							userId: session.user.id,
+						},
+					});
+
+			if (!invoiceId) {
+				const [number, ...rest] = invoiceNumber!.split("/");
+
+				const nextInvoiceNumber = `${Number(number) + 1}/${rest.join("/")}`;
+
+				await tx.settings.upsert({
+					where: {
+						userId: session.user.id,
+					},
+					update: {
+						nextInvoiceNumber,
+					},
+					create: {
+						userId: session.user.id,
+						nextInvoiceNumber,
+					},
+				});
+			}
+
+			const countryCode = client.vatCountryCode;
+			const isOutsideHR = countryCode && countryCode !== "HR";
+			const isEU = countryCode && EU_COUNTRY_CODES.includes(countryCode);
+
+			if (isOutsideHR) {
+				const month = invoiceData.issueDate.getMonth() + 1;
+				const year = invoiceData.issueDate.getFullYear();
+
+				const periodLabel = `${month.toString().padStart(2, "0")}/${year}`;
+
+				const dueDate = new Date(year, month, 20);
+
+				await tx.obligation.upsert({
+					where: {
+						userId_kind_periodLabel: {
+							userId: session.user.id,
+							kind: ObligationKind.PDV_FORM,
+							periodLabel,
+						},
+					},
+					create: {
+						userId: session.user.id,
+						kind: ObligationKind.PDV_FORM,
+						name: `PDV obrazac za ${periodLabel}`,
+						periodLabel,
+						dueDate,
+						status: "PENDING",
+					},
+					update: {},
+				});
+
+				if (isEU) {
+					await tx.obligation.upsert({
+						where: {
+							userId_kind_periodLabel: {
+								userId: session.user.id,
+								kind: ObligationKind.ZP_FORM,
+								periodLabel,
+							},
+						},
+						create: {
+							userId: session.user.id,
+							kind: ObligationKind.ZP_FORM,
+							name: `Zbirna prijava (ZP) za ${periodLabel}`,
+							periodLabel,
+							dueDate,
+							status: "PENDING",
+						},
+						update: {},
+					});
+				}
+			}
+
+			return savedInvoice;
+		});
+	} catch (err) {
 		return {
 			status: "error",
 			messages: ["Došlo je do pogreške. Molimo pokušajte ponovno."],
@@ -108,7 +222,9 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 	if (!invoiceId) {
 		redirect(`/invoices/${invoice.id}`);
 	}
+
 	revalidatePath(`/invoices/${invoiceId}`);
+
 	return {
 		status: "success",
 		message:

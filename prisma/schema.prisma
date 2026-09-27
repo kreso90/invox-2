@@ -27,6 +27,7 @@ model User {
   articles      Article[]
   invoices      Invoice[]
   obligations   Obligation[]
+  settings      Settings?
 
   @@unique([email])
   @@map("user")
@@ -172,7 +173,7 @@ model Invoice {
   userId          String
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   clientId        String
-  client          Client           @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  client          Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
   invoiceNumber   String
   issueDate       DateTime
   dueDate         DateTime
@@ -237,6 +238,28 @@ model Obligation {
 
   @@unique([userId, kind, periodLabel])
   @@index([userId, dueDate])
+}
+
+model Settings {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nextInvoiceNumber String @default("1/1/1")
+  nextQuoteNumber   String @default("P-1/1/1")
+
+  defaultDueDays       Int         @default(15)
+  defaultIssuePlace    String?
+  defaultPaymentMethod PaymentType @default(BANK_TRANSFER)
+  defaultFooterNote    String?
+
+  emailSenderName      String?
+  emailReplyTo         String?
+  emailSubjectTemplate String?
+  emailBodyTemplate    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Enums

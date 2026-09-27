@@ -302,6 +302,23 @@ exports.Prisma.ObligationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  nextInvoiceNumber: 'nextInvoiceNumber',
+  nextQuoteNumber: 'nextQuoteNumber',
+  defaultDueDays: 'defaultDueDays',
+  defaultIssuePlace: 'defaultIssuePlace',
+  defaultPaymentMethod: 'defaultPaymentMethod',
+  defaultFooterNote: 'defaultFooterNote',
+  emailSenderName: 'emailSenderName',
+  emailReplyTo: 'emailReplyTo',
+  emailSubjectTemplate: 'emailSubjectTemplate',
+  emailBodyTemplate: 'emailBodyTemplate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -380,7 +397,8 @@ exports.Prisma.ModelName = {
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
   InvoicePayment: 'InvoicePayment',
-  Obligation: 'Obligation'
+  Obligation: 'Obligation',
+  Settings: 'Settings'
 };
 
 /**

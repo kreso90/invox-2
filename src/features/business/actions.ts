@@ -57,20 +57,6 @@ function getMonthlyContributionObligations({
 			},
 			{
 				userId,
-				kind: ObligationKind.PDV_FORM,
-				name: "PDV obrazac (PDV-S)",
-				periodLabel,
-				dueDate,
-			},
-			{
-				userId,
-				kind: ObligationKind.ZP_FORM,
-				name: "ZP obrazac — zbirna prijava",
-				periodLabel,
-				dueDate,
-			},
-			{
-				userId,
 				kind: ObligationKind.OTHER,
 				name: "PO-SD obrazac — prijava paušalnog dohotka",
 				periodLabel: `${String(year)}`,
