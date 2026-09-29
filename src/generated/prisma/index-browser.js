@@ -262,6 +262,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   sentAt: 'sentAt',
   fiscalizedAt: 'fiscalizedAt',
   pdfUrl: 'pdfUrl',
+  isEmailSent: 'isEmailSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

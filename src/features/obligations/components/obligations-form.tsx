@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import {
 	Field,
 	FieldGroup,
@@ -52,6 +53,9 @@ export default function ObligationForm({
 		paymentDescription: obligationData?.paymentDescription || "",
 		status: obligationData?.status || "PENDING",
 	};
+
+	const [periodLabel, setPeriodLabel] = useState<Date | null>(null);
+
 	const { formValues, handleInputChange } = useFormValues(initialValues);
 
 	return (
@@ -76,7 +80,7 @@ export default function ObligationForm({
 						/>
 					</Field>
 
-					<div className="grid md:grid-cols-2 md:gap-4">
+					<div className="grid md:grid-cols-3 md:gap-4">
 						<Field>
 							<FieldLabel htmlFor="kind">
 								Vrsta / kategorija <span className="text-destructive">*</span>
@@ -113,44 +117,40 @@ export default function ObligationForm({
 								placeholder="npr. 100.00"
 							/>
 						</Field>
-					</div>
 
-					<div className="grid md:grid-cols-2 md:gap-4">
 						<Field>
 							<FieldLabel htmlFor="dueDate">
-								Rok (prvi put) <span className="text-destructive">*</span>
+								Rok <span className="text-destructive">*</span>
 							</FieldLabel>
 							<Input
 								id="dueDate"
 								name="dueDate"
 								type="date"
 								value={formValues.dueDate}
-								onChange={handleInputChange}
+								onChange={(event) => {
+									setPeriodLabel(
+										new Date((event.target as HTMLInputElement).value),
+									);
+									handleInputChange(event);
+								}}
 								required
 							/>
 						</Field>
-						<Field>
-							<FieldLabel htmlFor="amount">Iznos</FieldLabel>
-
-							<InputGroup className="w-full h-10 bg-background">
-								<InputGroupAddon>
-									<InputGroupText className="text-primary">€</InputGroupText>
-								</InputGroupAddon>
-								<InputGroupInput
-									id="amount"
-									name="amount"
-									type="number"
-									placeholder="npr. 100.00"
-									step="0.01"
-									value={formValues.amount}
-									onChange={handleInputChange}
-									required
-								/>
-								<InputGroupAddon align="inline-end">
-									<InputGroupText className="text-primary">EUR</InputGroupText>
-								</InputGroupAddon>
-							</InputGroup>
-						</Field>
+						<input
+							type="hidden"
+							name="periodLabel"
+							value={
+								periodLabel
+									? `${String(periodLabel.getMonth() + 1).padStart(2, "0")}/${periodLabel.getFullYear()}`
+									: ""
+							}
+						/>
+						<input
+							type="hidden"
+							name="paymentModel"
+							value={formValues.paymentModel || ""}
+						/>
+						<input type="hidden" name="status" value="PENDING" />
 					</div>
 				</FieldGroup>
 			</FieldSet>

@@ -22,13 +22,24 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { getEffectiveStatus } from "@/features/invoices/utils";
 import { Plus } from "lucide-react";
+import { getDueObligations } from "@/features/obligations/queries";
 
 export default async function DashboardPage() {
-	const userData = await getCurrentUser();
-	const businessData = await getCurrentBusiness();
-	const invoicesData = await getInvoices(undefined, 1, 5);
-	const amountsData = await getInvoicesAmounts();
-	const dueInvoices = await getDueInvoices();
+	const [
+		userData,
+		businessData,
+		invoicesData,
+		amountsData,
+		dueInvoices,
+		dueObligations,
+	] = await Promise.all([
+		getCurrentUser(),
+		getCurrentBusiness(),
+		getInvoices(undefined, 1, 5),
+		getInvoicesAmounts(),
+		getDueInvoices(),
+		getDueObligations(),
+	]);
 
 	const currentAnnualThreshold = amountsData.paidAmount;
 	const thresholdLeft = businessData?.annual_threshold
@@ -54,6 +65,23 @@ export default async function DashboardPage() {
 
 	const current = amountsData.currentMonthPaidAmount ?? 0;
 	const previous = amountsData.previousMonthPaidAmount ?? 0;
+
+	const upcomingDeadlines = [
+		...(dueInvoices ?? []).map((invoice) => ({
+			id: invoice.id,
+			type: "invoice" as const,
+			title: `${invoice.client.companyName} - račun ${invoice.invoiceNumber}`,
+			dueDate: invoice.dueDate,
+		})),
+		...(dueObligations ?? []).map((obligation) => ({
+			id: obligation.id,
+			type: "obligation" as const,
+			title: obligation.name,
+			dueDate: obligation.dueDate,
+		})),
+	].sort(
+		(a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
+	);
 
 	const percentageText =
 		previous === 0 && current > 0
@@ -193,7 +221,7 @@ export default async function DashboardPage() {
 							<TableRow className="uppercase pointer-events-none">
 								<TableHead className="w-25">Broj</TableHead>
 								<TableHead>Klijenti</TableHead>
-								<TableHead>Datum izdavanja</TableHead>
+								<TableHead>Datum</TableHead>
 								<TableHead className="text-right">Iznos</TableHead>
 								<TableHead className="text-right">Status</TableHead>
 							</TableRow>
@@ -243,36 +271,41 @@ export default async function DashboardPage() {
 				<Card className="p-4">
 					<div className="font-semibold">Rokovi</div>
 					<ul className="mt-4 space-y-2">
-						{dueInvoices?.map((invoice) => {
+						{upcomingDeadlines.map((deadline) => {
 							const today = new Date();
 							today.setHours(0, 0, 0, 0);
-							const dueDate = new Date(invoice.dueDate);
+
+							const dueDate = new Date(deadline.dueDate);
 							dueDate.setHours(0, 0, 0, 0);
+
 							const daysUntilDue = Math.ceil(
 								(dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
 							);
+
 							const isOverdue = daysUntilDue < 0;
+
 							const daysLabel = isOverdue
-								? `${Math.abs(daysUntilDue)} ${Math.abs(daysUntilDue) === 1 ? "dan" : "dana"} u kašnjenju`
+								? `${Math.abs(daysUntilDue)} ${
+										Math.abs(daysUntilDue) === 1 ? "dan" : "dana"
+									} u kašnjenju`
 								: daysUntilDue === 0
 									? "Danas"
 									: `${daysUntilDue} ${daysUntilDue === 1 ? "dan" : "dana"}`;
 
 							return (
 								<li
-									key={invoice.id}
+									key={`${deadline.type}-${deadline.id}`}
 									className="flex items-center justify-between border-b border-border pb-2"
 								>
 									<div className="flex flex-col">
-										<span className="font-semibold">
-											{invoice.client.companyName} - račun{" "}
-											{invoice.invoiceNumber}
-										</span>
+										<span className="font-semibold">{deadline.title}</span>
+
 										<span className="text-muted text-xxs font-mono">
 											{isOverdue ? "rok prošao" : "dospijeva"}{" "}
-											{invoice.dueDate.toLocaleDateString("hr-HR")}
+											{dueDate.toLocaleDateString("hr-HR")}
 										</span>
 									</div>
+
 									<span
 										className={
 											isOverdue

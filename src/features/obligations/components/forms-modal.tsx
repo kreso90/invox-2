@@ -19,6 +19,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import { downloadXml, obrazacToXml } from "./xml-zp-export";
 import { pdvToXml } from "./xml-pdv-export";
 
@@ -39,7 +47,7 @@ export function FormsModal({
 	user: User | null;
 	onClose: () => void;
 }) {
-	const [state, fromAction, isPending] = useActionState(
+	const [state, formAction, isPending] = useActionState(
 		updateObligationStatus,
 		null,
 	);
@@ -51,18 +59,39 @@ export function FormsModal({
 	}
 
 	return (
-		<div
-			className={`fixed z-10 ${obligation ? "flex" : "hidden"} justify-center items-center inset-0 bg-black/40 bg-opacity-50`}
-		>
-			<div className="bg-white p-6 rounded-lg border border-border">
-				<div className="flex flex-col gap-0 mb-4">
-					<span className="font-semibold">
+		<Dialog open={!!obligation} onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>
 						{obligationLabels[obligation?.kind as ObligationKind]}
-					</span>
+					</DialogTitle>
 
-					<span className="text-sm text-muted">
+					<DialogDescription>
 						Razdoblje: {obligation?.periodLabel ?? ""}
-					</span>
+					</DialogDescription>
+				</DialogHeader>
+
+				<div className="mt-4 border-t border-border">
+					<div className="flex justify-between text-sm font-medium my-2">
+						<span>Ukupno za razdoblje</span>{" "}
+						<span className="font-mono">
+							{[...invoicesByVatId.values()]
+								.flat()
+								.reduce(
+									(total, invoice) => total + (invoice.totalAmount ?? 0),
+									0,
+								)
+								.toLocaleString("hr-HR", {
+									style: "currency",
+									currency: "EUR",
+								})}
+						</span>
+					</div>
+					<div className="text-xs text-muted">
+						Ovi podaci ne šalju se automatski Poreznoj upravi — služe kao
+						priprema koju prepisuješ (ili izvoziš) u ePorezna sustav pri predaji
+						obrasca.
+					</div>
 				</div>
 				<Table>
 					<TableHeader>
@@ -101,30 +130,8 @@ export function FormsModal({
 						))}
 					</TableBody>
 				</Table>
-				<div className="mt-4 border-t border-border">
-					<div className="flex justify-between text-sm font-medium my-2">
-						<span>Ukupno za razdoblje</span>{" "}
-						<span className="font-mono">
-							{[...invoicesByVatId.values()]
-								.flat()
-								.reduce(
-									(total, invoice) => total + (invoice.totalAmount ?? 0),
-									0,
-								)
-								.toLocaleString("hr-HR", {
-									style: "currency",
-									currency: "EUR",
-								})}
-						</span>
-					</div>
-					<div className="text-xs text-muted">
-						Ovi podaci ne šalju se automatski Poreznoj upravi — služe kao
-						priprema koju prepisuješ (ili izvoziš) u ePorezna sustav pri predaji
-						obrasca.
-					</div>
-				</div>
 
-				<div className="flex justify-center gap-2 mt-5">
+				<DialogFooter className="mt-4">
 					<Button onClick={onClose} variant="outline">
 						Zatvori
 					</Button>
@@ -153,17 +160,19 @@ export function FormsModal({
 						</Button>
 					)}
 					{obligation?.status !== "SUBMITTED" && (
-						<form action={fromAction} className="no-wrapper">
+						<form action={formAction} className="no-wrapper">
 							<input
 								type="hidden"
 								name="obligationId"
 								value={obligation?.id ?? ""}
 							/>
-							<Button type="submit">Podneseno</Button>
+							<Button type="submit" disabled={isPending}>
+								Podneseno
+							</Button>
 						</form>
 					)}
-				</div>
-			</div>
-		</div>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 }

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { obligationSchema } from "@/features/obligations/schemas";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { ObligationKind, ObligationStatus } from "@/generated/prisma/edge";
+import { ObligationKind, ObligationStatus, Prisma } from "@/generated/prisma";
 
 export async function createObligation(prevState: unknown, formData: FormData) {
 	const data = Object.fromEntries(formData);
@@ -44,14 +44,30 @@ export async function createObligation(prevState: unknown, formData: FormData) {
 	const obligationValues = {
 		kind: get("kind") as ObligationKind,
 		name: get("name")!,
-		periodLabel,
+		periodLabel: periodLabel,
 		dueDate: new Date(dueDate),
 		amount: get("amount") ? parseFloat(get("amount")!) : undefined,
-		paymentModel: get("paymentModel"),
+		paymentModel: get("paymentModel") || "",
 		paymentReference: get("paymentReference"),
 		paymentDescription: get("paymentDescription"),
-		status: get("status") as ObligationStatus | undefined,
 	};
+
+	const existingObligation = await prisma.obligation.findUnique({
+		where: {
+			userId_kind_periodLabel: {
+				userId: session.user.id,
+				kind: result.data.kind,
+				periodLabel: result.data.periodLabel,
+			},
+		},
+	});
+
+	if (existingObligation) {
+		return {
+			status: "error",
+			messages: [`Obveza za razdoblje ${result.data.periodLabel} već postoji.`],
+		};
+	}
 
 	try {
 		const obligation = obligationId
@@ -66,6 +82,7 @@ export async function createObligation(prevState: unknown, formData: FormData) {
 					data: {
 						...obligationValues,
 						userId: session.user.id,
+						status: "PENDING",
 					},
 				});
 
@@ -96,10 +113,87 @@ export async function updateObligationStatus(
 		};
 	}
 
-	await prisma.obligation.update({
+	const obligation = await prisma.obligation.findUnique({
 		where: { id: obligationId },
-		data: { status: "SUBMITTED" },
 	});
 
-	redirect("/obligations");
+	if (!obligation) {
+		return {
+			status: "error",
+			message: "Obveza nije pronađena",
+		};
+	}
+
+	await prisma.obligation.update({
+		where: { id: obligationId },
+		data: {
+			status: obligation?.status !== "SUBMITTED" ? "SUBMITTED" : "PENDING",
+		},
+	});
+
+	revalidatePath("/obligations");
+	return {
+		status: "success",
+		message:
+			obligation?.status !== "SUBMITTED"
+				? "Obveza je uspješno ažurirana."
+				: "Obveza je poništena.",
+	};
+}
+
+export async function getDueObligations() {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session?.user) {
+		return null;
+	}
+
+	const dueObligations = await prisma.obligation.findMany({
+		where: {
+			userId: session.user.id,
+			status: "PENDING",
+		},
+		orderBy: { dueDate: "asc" },
+		take: 5,
+		include: { user: true },
+	});
+
+	return dueObligations;
+}
+
+export async function deleteObligation(prevState: unknown, formData: FormData) {
+	const obligationId = formData.get("obligationId") as string;
+
+	const obligation = await prisma.obligation.findUnique({
+		where: { id: obligationId },
+	});
+
+	if (!obligationId || !obligation) {
+		return {
+			status: "error",
+			message: "Obveza nije pronađena.",
+		};
+	}
+
+	try {
+		await prisma.obligation.delete({
+			where: {
+				id: obligationId,
+			},
+		});
+
+		revalidatePath("/obligations");
+
+		return {
+			status: "success",
+			message: `Obveza ${obligation?.name} za period ${obligation.periodLabel} je uspješno izbrisana.`,
+		};
+	} catch (error) {
+		return {
+			status: "error",
+			message: "Brisanje obveze nije uspjelo.",
+		};
+	}
 }

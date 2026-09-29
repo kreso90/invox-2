@@ -12814,6 +12814,7 @@ export namespace Prisma {
     sentAt: Date | null
     fiscalizedAt: Date | null
     pdfUrl: string | null
+    isEmailSent: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12834,6 +12835,7 @@ export namespace Prisma {
     sentAt: Date | null
     fiscalizedAt: Date | null
     pdfUrl: string | null
+    isEmailSent: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12854,6 +12856,7 @@ export namespace Prisma {
     sentAt: number
     fiscalizedAt: number
     pdfUrl: number
+    isEmailSent: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -12884,6 +12887,7 @@ export namespace Prisma {
     sentAt?: true
     fiscalizedAt?: true
     pdfUrl?: true
+    isEmailSent?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12904,6 +12908,7 @@ export namespace Prisma {
     sentAt?: true
     fiscalizedAt?: true
     pdfUrl?: true
+    isEmailSent?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12924,6 +12929,7 @@ export namespace Prisma {
     sentAt?: true
     fiscalizedAt?: true
     pdfUrl?: true
+    isEmailSent?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -13031,6 +13037,7 @@ export namespace Prisma {
     sentAt: Date | null
     fiscalizedAt: Date | null
     pdfUrl: string | null
+    isEmailSent: boolean
     createdAt: Date
     updatedAt: Date
     _count: InvoiceCountAggregateOutputType | null
@@ -13070,6 +13077,7 @@ export namespace Prisma {
     sentAt?: boolean
     fiscalizedAt?: boolean
     pdfUrl?: boolean
+    isEmailSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -13095,6 +13103,7 @@ export namespace Prisma {
     sentAt?: boolean
     fiscalizedAt?: boolean
     pdfUrl?: boolean
+    isEmailSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -13117,6 +13126,7 @@ export namespace Prisma {
     sentAt?: boolean
     fiscalizedAt?: boolean
     pdfUrl?: boolean
+    isEmailSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -13139,11 +13149,12 @@ export namespace Prisma {
     sentAt?: boolean
     fiscalizedAt?: boolean
     pdfUrl?: boolean
+    isEmailSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "clientId" | "invoiceNumber" | "issueDate" | "dueDate" | "issuePlace" | "paymentMethod" | "status" | "note" | "totalAmount" | "paidAt" | "sentAt" | "fiscalizedAt" | "pdfUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "clientId" | "invoiceNumber" | "issueDate" | "dueDate" | "issuePlace" | "paymentMethod" | "status" | "note" | "totalAmount" | "paidAt" | "sentAt" | "fiscalizedAt" | "pdfUrl" | "isEmailSent" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     client?: boolean | ClientDefaultArgs<ExtArgs>
@@ -13184,6 +13195,7 @@ export namespace Prisma {
       sentAt: Date | null
       fiscalizedAt: Date | null
       pdfUrl: string | null
+      isEmailSent: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["invoice"]>
@@ -13628,6 +13640,7 @@ export namespace Prisma {
     readonly sentAt: FieldRef<"Invoice", 'DateTime'>
     readonly fiscalizedAt: FieldRef<"Invoice", 'DateTime'>
     readonly pdfUrl: FieldRef<"Invoice", 'String'>
+    readonly isEmailSent: FieldRef<"Invoice", 'Boolean'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
   }
@@ -18980,6 +18993,7 @@ export namespace Prisma {
     sentAt: 'sentAt',
     fiscalizedAt: 'fiscalizedAt',
     pdfUrl: 'pdfUrl',
+    isEmailSent: 'isEmailSent',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20040,6 +20054,7 @@ export namespace Prisma {
     sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     fiscalizedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     pdfUrl?: StringNullableFilter<"Invoice"> | string | null
+    isEmailSent?: BoolFilter<"Invoice"> | boolean
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -20064,6 +20079,7 @@ export namespace Prisma {
     sentAt?: SortOrderInput | SortOrder
     fiscalizedAt?: SortOrderInput | SortOrder
     pdfUrl?: SortOrderInput | SortOrder
+    isEmailSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -20092,6 +20108,7 @@ export namespace Prisma {
     sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     fiscalizedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     pdfUrl?: StringNullableFilter<"Invoice"> | string | null
+    isEmailSent?: BoolFilter<"Invoice"> | boolean
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -20116,6 +20133,7 @@ export namespace Prisma {
     sentAt?: SortOrderInput | SortOrder
     fiscalizedAt?: SortOrderInput | SortOrder
     pdfUrl?: SortOrderInput | SortOrder
+    isEmailSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
@@ -20144,6 +20162,7 @@ export namespace Prisma {
     sentAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     fiscalizedAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     pdfUrl?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    isEmailSent?: BoolWithAggregatesFilter<"Invoice"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   }
@@ -21416,6 +21435,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutInvoicesInput
@@ -21440,6 +21460,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -21460,6 +21481,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
@@ -21484,6 +21506,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -21506,6 +21529,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21524,6 +21548,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21544,6 +21569,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22690,6 +22716,7 @@ export namespace Prisma {
     sentAt?: SortOrder
     fiscalizedAt?: SortOrder
     pdfUrl?: SortOrder
+    isEmailSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22714,6 +22741,7 @@ export namespace Prisma {
     sentAt?: SortOrder
     fiscalizedAt?: SortOrder
     pdfUrl?: SortOrder
+    isEmailSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22734,6 +22762,7 @@ export namespace Prisma {
     sentAt?: SortOrder
     fiscalizedAt?: SortOrder
     pdfUrl?: SortOrder
+    isEmailSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24354,6 +24383,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutInvoicesInput
@@ -24376,6 +24406,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -24715,6 +24746,7 @@ export namespace Prisma {
     sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     fiscalizedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     pdfUrl?: StringNullableFilter<"Invoice"> | string | null
+    isEmailSent?: BoolFilter<"Invoice"> | boolean
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
   }
@@ -25102,6 +25134,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutInvoicesInput
@@ -25124,6 +25157,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -25641,6 +25675,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutInvoicesInput
@@ -25664,6 +25699,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     invoicePayments?: InvoicePaymentUncheckedCreateNestedManyWithoutInvoiceInput
@@ -25728,6 +25764,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
@@ -25751,6 +25788,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invoicePayments?: InvoicePaymentUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -25805,6 +25843,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutInvoicesInput
@@ -25828,6 +25867,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -25863,6 +25903,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
@@ -25886,6 +25927,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -26130,6 +26172,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26335,6 +26378,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutInvoicesNestedInput
@@ -26357,6 +26401,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -26378,6 +26423,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26442,6 +26488,7 @@ export namespace Prisma {
     sentAt?: Date | string | null
     fiscalizedAt?: Date | string | null
     pdfUrl?: string | null
+    isEmailSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26460,6 +26507,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInvoicesNestedInput
@@ -26482,6 +26530,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -26503,6 +26552,7 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fiscalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

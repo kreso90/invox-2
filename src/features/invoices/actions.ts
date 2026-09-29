@@ -256,8 +256,10 @@ export async function deleteInvoice(prevState: any, formData: FormData) {
 		where: { id: invoiceId },
 	});
 
-	revalidatePath("/invoices");
-	redirect("/invoices");
+	return {
+		status: "success",
+		message: "Račun je uspješno izbrisan",
+	};
 }
 
 export async function enterPayment(prevState: any, formData: FormData) {
@@ -465,6 +467,15 @@ export async function sendInvoiceEmail(prevState: any, formData: FormData) {
 				message: "Slanje emaila nije uspjelo",
 			};
 		}
+
+		await prisma.invoice.update({
+			where: {
+				id: invoice.id,
+			},
+			data: {
+				isEmailSent: true,
+			},
+		});
 
 		return {
 			status: "success",

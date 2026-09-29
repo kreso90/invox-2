@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Edit2, Mail, MoreHorizontalIcon } from "lucide-react";
+import { Edit2, Mail, MoreHorizontalIcon, Trash2, X } from "lucide-react";
 import type { Business, Invoice, Prisma } from "@/generated/prisma";
 
 import { Button } from "@/components/ui/button";
@@ -33,9 +33,12 @@ export function InvoiceActions({
 	settingsData,
 	businessData,
 }: InvoiceActionsProps) {
-	const [emailModalOpen, setEmailModalOpen] = useState(false);
+	const [modalOpen, setModalOpen] = useState({
+		emailModalOpen: false,
+		deleteModalOpen: false,
+	});
 
-	console.log("modal:", emailModalOpen);
+	console.log("modal:", modalOpen);
 
 	return (
 		<>
@@ -62,30 +65,48 @@ export function InvoiceActions({
 						}
 					/>
 
-					<DropdownMenuSeparator />
-
 					<DropdownMenuItem
 						onClick={() => {
-							console.log("EMAIL CLICK");
-							setEmailModalOpen(true);
+							setModalOpen({ ...modalOpen, emailModalOpen: true });
 						}}
 					>
 						<Mail className="mr-2 size-4" />
-						Pošalji email
+						{invoiceData.isEmailSent
+							? "Ponovno pošalji email"
+							: "Pošalji email"}
 					</DropdownMenuItem>
 
 					<DropdownMenuSeparator />
 
-					<InvoiceDeleteForm invoiceId={invoiceData.id} variant="ghost" />
+					<DropdownMenuItem
+						className="text-destructive"
+						onClick={() => {
+							setModalOpen({ ...modalOpen, deleteModalOpen: true });
+						}}
+					>
+						<Trash2 className="mr-2 size-4" />
+						Izbriši račun
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 
 			<InvoiceEmailFormModal
 				invoiceData={invoiceData}
-				open={emailModalOpen}
-				onOpenChange={setEmailModalOpen}
+				open={modalOpen.emailModalOpen}
+				onOpenChange={(open) =>
+					setModalOpen({ ...modalOpen, emailModalOpen: open })
+				}
 				settingsData={settingsData}
 				businessData={businessData}
+			/>
+
+			<InvoiceDeleteForm
+				invoiceData={invoiceData}
+				variant="ghost"
+				open={modalOpen.deleteModalOpen}
+				onOpenChange={(open) =>
+					setModalOpen({ ...modalOpen, deleteModalOpen: open })
+				}
 			/>
 		</>
 	);

@@ -24,10 +24,12 @@ import {
 import { useState } from "react";
 import { BarcodeModal } from "./barcode-modal";
 import { Button } from "@/components/ui/button";
-import { FileText, Form, QrCode } from "lucide-react";
+import { FileText, Form, QrCode, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { FormsModal } from "./forms-modal";
 import dynamic from "next/dynamic";
+import { deleteObligation } from "../actions";
+import ObligationDeleteForm from "./obligation-delete-modal";
 
 const DownloadKpr = dynamic(
 	() => import("./kpr-pdf").then((mod) => mod.DownloadKpr),
@@ -61,6 +63,9 @@ export function ObligationTable({
 	const [selectedFormObligationId, setSelectedFormObligationId] = useState<
 		string | null
 	>(null);
+	const [selectedDeleteObligationId, setSelectedDeleteObligationId] = useState<
+		string | null
+	>(null);
 	const currentMonth = new Intl.DateTimeFormat("hr-HR", {
 		month: "2-digit",
 		year: "numeric",
@@ -84,24 +89,40 @@ export function ObligationTable({
 						className="flex justify-between items-center gap-2 border-b border-border pb-2"
 					>
 						<div>
-							<span className="font-medium">
-								PO-SD obrazac — prijava paušalnog dohotka
-							</span>
+							<span className="font-medium">{otherObligation.name}</span>
 							<br />
 							<span className="text-muted-foreground text-xs font-mono">
-								rok: 15.01.2027.
+								rok:{" "}
+								{otherObligation.dueDate
+									? new Date(otherObligation.dueDate).toLocaleDateString(
+											"hr-HR",
+										)
+									: "N/A"}
 							</span>
 						</div>
-
-						<Badge
-							variant={otherObligation.status === "PENDING" ? "draft" : "paid"}
-						>
-							{
-								obligationStatusLabels[
-									otherObligation.status as ObligationStatus
-								]
-							}
-						</Badge>
+						<div className="flex gap-4">
+							<Badge
+								variant={
+									otherObligation.status === "PENDING" ? "draft" : "paid"
+								}
+							>
+								{
+									obligationStatusLabels[
+										otherObligation.status as ObligationStatus
+									]
+								}
+							</Badge>
+							<Button
+								variant="outline"
+								className="bg-destructive text-white"
+								onClick={() =>
+									setSelectedDeleteObligationId(otherObligation.id)
+								}
+							>
+								<Trash2 />
+								Obriši
+							</Button>
+						</div>
 					</div>
 				))}
 				<div className="flex justify-between gap-2">
@@ -263,13 +284,23 @@ export function ObligationTable({
 												}
 											</Badge>
 										</TableCell>
-										<TableCell className="text-right">
+										<TableCell className="text-right flex justify-end gap-2">
 											<Button
 												onClick={() => setSelectedObligationId(obligation.id)}
 												className="bg-accent-foreground"
 											>
 												<QrCode />
 												QR
+											</Button>
+											<Button
+												variant="outline"
+												className="bg-destructive text-white"
+												onClick={() =>
+													setSelectedDeleteObligationId(obligation.id)
+												}
+											>
+												<Trash2 />
+												Obriši
 											</Button>
 										</TableCell>
 									</TableRow>
@@ -344,13 +375,23 @@ export function ObligationTable({
 											}
 										</Badge>
 									</TableCell>
-									<TableCell className="text-right">
+									<TableCell className="text-right flex justify-end gap-2">
 										<Button
 											onClick={() => setSelectedObligationId(taxObligation.id)}
 											className="bg-accent-foreground"
 										>
 											<QrCode />
 											QR
+										</Button>
+										<Button
+											variant="outline"
+											className="bg-destructive text-white"
+											onClick={() =>
+												setSelectedDeleteObligationId(taxObligation.id)
+											}
+										>
+											<Trash2 />
+											Obriši
 										</Button>
 									</TableCell>
 								</TableRow>
@@ -501,7 +542,7 @@ export function ObligationTable({
 												}
 											</Badge>
 										</TableCell>
-										<TableCell className="text-right">
+										<TableCell className="text-right flex justify-end gap-2">
 											<Button
 												onClick={() =>
 													setSelectedFormObligationId(obligation.id)
@@ -511,6 +552,16 @@ export function ObligationTable({
 												<FileText />
 												Obrazac
 											</Button>
+											<Button
+												variant="outline"
+												className="bg-destructive text-white"
+												onClick={() =>
+													setSelectedDeleteObligationId(obligation.id)
+												}
+											>
+												<Trash2 />
+												Obriši
+											</Button>
 										</TableCell>
 									</TableRow>
 								);
@@ -518,6 +569,18 @@ export function ObligationTable({
 					</TableBody>
 				</Table>
 			</Card>
+
+			<ObligationDeleteForm
+				obligationData={
+					[
+						...obligations,
+						...taxObligations,
+						...formsObligations,
+						...otherObligations,
+					].find((o) => o.id === selectedDeleteObligationId) ?? null
+				}
+				onClose={() => setSelectedDeleteObligationId(null)}
+			/>
 
 			<BarcodeModal
 				obligation={

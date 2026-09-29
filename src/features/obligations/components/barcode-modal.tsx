@@ -10,7 +10,17 @@ import type { Obligation, ObligationKind } from "@/generated/prisma";
 import type { Business } from "@/generated/prisma";
 import { generateHub3aData } from "@/lib/hub3";
 import { updateObligationStatus } from "../actions";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "@/components/ui/toast";
 
 export function BarcodeModal({
 	obligation,
@@ -21,7 +31,7 @@ export function BarcodeModal({
 	business: Business | null;
 	onClose: () => void;
 }) {
-	const [state, fromAction, isPending] = useActionState(
+	const [state, formAction, isPending] = useActionState(
 		updateObligationStatus,
 		null,
 	);
@@ -43,15 +53,29 @@ export function BarcodeModal({
 					description: paymentDetails.paymentDescription,
 				})
 			: null;
+
+	useEffect(() => {
+		if (state?.status === "success") {
+			toast.add({
+				type: "success",
+				description: state.message,
+			});
+
+			onClose();
+		}
+	}, [state?.status, state?.message]);
 	return (
-		<div
-			className={`fixed z-10 ${obligation ? "flex" : "hidden"} justify-center items-center inset-0 bg-black/40 bg-opacity-50`}
-		>
-			<div className="bg-white p-6 rounded-lg border border-border text-center">
-				<div className="text-lg font-semibold">
-					{obligationLabels[obligation?.kind as ObligationKind]}
-				</div>
-				<div className="text-center">Skeniraj kod u mobilnom bankarstvu</div>
+		<Dialog open={!!obligation} onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>
+						{obligationLabels[obligation?.kind as ObligationKind]}
+					</DialogTitle>
+
+					<DialogDescription>
+						Skeniraj kod u mobilnom bankarstvu
+					</DialogDescription>
+				</DialogHeader>
 
 				<div className="my-4 flex justify-center">
 					{obligation && <Hub3aBarcode value={barcodeValue ?? ""} />}
@@ -90,27 +114,31 @@ export function BarcodeModal({
 					</li>
 					<li className="flex justify-between gap-4 py-1">
 						<span className="text-muted">Opis plaćanja</span>{" "}
-						<span className="font-mono">
+						<span className="font-mono text-right">
 							{paymentDetails?.paymentDescription ?? "N/A"}
 						</span>
 					</li>
 				</ul>
-				<div className="flex justify-center gap-2 mt-5">
-					<Button onClick={onClose} variant="outline">
+
+				<DialogFooter className="mt-4">
+					<Button onClick={onClose} variant="outline" size="lg">
 						Zatvori
 					</Button>
-					{obligation?.status !== "SUBMITTED" && (
-						<form action={fromAction} className="no-wrapper">
-							<input
-								type="hidden"
-								name="obligationId"
-								value={obligation?.id ?? ""}
-							/>
-							<Button type="submit">Plačeno</Button>
-						</form>
-					)}
-				</div>
-			</div>
-		</div>
+
+					<form action={formAction} className="no-wrapper">
+						<input
+							type="hidden"
+							name="obligationId"
+							value={obligation?.id ?? ""}
+						/>
+						<Button type="submit" size="lg" disabled={isPending}>
+							{obligation?.status !== "SUBMITTED"
+								? "Plačeno"
+								: "Poništi plaćanje"}
+						</Button>
+					</form>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 }

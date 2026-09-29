@@ -294,5 +294,3 @@ export function DownloadInvoiceButton({ invoice, business, client, user, languag
      </PDFDownloadLink>
    );
  }
-
-

@@ -111,13 +111,13 @@ export default async function ObligationsPage({
 					</CardHeader>
 					<CardContent className="flex flex-col">
 						<span className="font-mono text-2xl font-semibold">
-							15.{String(new Date().getMonth() + 1).padStart(2, "0")}
+							15.{String(new Date().getMonth() + 2).padStart(2, "0")}
 						</span>
 						<span className="text-muted text-xs font-normal">
 							doprinosi za{" "}
 							{new Date(
 								new Date().getFullYear(),
-								new Date().getMonth() - 1,
+								new Date().getMonth(),
 							).toLocaleString("hr-HR", { month: "long" })}{" "}
 							2026.
 						</span>

@@ -59,8 +59,8 @@ function getMonthlyContributionObligations({
 				userId,
 				kind: ObligationKind.OTHER,
 				name: "PO-SD obrazac — prijava paušalnog dohotka",
-				periodLabel: `${String(year)}`,
-				dueDate: new Date(year, 0, 15),
+				periodLabel: `${String(year + 1)}`,
+				dueDate: new Date(year + 1, 0, 15),
 			},
 
 			...(incomeTaxMonths.includes(monthNumber)

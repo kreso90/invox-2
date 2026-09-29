@@ -41,8 +41,9 @@ import {
 	AttachmentMedia,
 	AttachmentTitle,
 } from "@/components/ui/attachment";
-import { useState, useRef, useActionState } from "react";
+import { useState, useRef, useActionState, useEffect } from "react";
 import { sendInvoiceEmail } from "../actions";
+import { toast } from "@/components/ui/toast";
 
 interface InvoiceEmailFormModalProps {
 	invoiceData: InvoiceWithRelations;
@@ -120,6 +121,17 @@ export function InvoiceEmailFormModal({
 
 	const { formValues, handleInputChange } = useFormValues(initialValues);
 
+	useEffect(() => {
+		if (state?.status === "success") {
+			toast.add({
+				type: "success",
+				description: "Email je uspješno poslan.",
+			});
+
+			onOpenChange(false);
+		}
+	}, [state?.status]);
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
@@ -163,9 +175,7 @@ export function InvoiceEmailFormModal({
 							</Field>
 
 							<Field>
-								<FieldLabel htmlFor="emailSubjectTemplate">
-									Predložak naslova
-								</FieldLabel>
+								<FieldLabel htmlFor="emailSubjectTemplate">Predmet</FieldLabel>
 								<Input
 									id="emailSubjectTemplate"
 									name="emailSubjectTemplate"
@@ -177,9 +187,7 @@ export function InvoiceEmailFormModal({
 							</Field>
 
 							<Field>
-								<FieldLabel htmlFor="emailBodyTemplate">
-									Predložak tijela emaila
-								</FieldLabel>
+								<FieldLabel htmlFor="emailBodyTemplate">Poruka</FieldLabel>
 								<Textarea
 									id="emailBodyTemplate"
 									name="emailBodyTemplate"
@@ -243,22 +251,19 @@ export function InvoiceEmailFormModal({
 						</div>
 					)}
 
-					{state?.status === "success" && (
-						<div className="text-sm text-success mt-2 bg-success-foreground p-2 rounded-lg border border-success">
-							<p>{state.message}</p>
-						</div>
-					)}
-
 					<DialogFooter className="mt-4">
 						<Button
 							type="button"
+							size="lg"
 							variant="outline"
 							onClick={() => onOpenChange(false)}
 						>
 							Odustani
 						</Button>
 
-						<Button type="submit">Pošalji</Button>
+						<Button type="submit" size="lg" disabled={isPending}>
+							Pošalji
+						</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>
