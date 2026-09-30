@@ -348,10 +348,20 @@ exports.Unit = exports.$Enums.Unit = {
   PIECE: 'PIECE',
   HOUR: 'HOUR',
   DAY: 'DAY',
+  MONTH: 'MONTH',
+  YEAR: 'YEAR',
   METER: 'METER',
   SQUARE_METER: 'SQUARE_METER',
+  CUBIC_METER: 'CUBIC_METER',
+  KILOMETER: 'KILOMETER',
   LITER: 'LITER',
-  KILOGRAM: 'KILOGRAM'
+  KILOGRAM: 'KILOGRAM',
+  GRAM: 'GRAM',
+  TON: 'TON',
+  SET: 'SET',
+  PACKAGE: 'PACKAGE',
+  SERVICE: 'SERVICE',
+  LICENSE: 'LICENSE'
 };
 
 exports.PaymentType = exports.$Enums.PaymentType = {

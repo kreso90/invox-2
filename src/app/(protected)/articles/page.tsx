@@ -56,7 +56,7 @@ export default async function ArticlesPage() {
 			<Card className="p-4">
 				<Table>
 					<TableHeader>
-						<TableRow className="uppercase">
+						<TableRow className="uppercase hover:bg-transparent">
 							<TableHead className="w-2/5">Naziv</TableHead>
 							<TableHead>Jedinica mjere</TableHead>
 							<TableHead>Cijena</TableHead>
@@ -66,8 +66,15 @@ export default async function ArticlesPage() {
 					</TableHeader>
 					<TableBody>
 						{articles?.map((article) => (
-							<TableRow key={article.id}>
-								<TableCell className="font-medium">{article.name}</TableCell>
+							<TableRow key={article.id} className="hover:bg-transparent">
+								<TableCell className="font-medium">
+									<Link
+										href={`/articles/${article.id}`}
+										className="text-primary underline"
+									>
+										{article.name}
+									</Link>
+								</TableCell>
 								<TableCell>{unitLabels[article.unit]}</TableCell>
 								<TableCell className="font-mono">€{article.price}</TableCell>
 								<TableCell className="text-right font-mono">

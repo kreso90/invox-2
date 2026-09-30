@@ -64,16 +64,15 @@ export async function login(prevState: any, formData: FormData) {
 				password: password,
 			},
 		});
-		return {
-			status: "success",
-			message: "Login successful",
-		};
 	} catch (err: any) {
+		console.error(err);
 		return {
 			status: "error",
 			message: err?.message ?? "Login failed",
 		};
 	}
+
+	redirect("/");
 }
 
 export async function signOut() {

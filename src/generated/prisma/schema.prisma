@@ -274,10 +274,20 @@ enum Unit {
   PIECE
   HOUR
   DAY
+  MONTH
+  YEAR
   METER
   SQUARE_METER
+  CUBIC_METER
+  KILOMETER
   LITER
   KILOGRAM
+  GRAM
+  TON
+  SET
+  PACKAGE
+  SERVICE
+  LICENSE
 }
 
 enum InvoiceStatus {

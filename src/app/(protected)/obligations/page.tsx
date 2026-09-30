@@ -47,7 +47,7 @@ export default async function ObligationsPage({
 		getUserFormsObligations(),
 		getOtherObligations(),
 		getCurrentBusiness(),
-		getInvoices(),
+		getInvoices(undefined, 1, 10000),
 		getMonthlyObligationsAmount(),
 		getCurrentUser(),
 	]);
@@ -56,7 +56,7 @@ export default async function ObligationsPage({
 		await Promise.all(
 			(formsObligations ?? []).map(async (obligation) => {
 				const [month, year] = obligation.periodLabel.split("/");
-				// periodLabel is the filing month; the invoices belong to the month before it.
+
 				const countryFilter =
 					obligation.kind === "ZP_FORM"
 						? { vatCountryCode: { in: EU_COUNTRY_CODES } }

@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { articleSchema } from "./schemas";
 import { Unit } from "@/generated/prisma/client";
+import { redirect } from "next/navigation";
 
 export async function createArticle(prevState: unknown, formData: FormData) {
 	const data = Object.fromEntries(formData);
@@ -39,8 +40,10 @@ export async function createArticle(prevState: unknown, formData: FormData) {
 		lastUsedAt: get("lastUsedAt") ? new Date(get("lastUsedAt")!) : undefined,
 	};
 
+	let article;
+
 	try {
-		const article = articleId
+		article = articleId
 			? await prisma.article.update({
 					where: {
 						id: articleId,
@@ -54,19 +57,21 @@ export async function createArticle(prevState: unknown, formData: FormData) {
 						userId: session.user.id,
 					},
 				});
-		revalidatePath("/articles/new");
-		if (article) {
-			return {
-				status: "success",
-				message: "Podaci o artiklu su uspješno spremljeni!",
-			};
-		}
 	} catch (err: any) {
 		return {
 			status: "error",
 			messages: ["Došlo je do pogreške. Molimo pokušajte ponovno."],
 		};
 	}
+
+	if (!articleId) {
+		redirect(`/articles/${article.id}?created=true`);
+	}
+
+	return {
+		status: "success",
+		message: "Podaci o klijentu su uspješno spremljeni!",
+	};
 }
 
 export async function deleteArticle(prevState: any, formData: FormData) {

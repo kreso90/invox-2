@@ -17,7 +17,10 @@ export async function createClient(prevState: unknown, formData: FormData) {
 	});
 
 	if (!session?.user?.id) {
-		return { status: "error", message: "Korisnik nije logiran" };
+		return {
+			status: "error",
+			message: "Korisnik nije logiran",
+		};
 	}
 
 	if (!result.success) {
@@ -47,8 +50,10 @@ export async function createClient(prevState: unknown, formData: FormData) {
 		note: get("note") || null,
 	};
 
+	let client;
+
 	try {
-		const client = clientId
+		client = clientId
 			? await prisma.client.update({
 					where: {
 						id: clientId,
@@ -62,19 +67,21 @@ export async function createClient(prevState: unknown, formData: FormData) {
 						userId: session.user.id,
 					},
 				});
-
-		if (client) {
-			return {
-				status: "success",
-				message: "Podaci o klijentu su uspješno spremljeni!",
-			};
-		}
-	} catch (err: any) {
+	} catch (err) {
 		return {
 			status: "error",
 			messages: ["Došlo je do pogreške. Molimo pokušajte ponovno."],
 		};
 	}
+
+	if (!clientId) {
+		redirect(`/clients/${client.id}?created=true`);
+	}
+
+	return {
+		status: "success",
+		message: "Podaci o klijentu su uspješno spremljeni!",
+	};
 }
 
 export async function deleteClient(prevState: any, formData: FormData) {

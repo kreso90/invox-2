@@ -5,14 +5,14 @@ import {
 	FieldLabel,
 	FieldLegend,
 	FieldSet,
-} from "../../../components/ui/field";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
+} from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { createClient } from "@/features/clients/actions";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Client } from "@/features/clients/types";
 import { useFormValues } from "@/hooks/use-form-values";
-import { Textarea } from "../../../components/ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import { allCountries } from "country-region-data";
 
 import {
@@ -178,7 +178,6 @@ export default function ClientForm({ clientData }: clientFormProps) {
 									placeholder="npr. 9512345678"
 									value={formValues.vatNumber}
 									onChange={handleInputChange}
-									required
 								/>
 							</Field>
 						</div>

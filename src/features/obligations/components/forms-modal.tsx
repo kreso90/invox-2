@@ -53,7 +53,6 @@ export function FormsModal({
 		null,
 	);
 
-	// ZP only covers EU clients (HR is never in EU_COUNTRY_CODES); PDV covers everyone except HR.
 	const relevantInvoices =
 		obligation?.kind === "ZP_FORM"
 			? invoices.filter(

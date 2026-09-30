@@ -31,10 +31,20 @@ const unitLabels: Record<Unit, string> = {
 	PIECE: "Komad",
 	HOUR: "Sat",
 	DAY: "Dan",
+	MONTH: "Mjesec",
+	YEAR: "Godina",
 	METER: "Metar",
 	SQUARE_METER: "Kvadratni metar",
-	LITER: "Litar",
+	CUBIC_METER: "Kubični metar",
+	KILOMETER: "Kilometar",
+	LITER: "Litra",
 	KILOGRAM: "Kilogram",
+	GRAM: "Gram",
+	TON: "Tona",
+	SET: "Set",
+	PACKAGE: "Paket",
+	SERVICE: "Usluga",
+	LICENSE: "Licenca",
 };
 
 export default function ArticleForm({ articleData }: ArticleFormProps) {

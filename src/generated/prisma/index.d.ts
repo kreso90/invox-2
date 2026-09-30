@@ -100,10 +100,20 @@ export const Unit: {
   PIECE: 'PIECE',
   HOUR: 'HOUR',
   DAY: 'DAY',
+  MONTH: 'MONTH',
+  YEAR: 'YEAR',
   METER: 'METER',
   SQUARE_METER: 'SQUARE_METER',
+  CUBIC_METER: 'CUBIC_METER',
+  KILOMETER: 'KILOMETER',
   LITER: 'LITER',
-  KILOGRAM: 'KILOGRAM'
+  KILOGRAM: 'KILOGRAM',
+  GRAM: 'GRAM',
+  TON: 'TON',
+  SET: 'SET',
+  PACKAGE: 'PACKAGE',
+  SERVICE: 'SERVICE',
+  LICENSE: 'LICENSE'
 };
 
 export type Unit = (typeof Unit)[keyof typeof Unit]

@@ -4,17 +4,20 @@ import { Card, CardContent, CardContentRow } from "@/components/ui/card";
 import ClientDeleteForm from "@/features/clients/components/client-delete-form";
 import { getClientById } from "@/features/clients/queries";
 import Link from "next/link";
+import { ToastFromQuery } from "@/components/ui/toast-from-query";
 
 export default async function ClientPage({
 	params,
+	searchParams,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
+	searchParams: Promise<{ created?: string }>;
 }) {
-	const id = (await params).id;
+	const [{ id }, { created }] = await Promise.all([params, searchParams]);
 	const client = await getClientById(id);
 
 	return (
-		<div>
+		<>
 			<div className="flex items-end justify-between mb-8">
 				<div className="flex flex-col">
 					<Link
@@ -96,6 +99,10 @@ export default async function ClientPage({
 					</Card>
 				</div>
 			</div>
-		</div>
+
+			{created === "true" && (
+				<ToastFromQuery message={"Klijent je uspješno kreiran!"} />
+			)}
+		</>
 	);
 }

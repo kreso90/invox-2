@@ -7,6 +7,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { ToastFromQuery } from "@/components/ui/toast-from-query";
 import ArticleDeleteForm from "@/features/articles/components/article-delete-form";
 import ArticleForm from "@/features/articles/components/article-form";
 import { getArticleById } from "@/features/articles/queries";
@@ -25,13 +26,15 @@ const unitLabels: Record<Unit, string> = {
 
 export default async function ArticlePage({
 	params,
+	searchParams,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
+	searchParams: Promise<{ created?: string }>;
 }) {
-	const id = (await params).id;
+	const [{ id }, { created }] = await Promise.all([params, searchParams]);
 	const article = await getArticleById(id);
 	return (
-		<div>
+		<>
 			<div className="flex items-end justify-between mb-8">
 				<div className="flex flex-col">
 					<Link
@@ -42,10 +45,6 @@ export default async function ArticlePage({
 					</Link>
 					<h1 className="page-title">Artikal</h1>
 				</div>
-				<ArticleDeleteForm
-					articleId={article?.id || ""}
-					variant="destructive"
-				/>
 			</div>
 			<div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-4">
 				<ArticleForm articleData={article} />
@@ -75,6 +74,9 @@ export default async function ArticlePage({
 					</Card>
 				</div>
 			</div>
-		</div>
+			{created === "true" && (
+				<ToastFromQuery message={"Artikal je uspješno kreiran!"} />
+			)}
+		</>
 	);
 }

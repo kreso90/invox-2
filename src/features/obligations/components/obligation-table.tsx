@@ -607,7 +607,6 @@ export function ObligationTable({
 					if (!selectedObligation) return false;
 
 					const issueDate = new Date(invoice.issueDate);
-					// obligation.periodLabel is the filing month, one month after the invoice's issue month.
 					const filingDate = new Date(
 						issueDate.getFullYear(),
 						issueDate.getMonth() + 1,
