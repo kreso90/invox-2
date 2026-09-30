@@ -1,13 +1,6 @@
 import { getUserArticles } from "@/features/articles/queries";
-import { Edit2, MoreHorizontalIcon, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	Table,
 	TableBody,
@@ -16,21 +9,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import ArticleDeleteForm from "@/features/articles/components/article-delete-form";
-import { Unit } from "@/generated/prisma";
 import { ArticleActions } from "@/features/articles/components/article-actions";
-
-const unitLabels: Record<Unit, string> = {
-	PIECE: "Komad",
-	HOUR: "Sat",
-	DAY: "Dan",
-	METER: "Metar",
-	SQUARE_METER: "Kvadratni metar",
-	LITER: "Litar",
-	KILOGRAM: "Kilogram",
-};
+import { unitLabelsLong } from "@/features/articles/constants";
 
 export default async function ArticlesPage() {
 	const articles = await getUserArticles();
@@ -60,7 +41,6 @@ export default async function ArticlesPage() {
 							<TableHead className="w-2/5">Naziv</TableHead>
 							<TableHead>Jedinica mjere</TableHead>
 							<TableHead>Cijena</TableHead>
-							<TableHead className="text-right">Zadnje korišteno</TableHead>
 							<TableHead className="text-right">Akcije</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -75,13 +55,8 @@ export default async function ArticlesPage() {
 										{article.name}
 									</Link>
 								</TableCell>
-								<TableCell>{unitLabels[article.unit]}</TableCell>
+								<TableCell>{unitLabelsLong[article.unit]}</TableCell>
 								<TableCell className="font-mono">€{article.price}</TableCell>
-								<TableCell className="text-right font-mono">
-									{article.lastUsedAt
-										? new Date(article.lastUsedAt).toLocaleDateString()
-										: "N/A"}
-								</TableCell>
 								<TableCell className="text-right">
 									<ArticleActions articleData={article} />
 								</TableCell>
