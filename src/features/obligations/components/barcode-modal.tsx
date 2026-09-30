@@ -63,7 +63,7 @@ export function BarcodeModal({
 
 			onClose();
 		}
-	}, [state?.status, state?.message]);
+	}, [state]);
 	return (
 		<Dialog open={!!obligation} onOpenChange={onClose}>
 			<DialogContent>

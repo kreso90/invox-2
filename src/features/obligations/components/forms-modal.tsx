@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { downloadXml, obrazacToXml } from "./xml-zp-export";
 import { pdvToXml } from "./xml-pdv-export";
+import { EU_COUNTRY_CODES } from "@/features/invoices/constants";
 
 type InvoiceWithClient = Prisma.InvoiceGetPayload<{
 	include: { client: true; invoicePayments: true };
@@ -52,8 +53,20 @@ export function FormsModal({
 		null,
 	);
 
+	// ZP only covers EU clients (HR is never in EU_COUNTRY_CODES); PDV covers everyone except HR.
+	const relevantInvoices =
+		obligation?.kind === "ZP_FORM"
+			? invoices.filter(
+					(invoice) =>
+						invoice.client?.vatCountryCode &&
+						EU_COUNTRY_CODES.includes(invoice.client.vatCountryCode),
+				)
+			: obligation?.kind === "PDV_FORM"
+				? invoices.filter((invoice) => invoice.client?.vatCountryCode !== "HR")
+				: invoices;
+
 	const invoicesByVatId = new Map<string, InvoiceWithClient[]>();
-	for (const invoice of invoices) {
+	for (const invoice of relevantInvoices) {
 		const key = invoice.client?.vatNumber ?? invoice.id;
 		invoicesByVatId.set(key, [...(invoicesByVatId.get(key) ?? []), invoice]);
 	}
@@ -114,7 +127,7 @@ export function FormsModal({
 								<TableCell>
 									{groupedInvoices[0]?.client?.vatCountryCode ?? ""}
 								</TableCell>
-								<TableCell>{vatId.slice(2)}</TableCell>
+								<TableCell>{vatId}</TableCell>
 								<TableCell className="font-mono text-right">
 									{groupedInvoices
 										.reduce(
@@ -139,7 +152,12 @@ export function FormsModal({
 						<Button
 							onClick={() =>
 								downloadXml(
-									obrazacToXml({ obligation, invoices, business, user }),
+									obrazacToXml({
+										obligation,
+										invoices: relevantInvoices,
+										business,
+										user,
+									}),
 									`${obligation?.kind?.toLowerCase().includes("zp") ? "zp-obrazac" : "pdv-obrazac"}-${obligation?.periodLabel?.replace(/\s|\.$/g, "")}.xml`,
 								)
 							}
@@ -151,7 +169,12 @@ export function FormsModal({
 						<Button
 							onClick={() =>
 								downloadXml(
-									pdvToXml({ obligation, invoices, business, user }),
+									pdvToXml({
+										obligation,
+										invoices: relevantInvoices,
+										business,
+										user,
+									}),
 									`${obligation?.kind?.toLowerCase().includes("zp") ? "zp-obrazac" : "pdv-obrazac"}-${obligation?.periodLabel?.replace(/\s|\.$/g, "")}.xml`,
 								)
 							}

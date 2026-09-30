@@ -1,5 +1,5 @@
 "use client";
-import { Invoice } from "../types";
+import { redirect, useRouter } from "next/navigation";
 import { Article } from "@/features/articles/types";
 import { Business } from "@/features/business/types";
 import { Settings } from "@/features/settings/types";
@@ -56,6 +56,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { toast } from "@/components/ui/toast";
 
 interface InvoiceFormProps {
 	invoiceData: InvoiceWithClient | null;
@@ -91,6 +92,7 @@ export default function InvoiceForm({
 	userData,
 	settingsData,
 }: InvoiceFormProps) {
+	const router = useRouter();
 	const [state, formAction, isPending] = useActionState(createInvoice, null);
 	const [paymentState, formPaymentAction, isPaymentPending] = useActionState(
 		enterPayment,
@@ -167,6 +169,17 @@ export default function InvoiceForm({
 	useEffect(() => {
 		setPaymentDate(new Date().toISOString().split("T")[0]);
 	}, []);
+
+	useEffect(() => {
+		if (state?.status === "success") {
+			toast.add({
+				type: "success",
+				description: isEdit
+					? "Račun je uspješno ažuriran."
+					: "Novi račun je uspješno kreiran.",
+			});
+		}
+	}, [state]);
 
 	const handleInvoiceItemChange = (
 		id: string,

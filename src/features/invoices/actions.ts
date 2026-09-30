@@ -12,37 +12,9 @@ import { Resend } from "resend";
 import { createElement } from "react";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { InvoicePDF } from "./components/invoice-pdf";
+import { EU_COUNTRY_CODES } from "./constants";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-const EU_COUNTRY_CODES = [
-	"AT",
-	"BE",
-	"BG",
-	"CY",
-	"CZ",
-	"DE",
-	"DK",
-	"EE",
-	"ES",
-	"FI",
-	"FR",
-	"GR",
-	"HU",
-	"IE",
-	"IT",
-	"LT",
-	"LU",
-	"LV",
-	"MT",
-	"NL",
-	"PL",
-	"PT",
-	"RO",
-	"SE",
-	"SI",
-	"SK",
-];
 
 export async function createInvoice(prevState: unknown, formData: FormData) {
 	const data = Object.fromEntries(formData);
@@ -168,12 +140,18 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 			const isEU = countryCode && EU_COUNTRY_CODES.includes(countryCode);
 
 			if (isOutsideHR) {
-				const month = invoiceData.issueDate.getMonth() + 1;
-				const year = invoiceData.issueDate.getFullYear();
+				// Obligation is filed the month after the invoice's issue month.
+				const obligationMonth = new Date(
+					invoiceData.issueDate.getFullYear(),
+					invoiceData.issueDate.getMonth() + 1,
+					1,
+				);
+				const month = obligationMonth.getMonth() + 1;
+				const year = obligationMonth.getFullYear();
 
 				const periodLabel = `${month.toString().padStart(2, "0")}/${year}`;
 
-				const dueDate = new Date(year, month, 20);
+				const dueDate = new Date(year, month - 1, 20);
 
 				await tx.obligation.upsert({
 					where: {
@@ -226,10 +204,8 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 	}
 
 	if (!invoiceId) {
-		redirect(`/invoices/${invoice.id}`);
+		redirect(`/invoices/${invoice.id}?created=true`);
 	}
-
-	revalidatePath(`/invoices/${invoiceId}`);
 
 	return {
 		status: "success",
@@ -350,10 +326,6 @@ export async function sendInvoiceEmail(prevState: any, formData: FormData) {
 	const emailRecipient = (
 		formData.get("emailRecipient") as string | null
 	)?.trim();
-	const emailSenderName = (
-		formData.get("emailSenderName") as string | null
-	)?.trim();
-	const emailReplyTo = (formData.get("emailReplyTo") as string | null)?.trim();
 	const emailSubjectTemplate = (
 		formData.get("emailSubjectTemplate") as string | null
 	)?.trim();

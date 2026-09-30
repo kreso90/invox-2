@@ -1,4 +1,3 @@
-import ArticleForm from "@/features/articles/components/article-form";
 import { getUserArticles } from "@/features/articles/queries";
 import { Edit2, MoreHorizontalIcon, Plus } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ArticleDeleteForm from "@/features/articles/components/article-delete-form";
 import { Unit } from "@/generated/prisma";
+import { ArticleActions } from "@/features/articles/components/article-actions";
 
 const unitLabels: Record<Unit, string> = {
 	PIECE: "Komad",
@@ -76,32 +76,7 @@ export default async function ArticlesPage() {
 										: "N/A"}
 								</TableCell>
 								<TableCell className="text-right">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" className="size-8">
-													<MoreHorizontalIcon />
-													<span className="sr-only">Open menu</span>
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end">
-											<DropdownMenuItem>
-												<Link
-													href={`/articles/${article.id}`}
-													className="flex w-full"
-												>
-													<Edit2 className="mr-2" />
-													Uredi
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuSeparator />
-											<ArticleDeleteForm
-												articleId={article.id}
-												variant="ghost"
-											/>
-										</DropdownMenuContent>
-									</DropdownMenu>
+									<ArticleActions articleData={article} />
 								</TableCell>
 							</TableRow>
 						))}

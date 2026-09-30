@@ -13,7 +13,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { DownloadInvoiceButton } from "@/features/invoices/components/invoice-pdf";
 import InvoiceDeleteForm from "./invoice-delete-form";
 import { InvoiceEmailFormModal } from "./invoice-email-form";
 import { Settings } from "@/generated/prisma";
@@ -37,8 +37,6 @@ export function InvoiceActions({
 		emailModalOpen: false,
 		deleteModalOpen: false,
 	});
-
-	console.log("modal:", modalOpen);
 
 	return (
 		<>

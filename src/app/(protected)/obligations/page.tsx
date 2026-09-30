@@ -16,6 +16,7 @@ import { ObligationKind } from "@/generated/prisma";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { getInvoices, getInvoicesAmounts } from "@/features/invoices/queries";
+import { EU_COUNTRY_CODES } from "@/features/invoices/constants";
 import { Progress } from "@/components/ui/progress";
 import { DownloadKpr } from "@/features/obligations/components/kpr-pdf";
 import { getCurrentUser } from "@/features/dashboard/queries";
@@ -51,18 +52,26 @@ export default async function ObligationsPage({
 		getCurrentUser(),
 	]);
 
-	const periodLabels = [
-		...new Set((formsObligations ?? []).map((o) => o.periodLabel)),
-	];
 	const invoicesAmountsByPeriod = Object.fromEntries(
 		await Promise.all(
-			periodLabels.map(async (periodLabel) => {
-				const [month, year] = periodLabel.split("/");
+			(formsObligations ?? []).map(async (obligation) => {
+				const [month, year] = obligation.periodLabel.split("/");
+				// periodLabel is the filing month; the invoices belong to the month before it.
+				const countryFilter =
+					obligation.kind === "ZP_FORM"
+						? { vatCountryCode: { in: EU_COUNTRY_CODES } }
+						: obligation.kind === "PDV_FORM"
+							? { vatCountryCode: { not: "HR" } }
+							: undefined;
 				const amounts = await getInvoicesAmounts(
-					new Date(Number(year), Number(month) - 1),
+					new Date(Number(year), Number(month) - 2),
+					countryFilter,
 				);
 
-				return [periodLabel, amounts.selectedMonthPaidAmount ?? 0];
+				return [
+					`${obligation.kind}_${obligation.periodLabel}`,
+					amounts.selectedMonthPaidAmount ?? 0,
+				];
 			}),
 		),
 	);

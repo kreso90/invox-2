@@ -1,5 +1,6 @@
 "use client";
 import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { deleteInvoice } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -35,16 +36,20 @@ export default function InvoiceDeleteForm({
 }: InvoiceDeleteFormProps) {
 	const [state, formAction, isPending] = useActionState(deleteInvoice, null);
 
-	useEffect(() => {
-		if (state?.status === "success") {
-			toast.add({
-				type: "success",
-				description: "Račun je uspješno izbrisan.",
-			});
+	const router = useRouter();
 
-			onOpenChange(false);
-		}
-	}, [state?.status]);
+	useEffect(() => {
+		if (state?.status !== "success") return;
+
+		toast.add({
+			type: "success",
+			description: `Račun ${invoiceData?.invoiceNumber} je uspješno izbrisan.`,
+		});
+
+		onOpenChange(false);
+
+		router.refresh();
+	}, [state]);
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>

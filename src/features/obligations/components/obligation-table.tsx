@@ -120,7 +120,6 @@ export function ObligationTable({
 								}
 							>
 								<Trash2 />
-								Obriši
 							</Button>
 						</div>
 					</div>
@@ -300,7 +299,6 @@ export function ObligationTable({
 												}
 											>
 												<Trash2 />
-												Obriši
 											</Button>
 										</TableCell>
 									</TableRow>
@@ -391,7 +389,6 @@ export function ObligationTable({
 											}
 										>
 											<Trash2 />
-											Obriši
 										</Button>
 									</TableCell>
 								</TableRow>
@@ -520,12 +517,16 @@ export function ObligationTable({
 												: "N/A"}
 										</TableCell>
 										<TableCell className="font-mono font-medium text-sm">
-											{invoicesAmountsByPeriod[obligation.periodLabel]
+											{invoicesAmountsByPeriod[
+												`${obligation.kind}_${obligation.periodLabel}`
+											]
 												? new Intl.NumberFormat("hr-HR", {
 														style: "currency",
 														currency: "EUR",
 													}).format(
-														invoicesAmountsByPeriod[obligation.periodLabel],
+														invoicesAmountsByPeriod[
+															`${obligation.kind}_${obligation.periodLabel}`
+														],
 													)
 												: "N/A"}
 										</TableCell>
@@ -560,7 +561,6 @@ export function ObligationTable({
 												}
 											>
 												<Trash2 />
-												Obriši
 											</Button>
 										</TableCell>
 									</TableRow>
@@ -607,7 +607,13 @@ export function ObligationTable({
 					if (!selectedObligation) return false;
 
 					const issueDate = new Date(invoice.issueDate);
-					const invoicePeriodLabel = `${String(issueDate.getMonth() + 1).padStart(2, "0")}/${issueDate.getFullYear()}`;
+					// obligation.periodLabel is the filing month, one month after the invoice's issue month.
+					const filingDate = new Date(
+						issueDate.getFullYear(),
+						issueDate.getMonth() + 1,
+						1,
+					);
+					const invoicePeriodLabel = `${String(filingDate.getMonth() + 1).padStart(2, "0")}/${filingDate.getFullYear()}`;
 
 					return invoicePeriodLabel === selectedObligation.periodLabel;
 				})}

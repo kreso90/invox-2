@@ -105,7 +105,10 @@ export async function getInvoices(
 	};
 }
 
-export async function getInvoicesAmounts(date?: Date) {
+export async function getInvoicesAmounts(
+	date?: Date,
+	clientCountryFilter?: Prisma.InvoiceWhereInput["client"],
+) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -178,6 +181,7 @@ export async function getInvoicesAmounts(date?: Date) {
 					1,
 				),
 			},
+			...(clientCountryFilter ? { client: clientCountryFilter } : {}),
 		},
 		_sum: {
 			totalAmount: true,

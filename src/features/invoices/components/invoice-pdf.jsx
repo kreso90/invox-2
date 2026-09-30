@@ -290,7 +290,7 @@ export function DownloadInvoiceButton({ invoice, business, client, user, languag
       document={<InvoicePDF invoice={invoice} business={business} client={client} user={user} language={language} />}
       fileName={`${labels.fileName}-${invoice.invoiceNumber}.pdf`}
      >
-       {({ loading }) => (loading ? 'Priprema PDF...' :  <button className="w-full py-1 hover:bg-background cursor-pointer rounded-lg font-medium">{labels.download}</button>)}
+       {({ loading }) => (loading ? 'Priprema PDF...' :  <button className="w-full py-1 hover:bg-background cursor-pointer rounded-lg font-medium" >{labels.download}</button>)}
      </PDFDownloadLink>
    );
  }

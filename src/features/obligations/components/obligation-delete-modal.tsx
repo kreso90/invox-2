@@ -35,7 +35,7 @@ export default function ObligationDeleteForm({
 
 			onClose();
 		}
-	}, [state?.status, state?.message]);
+	}, [state]);
 	return (
 		<Dialog open={!!obligationData} onOpenChange={onClose}>
 			<DialogContent>

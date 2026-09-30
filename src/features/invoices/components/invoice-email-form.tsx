@@ -8,6 +8,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 import { Business, Invoice, Prisma, Settings } from "@/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,6 +75,8 @@ export function InvoiceEmailFormModal({
 		);
 	};
 
+	const router = useRouter();
+
 	const initialValues = {
 		emailRecipient: invoiceData.client?.email || "",
 		emailSenderName: settingsData?.emailSenderName || "",
@@ -129,8 +132,9 @@ export function InvoiceEmailFormModal({
 			});
 
 			onOpenChange(false);
+			router.refresh();
 		}
-	}, [state?.status]);
+	}, [state]);
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>

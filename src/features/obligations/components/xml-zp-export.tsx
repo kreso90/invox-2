@@ -86,8 +86,8 @@ export function obrazacToXml({
 						const r = groupedInvoices[0];
 						return {
 							RedBr: groupedInvoices.indexOf(r) + 1,
-							KodDrzave: r.client?.vatNumber?.slice(0, 2) ?? "",
-							PDVID: r.client?.vatNumber?.slice(2) ?? "",
+							KodDrzave: r.client?.vatCountryCode ?? "",
+							PDVID: r.client?.vatNumber ?? "",
 							T1: 0,
 							T2: 0,
 							T3: 0,

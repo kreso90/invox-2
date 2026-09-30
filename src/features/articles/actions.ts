@@ -1,11 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { articleSchema } from "./schemas";
 import { Unit } from "@/generated/prisma/client";
 
@@ -56,7 +54,7 @@ export async function createArticle(prevState: unknown, formData: FormData) {
 						userId: session.user.id,
 					},
 				});
-
+		revalidatePath("/articles/new");
 		if (article) {
 			return {
 				status: "success",
@@ -81,10 +79,21 @@ export async function deleteArticle(prevState: any, formData: FormData) {
 		};
 	}
 
-	await prisma.article.delete({
-		where: { id: articleId },
-	});
+	try {
+		await prisma.article.delete({
+			where: {
+				id: articleId,
+			},
+		});
 
-	revalidatePath("/articles");
-	redirect("/articles");
+		return {
+			status: "success",
+			message: `Artikal ${articleId} je uspješno izbrisan.`,
+		};
+	} catch (error) {
+		return {
+			status: "error",
+			message: "Brisanje artikla nije uspjelo.",
+		};
+	}
 }
