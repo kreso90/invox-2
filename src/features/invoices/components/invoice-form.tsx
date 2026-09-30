@@ -181,6 +181,20 @@ export default function InvoiceForm({
 		}
 	}, [state]);
 
+	useEffect(() => {
+		if (paymentState?.status) {
+			toast.add({
+				type: paymentState?.status === "success" ? "success" : "error",
+				description:
+					paymentState?.status === "success"
+						? "Uplata je uspješno evidentirana."
+						: "Došlo je do pogreške prilikom evidentiranja uplate.",
+			});
+		}
+		setPaymentEntry(false);
+		router.refresh();
+	}, [paymentState]);
+
 	const handleInvoiceItemChange = (
 		id: string,
 		field: "name" | "quantity" | "unitPrice" | "unit",

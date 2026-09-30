@@ -262,45 +262,76 @@ export async function enterPayment(prevState: any, formData: FormData) {
 	});
 
 	if (!session?.user?.id) {
-		return { status: "error", message: "Korisnik nije logiran" };
+		return {
+			status: "error",
+			message: "Korisnik nije logiran",
+		};
 	}
 
 	const invoice = await prisma.invoice.findFirst({
-		where: { id: invoiceId, userId: session.user.id },
-		select: { id: true, totalAmount: true },
+		where: {
+			id: invoiceId,
+			userId: session.user.id,
+		},
+		select: {
+			id: true,
+			totalAmount: true,
+		},
 	});
 
 	if (!invoice) {
-		return { status: "error", message: "Račun nije pronađen" };
+		return {
+			status: "error",
+			message: "Račun nije pronađen",
+		};
 	}
 
-	await prisma.$transaction(async (transaction) => {
-		await transaction.invoicePayment.create({
-			data: {
-				invoiceId,
-				amount,
-				method,
-			},
+	try {
+		await prisma.$transaction(async (transaction) => {
+			await transaction.invoicePayment.create({
+				data: {
+					invoiceId,
+					amount,
+					method,
+				},
+			});
+
+			const payments = await transaction.invoicePayment.aggregate({
+				where: {
+					invoiceId,
+				},
+				_sum: {
+					amount: true,
+				},
+			});
+
+			const paidAmount = payments._sum.amount ?? 0;
+			const isFullyPaid = paidAmount >= invoice.totalAmount - 0.01;
+
+			await transaction.invoice.update({
+				where: {
+					id: invoiceId,
+				},
+				data: {
+					status: isFullyPaid ? "PAID" : "PARTIALLY_PAID",
+					paidAt: isFullyPaid ? new Date() : null,
+				},
+			});
 		});
 
-		const payments = await transaction.invoicePayment.aggregate({
-			where: { invoiceId },
-			_sum: { amount: true },
-		});
-		const paidAmount = payments._sum.amount ?? 0;
-		const isFullyPaid = paidAmount >= invoice.totalAmount - 0.01;
+		return {
+			status: "success",
+			message: "Uplata je uspješno evidentirana",
+		};
+	} catch (error) {
+		console.error("Greška prilikom evidentiranja uplate:", error);
 
-		await transaction.invoice.update({
-			where: { id: invoiceId },
-			data: {
-				status: isFullyPaid ? "PAID" : "PARTIALLY_PAID",
-				paidAt: isFullyPaid ? new Date() : null,
-			},
-		});
-	});
-
-	revalidatePath("/invoices");
-	revalidatePath(`/invoices/${invoiceId}`);
+		return {
+			status: "error",
+			message:
+				"Došlo je do pogreške prilikom evidentiranja uplate. Molimo pokušajte ponovno.",
+		};
+	}
 }
 
 export async function deletePayment(prevState: any, formData: FormData) {
