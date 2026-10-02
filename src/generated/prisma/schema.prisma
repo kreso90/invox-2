@@ -169,28 +169,30 @@ model Article {
 }
 
 model Invoice {
-  id              String           @id @default(cuid())
-  userId          String
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  clientId        String
-  client          Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  invoiceNumber   String
-  issueDate       DateTime
-  dueDate         DateTime
-  issuePlace      String?
-  paymentMethod   PaymentType      @default(BANK_TRANSFER)
-  status          InvoiceStatus    @default(DRAFT)
-  note            String?
-  totalAmount     Float            @default(0)
-  paidAt          DateTime?
-  sentAt          DateTime?
-  fiscalizedAt    DateTime?
-  pdfUrl          String?
-  isEmailSent     Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  invoiceItems    InvoiceItem[]
-  invoicePayments InvoicePayment[]
+  id                String           @id @default(cuid())
+  userId            String
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId          String
+  client            Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  invoiceNumber     String
+  issueDate         DateTime
+  dueDate           DateTime
+  servicePeriodFrom DateTime?
+  servicePeriodTo   DateTime?
+  issuePlace        String?
+  paymentMethod     PaymentType      @default(BANK_TRANSFER)
+  status            InvoiceStatus    @default(DRAFT)
+  note              String?
+  totalAmount       Float            @default(0)
+  paidAt            DateTime?
+  sentAt            DateTime?
+  fiscalizedAt      DateTime?
+  pdfUrl            String?
+  isEmailSent       Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  invoiceItems      InvoiceItem[]
+  invoicePayments   InvoicePayment[]
 
   @@unique([userId, invoiceNumber])
 }

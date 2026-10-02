@@ -19,6 +19,7 @@ export type KprData = {
 	user: User;
 	invoices: InvoiceWithItems[];
 	business: Business;
+	year?: Date | null;
 };
 
 Font.register({
@@ -371,7 +372,13 @@ function GeneralData({ data }: { data: KprData }) {
 	);
 }
 
-function KprTable({ invoices }: { invoices: InvoiceWithItems[] }) {
+function KprTable({
+	invoices,
+	year,
+}: {
+	invoices: InvoiceWithItems[];
+	year?: Date | null;
+}) {
 	return (
 		<View style={styles.table}>
 			{/* HEADER */}
@@ -426,7 +433,12 @@ function KprTable({ invoices }: { invoices: InvoiceWithItems[] }) {
 					(a, b) =>
 						new Date(a.issueDate).getTime() - new Date(b.issueDate).getTime(),
 				)
-				.filter((entry) => entry.status !== "DRAFT")
+				.filter(
+					(entry) =>
+						entry.status !== "DRAFT" &&
+						(!year ||
+							new Date(entry.issueDate).getFullYear() === year.getFullYear()),
+				)
 				.map((entry, index) => (
 					<View style={styles.dataRow} key={`${entry.invoiceNumber}-${index}`}>
 						<View style={[styles.dataCell, styles.columnNumber, styles.center]}>
@@ -522,7 +534,7 @@ export function KprDocument({ data }: { data: KprData }) {
 
 				<GeneralData data={data} />
 
-				<KprTable invoices={data.invoices} />
+				<KprTable invoices={data.invoices} year={data.year} />
 
 				<KprFooter />
 			</Page>
@@ -534,10 +546,14 @@ export function DownloadKpr({ data }: { data: KprData }) {
 	return (
 		<PDFDownloadLink
 			document={<KprDocument data={data} />}
-			fileName="KPR-2026.pdf"
+			fileName={
+				data.year ? `KPR-${data.year.getFullYear()}.pdf` : "KPR-sve-godine.pdf"
+			}
 		>
 			{({ loading }) => (
-				<Button size="lg">{loading ? "KPR ažurira..." : "Preuzmi KPR"}</Button>
+				<Button size="lg" className="h-full">
+					{loading ? "KPR ažurira..." : "Preuzmi KPR"}
+				</Button>
 			)}
 		</PDFDownloadLink>
 	);

@@ -30,6 +30,14 @@ import { FormsModal } from "./forms-modal";
 import dynamic from "next/dynamic";
 import { deleteObligation } from "../actions";
 import ObligationDeleteForm from "./obligation-delete-modal";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const DownloadKpr = dynamic(
 	() => import("./kpr-pdf").then((mod) => mod.DownloadKpr),
@@ -66,6 +74,14 @@ export function ObligationTable({
 	const [selectedDeleteObligationId, setSelectedDeleteObligationId] = useState<
 		string | null
 	>(null);
+	const invoiceYears = [
+		...new Set(
+			invoices.map((invoice) => new Date(invoice.issueDate).getFullYear()),
+		),
+	].sort((a, b) => b - a);
+	const [selectedYear, setSelectedYear] = useState<Date | null>(
+		() => new Date(invoiceYears[0] ?? new Date().getFullYear(), 0, 1),
+	);
 	const currentMonth = new Intl.DateTimeFormat("hr-HR", {
 		month: "2-digit",
 		year: "numeric",
@@ -133,13 +149,45 @@ export function ObligationTable({
 						</span>
 					</div>
 					{business && invoices && user && (
-						<DownloadKpr
-							data={{
-								business,
-								user,
-								invoices,
-							}}
-						/>
+						<div className="flex gap-2">
+							<Select
+								value={selectedYear?.getFullYear().toString() ?? "Sve godine"}
+								onValueChange={(value) =>
+									setSelectedYear(
+										value === "Sve godine" || value === null
+											? null
+											: new Date(Number(value), 0, 1),
+									)
+								}
+							>
+								<SelectTrigger className="w-full">
+									<SelectValue>
+										{(value: string | null) =>
+											value && value !== "null" ? value : "Odaberi godinu"
+										}
+									</SelectValue>
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectItem value="Sve godine">Sve godine</SelectItem>
+										{invoiceYears.map((year) => (
+											<SelectItem key={year} value={year.toString()}>
+												{year}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+
+							<DownloadKpr
+								data={{
+									business,
+									user,
+									invoices,
+									year: selectedYear,
+								}}
+							/>
+						</div>
 					)}
 				</div>
 			</Card>

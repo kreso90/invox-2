@@ -12,20 +12,14 @@ export const obligationSchema = z.object({
 		"ZP_FORM",
 		"OTHER",
 	]),
-	name: z.string().min(1, "Name is required"),
-	periodLabel: z.string().min(1, "Period label is required"),
-
+	name: z.string().min(1, "Naziv je obavezan"),
+	periodLabel: z.string().min(1, "Period je obavezan"),
 	dueDate: z.coerce.date({
-		message: "Due date is required",
+		message: "Rok je obavezan",
 	}),
-
-	amount: z.coerce.number().min(0, "Amount must be a positive number"),
-
+	amount: z.coerce.number().min(0, "Iznos mora biti pozitivan broj"),
 	paymentModel: z.string().optional(),
-
 	paymentReference: z.string().optional(),
-
 	paymentDescription: z.string().optional(),
-
-	status: z.string().min(1, "Status is required"),
+	status: z.string().min(1, "Status je obavezan"),
 });

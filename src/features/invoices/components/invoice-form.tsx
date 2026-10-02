@@ -25,7 +25,13 @@ import { Button } from "@/components/ui/button";
 import { Client } from "@/features/clients/types";
 import { PaymentType, Prisma, Unit, User } from "@/generated/prisma";
 import { useActionState, useEffect, useState } from "react";
-import { ArrowDownToLine, Plus, X } from "lucide-react";
+import {
+	ArrowDownToLine,
+	CalendarIcon,
+	ChevronDownIcon,
+	Plus,
+	X,
+} from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { createInvoice, enterPayment, deletePayment } from "../actions";
 import InputSelect from "@/components/ui/input-select";
@@ -56,7 +62,11 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from "@/components/ui/toast";
+import { DateRange } from "react-day-picker";
+import React from "react";
+import { addDays, format } from "date-fns";
 
 interface InvoiceFormProps {
 	invoiceData: InvoiceWithClient | null;
@@ -81,7 +91,13 @@ type InvoiceWithClient = Prisma.InvoiceGetPayload<{
 }>;
 
 function formatDateInput(value: Date | string | undefined) {
-	return value ? new Date(value).toISOString().split("T")[0] : "";
+	if (!value) return "";
+
+	const date = new Date(value);
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+
+	return `${date.getFullYear()}-${month}-${day}`;
 }
 
 export default function InvoiceForm({
@@ -108,26 +124,31 @@ export default function InvoiceForm({
 			"BANK_TRANSFER",
 	);
 
-	const [dueDate, setDueDate] = useState(
-		invoiceData?.dueDate
-			? formatDateInput(invoiceData.dueDate)
-			: new Date(
-					Date.now() +
-						(settingsData?.defaultDueDays ?? 0) * 24 * 60 * 60 * 1000,
-				)
-					.toISOString()
-					.split("T")[0],
+	const [issueDate, setIssueDate] = useState<Date>(
+		invoiceData?.issueDate ? new Date(invoiceData.issueDate) : new Date(),
 	);
+	const [dueDate, setDueDate] = useState<Date>(
+		invoiceData?.dueDate
+			? new Date(invoiceData.dueDate)
+			: addDays(new Date(), settingsData?.defaultDueDays ?? 0),
+	);
+
+	const [servicePeriod, setServicePeriod] = React.useState<
+		DateRange | undefined
+	>({
+		from: invoiceData?.servicePeriodFrom
+			? new Date(invoiceData.servicePeriodFrom)
+			: new Date(),
+		to: invoiceData?.servicePeriodTo
+			? new Date(invoiceData.servicePeriodTo)
+			: new Date(),
+	});
 
 	const initialValues = {
 		clientId: invoiceData?.clientId || "",
 		invoiceNumber:
 			(invoiceData?.invoiceNumber || settingsData?.nextInvoiceNumber) ??
 			"1/1/1",
-		issueDate:
-			formatDateInput(invoiceData?.issueDate) ||
-			new Date().toISOString().split("T")[0],
-		dueDate: dueDate,
 		status: invoiceData?.status || "",
 		totalAmount: invoiceData?.totalAmount?.toString() || "",
 		note: invoiceData?.note || settingsData?.defaultFooterNote || "",
@@ -366,6 +387,26 @@ export default function InvoiceForm({
 						/>
 						<input
 							type="hidden"
+							name="issueDate"
+							value={formatDateInput(issueDate)}
+						/>
+						<input
+							type="hidden"
+							name="dueDate"
+							value={formatDateInput(dueDate)}
+						/>
+						<input
+							type="hidden"
+							name="servicePeriodFrom"
+							value={formatDateInput(servicePeriod?.from)}
+						/>
+						<input
+							type="hidden"
+							name="servicePeriodTo"
+							value={formatDateInput(servicePeriod?.to)}
+						/>
+						<input
+							type="hidden"
 							name="items"
 							value={JSON.stringify(invoiceItems)}
 						/>
@@ -439,44 +480,136 @@ export default function InvoiceForm({
 											</FieldDescription>
 										) : null}
 									</Field>
+								</div>
+								<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 									<Field>
-										<FieldLabel htmlFor="issueDate">
-											Datum izdavanja
+										<FieldLabel htmlFor="dueDate">
+											Datum izdavanja{" "}
 											<span className="text-destructive">*</span>
 										</FieldLabel>
-										<Input
-											id="issueDate"
-											name="issueDate"
-											type="date"
-											value={formValues.issueDate}
-											onChange={(e) => {
-												handleInputChange(e);
-												setDueDate(
-													new Date(
-														new Date(e.target.value).getTime() +
-															15 * 24 * 60 * 60 * 1000,
-													)
-														.toISOString()
-														.split("T")[0],
-												);
-											}}
-											required
-										/>
+										<Popover>
+											<PopoverTrigger
+												render={
+													<Button variant="input" data-empty={!issueDate}>
+														{issueDate ? (
+															new Date(issueDate).toLocaleDateString("hr-HR")
+														) : (
+															<span>Odaberi datum</span>
+														)}
+														<ChevronDownIcon data-icon="inline-end" />
+													</Button>
+												}
+											/>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={issueDate}
+													onSelect={(date) => {
+														if (!date) return;
+
+														setIssueDate(date);
+														setDueDate(
+															new Date(
+																date.getTime() +
+																	(settingsData?.defaultDueDays ?? 0) *
+																		24 *
+																		60 *
+																		60 *
+																		1000,
+															),
+														);
+													}}
+													defaultMonth={issueDate}
+													required
+												/>
+											</PopoverContent>
+										</Popover>
 									</Field>
+
 									<Field>
 										<FieldLabel htmlFor="dueDate">
 											Dospijeće <span className="text-destructive">*</span>
 										</FieldLabel>
-										<Input
-											id="dueDate"
-											name="dueDate"
-											type="date"
-											value={dueDate}
-											onChange={(e) => setDueDate(e.target.value)}
-											required
-										/>
+										<Popover>
+											<PopoverTrigger
+												render={
+													<Button
+														variant="input"
+														data-empty={!dueDate}
+														className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+													>
+														{dueDate ? (
+															new Date(dueDate).toLocaleDateString("hr-HR")
+														) : (
+															<span>Odaberi datum</span>
+														)}
+														<ChevronDownIcon data-icon="inline-end" />
+													</Button>
+												}
+											/>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={dueDate}
+													onSelect={(date) => {
+														if (!date) return;
+
+														setDueDate(date);
+													}}
+													defaultMonth={dueDate}
+													required
+												/>
+											</PopoverContent>
+										</Popover>
 									</Field>
 
+									<Field>
+										<FieldLabel htmlFor="servicePeriod">
+											Roba/Usluga (od-do)
+											<span className="text-destructive">*</span>
+										</FieldLabel>
+										<Popover>
+											<PopoverTrigger
+												render={
+													<Button
+														variant="input"
+														id="date-picker-range"
+														className="justify-start px-2.5 font-normal"
+													>
+														<CalendarIcon data-icon="inline-start" />
+														{servicePeriod?.from ? (
+															servicePeriod.to ? (
+																<>
+																	{format(servicePeriod.from, "LLL dd, y")} -{" "}
+																	{format(servicePeriod.to, "LLL dd, y")}
+																</>
+															) : (
+																format(servicePeriod.from, "LLL dd, y")
+															)
+														) : (
+															<span>Pick a date</span>
+														)}
+													</Button>
+												}
+											/>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="range"
+													selected={servicePeriod}
+													onSelect={(date) => {
+														if (!date) return;
+
+														setServicePeriod(date);
+													}}
+													numberOfMonths={2}
+													defaultMonth={servicePeriod?.from}
+													required
+												/>
+											</PopoverContent>
+										</Popover>
+									</Field>
+								</div>
+								<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 									<Field>
 										<FieldLabel htmlFor="paymentMethod">
 											Način plaćanja <span className="text-destructive">*</span>
@@ -727,22 +860,37 @@ export default function InvoiceForm({
 								<br />
 								<span className="text-muted font-mono text-xs">
 									Izdano:{" "}
-									{formValues.issueDate
+									{issueDate
 										? new Intl.DateTimeFormat("hr-HR", {
 												day: "numeric",
 												month: "numeric",
 												year: "numeric",
-											}).format(new Date(`${formValues.issueDate}T00:00:00`))
+											}).format(issueDate)
 										: "Datum nije odabran"}
 									<br />
 									Dospijeće:{" "}
-									{formValues.dueDate
+									{dueDate
 										? new Intl.DateTimeFormat("hr-HR", {
 												day: "numeric",
 												month: "numeric",
 												year: "numeric",
-											}).format(new Date(`${formValues.dueDate}T00:00:00`))
+											}).format(dueDate)
 										: "Datum nije odabran"}
+									<br />
+									Roba/Usluga (od-do):{" "}
+									{servicePeriod?.from && servicePeriod?.to
+										? `${new Intl.DateTimeFormat("hr-HR", {
+												day: "numeric",
+												month: "numeric",
+												year: "numeric",
+											}).format(
+												servicePeriod.from,
+											)} - ${new Intl.DateTimeFormat("hr-HR", {
+												day: "numeric",
+												month: "numeric",
+												year: "numeric",
+											}).format(servicePeriod.to)}`
+										: "Nije odabrano"}
 									<br />
 									Način plaćanja:{" "}
 									{paymentLabels[formValues.paymentMethod as PaymentType] ||

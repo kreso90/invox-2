@@ -12815,6 +12815,8 @@ export namespace Prisma {
     invoiceNumber: string | null
     issueDate: Date | null
     dueDate: Date | null
+    servicePeriodFrom: Date | null
+    servicePeriodTo: Date | null
     issuePlace: string | null
     paymentMethod: $Enums.PaymentType | null
     status: $Enums.InvoiceStatus | null
@@ -12836,6 +12838,8 @@ export namespace Prisma {
     invoiceNumber: string | null
     issueDate: Date | null
     dueDate: Date | null
+    servicePeriodFrom: Date | null
+    servicePeriodTo: Date | null
     issuePlace: string | null
     paymentMethod: $Enums.PaymentType | null
     status: $Enums.InvoiceStatus | null
@@ -12857,6 +12861,8 @@ export namespace Prisma {
     invoiceNumber: number
     issueDate: number
     dueDate: number
+    servicePeriodFrom: number
+    servicePeriodTo: number
     issuePlace: number
     paymentMethod: number
     status: number
@@ -12888,6 +12894,8 @@ export namespace Prisma {
     invoiceNumber?: true
     issueDate?: true
     dueDate?: true
+    servicePeriodFrom?: true
+    servicePeriodTo?: true
     issuePlace?: true
     paymentMethod?: true
     status?: true
@@ -12909,6 +12917,8 @@ export namespace Prisma {
     invoiceNumber?: true
     issueDate?: true
     dueDate?: true
+    servicePeriodFrom?: true
+    servicePeriodTo?: true
     issuePlace?: true
     paymentMethod?: true
     status?: true
@@ -12930,6 +12940,8 @@ export namespace Prisma {
     invoiceNumber?: true
     issueDate?: true
     dueDate?: true
+    servicePeriodFrom?: true
+    servicePeriodTo?: true
     issuePlace?: true
     paymentMethod?: true
     status?: true
@@ -13038,6 +13050,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date
     dueDate: Date
+    servicePeriodFrom: Date | null
+    servicePeriodTo: Date | null
     issuePlace: string | null
     paymentMethod: $Enums.PaymentType
     status: $Enums.InvoiceStatus
@@ -13078,6 +13092,8 @@ export namespace Prisma {
     invoiceNumber?: boolean
     issueDate?: boolean
     dueDate?: boolean
+    servicePeriodFrom?: boolean
+    servicePeriodTo?: boolean
     issuePlace?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -13104,6 +13120,8 @@ export namespace Prisma {
     invoiceNumber?: boolean
     issueDate?: boolean
     dueDate?: boolean
+    servicePeriodFrom?: boolean
+    servicePeriodTo?: boolean
     issuePlace?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -13127,6 +13145,8 @@ export namespace Prisma {
     invoiceNumber?: boolean
     issueDate?: boolean
     dueDate?: boolean
+    servicePeriodFrom?: boolean
+    servicePeriodTo?: boolean
     issuePlace?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -13150,6 +13170,8 @@ export namespace Prisma {
     invoiceNumber?: boolean
     issueDate?: boolean
     dueDate?: boolean
+    servicePeriodFrom?: boolean
+    servicePeriodTo?: boolean
     issuePlace?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -13164,7 +13186,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "clientId" | "invoiceNumber" | "issueDate" | "dueDate" | "issuePlace" | "paymentMethod" | "status" | "note" | "totalAmount" | "paidAt" | "sentAt" | "fiscalizedAt" | "pdfUrl" | "isEmailSent" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "clientId" | "invoiceNumber" | "issueDate" | "dueDate" | "servicePeriodFrom" | "servicePeriodTo" | "issuePlace" | "paymentMethod" | "status" | "note" | "totalAmount" | "paidAt" | "sentAt" | "fiscalizedAt" | "pdfUrl" | "isEmailSent" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     client?: boolean | ClientDefaultArgs<ExtArgs>
@@ -13196,6 +13218,8 @@ export namespace Prisma {
       invoiceNumber: string
       issueDate: Date
       dueDate: Date
+      servicePeriodFrom: Date | null
+      servicePeriodTo: Date | null
       issuePlace: string | null
       paymentMethod: $Enums.PaymentType
       status: $Enums.InvoiceStatus
@@ -13641,6 +13665,8 @@ export namespace Prisma {
     readonly invoiceNumber: FieldRef<"Invoice", 'String'>
     readonly issueDate: FieldRef<"Invoice", 'DateTime'>
     readonly dueDate: FieldRef<"Invoice", 'DateTime'>
+    readonly servicePeriodFrom: FieldRef<"Invoice", 'DateTime'>
+    readonly servicePeriodTo: FieldRef<"Invoice", 'DateTime'>
     readonly issuePlace: FieldRef<"Invoice", 'String'>
     readonly paymentMethod: FieldRef<"Invoice", 'PaymentType'>
     readonly status: FieldRef<"Invoice", 'InvoiceStatus'>
@@ -18994,6 +19020,8 @@ export namespace Prisma {
     invoiceNumber: 'invoiceNumber',
     issueDate: 'issueDate',
     dueDate: 'dueDate',
+    servicePeriodFrom: 'servicePeriodFrom',
+    servicePeriodTo: 'servicePeriodTo',
     issuePlace: 'issuePlace',
     paymentMethod: 'paymentMethod',
     status: 'status',
@@ -20055,6 +20083,8 @@ export namespace Prisma {
     invoiceNumber?: StringFilter<"Invoice"> | string
     issueDate?: DateTimeFilter<"Invoice"> | Date | string
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
+    servicePeriodFrom?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    servicePeriodTo?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     issuePlace?: StringNullableFilter<"Invoice"> | string | null
     paymentMethod?: EnumPaymentTypeFilter<"Invoice"> | $Enums.PaymentType
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -20080,6 +20110,8 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     issueDate?: SortOrder
     dueDate?: SortOrder
+    servicePeriodFrom?: SortOrderInput | SortOrder
+    servicePeriodTo?: SortOrderInput | SortOrder
     issuePlace?: SortOrderInput | SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -20109,6 +20141,8 @@ export namespace Prisma {
     invoiceNumber?: StringFilter<"Invoice"> | string
     issueDate?: DateTimeFilter<"Invoice"> | Date | string
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
+    servicePeriodFrom?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    servicePeriodTo?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     issuePlace?: StringNullableFilter<"Invoice"> | string | null
     paymentMethod?: EnumPaymentTypeFilter<"Invoice"> | $Enums.PaymentType
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -20134,6 +20168,8 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     issueDate?: SortOrder
     dueDate?: SortOrder
+    servicePeriodFrom?: SortOrderInput | SortOrder
+    servicePeriodTo?: SortOrderInput | SortOrder
     issuePlace?: SortOrderInput | SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -20163,6 +20199,8 @@ export namespace Prisma {
     invoiceNumber?: StringWithAggregatesFilter<"Invoice"> | string
     issueDate?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     dueDate?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+    servicePeriodFrom?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
+    servicePeriodTo?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     issuePlace?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     paymentMethod?: EnumPaymentTypeWithAggregatesFilter<"Invoice"> | $Enums.PaymentType
     status?: EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -21436,6 +21474,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -21461,6 +21501,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -21482,6 +21524,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -21507,6 +21551,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -21530,6 +21576,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -21549,6 +21597,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -21570,6 +21620,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -22717,6 +22769,8 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     issueDate?: SortOrder
     dueDate?: SortOrder
+    servicePeriodFrom?: SortOrder
+    servicePeriodTo?: SortOrder
     issuePlace?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -22742,6 +22796,8 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     issueDate?: SortOrder
     dueDate?: SortOrder
+    servicePeriodFrom?: SortOrder
+    servicePeriodTo?: SortOrder
     issuePlace?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -22763,6 +22819,8 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     issueDate?: SortOrder
     dueDate?: SortOrder
+    servicePeriodFrom?: SortOrder
+    servicePeriodTo?: SortOrder
     issuePlace?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -24384,6 +24442,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -24407,6 +24467,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -24747,6 +24809,8 @@ export namespace Prisma {
     invoiceNumber?: StringFilter<"Invoice"> | string
     issueDate?: DateTimeFilter<"Invoice"> | Date | string
     dueDate?: DateTimeFilter<"Invoice"> | Date | string
+    servicePeriodFrom?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    servicePeriodTo?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     issuePlace?: StringNullableFilter<"Invoice"> | string | null
     paymentMethod?: EnumPaymentTypeFilter<"Invoice"> | $Enums.PaymentType
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -25135,6 +25199,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -25158,6 +25224,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -25676,6 +25744,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -25700,6 +25770,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -25765,6 +25837,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -25789,6 +25863,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -25844,6 +25920,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -25868,6 +25946,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -25904,6 +25984,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -25928,6 +26010,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -26173,6 +26257,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -26379,6 +26465,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -26402,6 +26490,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -26424,6 +26514,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -26489,6 +26581,8 @@ export namespace Prisma {
     invoiceNumber: string
     issueDate: Date | string
     dueDate: Date | string
+    servicePeriodFrom?: Date | string | null
+    servicePeriodTo?: Date | string | null
     issuePlace?: string | null
     paymentMethod?: $Enums.PaymentType
     status?: $Enums.InvoiceStatus
@@ -26508,6 +26602,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -26531,6 +26627,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -26553,6 +26651,8 @@ export namespace Prisma {
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     issueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    servicePeriodFrom?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    servicePeriodTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issuePlace?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus

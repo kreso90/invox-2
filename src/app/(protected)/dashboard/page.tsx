@@ -41,7 +41,7 @@ export default async function DashboardPage() {
 		getDueObligations(),
 	]);
 
-	const currentAnnualThreshold = amountsData.paidAmount;
+	const currentAnnualThreshold = amountsData.currentYearIssuedAmount ?? 0;
 	const thresholdLeft = businessData?.annual_threshold
 		? businessData.annual_threshold - currentAnnualThreshold
 		: 0;
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
 	const previousMonth = new Intl.DateTimeFormat("hr-HR", {
 		month: "long",
 	}).format(new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1));
-
+	console.log(previousMonth);
 	const currentDate = new Intl.DateTimeFormat("hr-HR", {
 		weekday: "long",
 		day: "numeric",

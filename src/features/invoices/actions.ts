@@ -140,7 +140,6 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 			const isEU = countryCode && EU_COUNTRY_CODES.includes(countryCode);
 
 			if (isOutsideHR) {
-				// Obligation is filed the month after the invoice's issue month.
 				const obligationMonth = new Date(
 					invoiceData.issueDate.getFullYear(),
 					invoiceData.issueDate.getMonth() + 1,
@@ -338,6 +337,17 @@ export async function deletePayment(prevState: any, formData: FormData) {
 	const invoiceId = formData.get("invoiceId") as string;
 	const paymentId = formData.get("paymentId") as string;
 
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session?.user?.id) {
+		return {
+			status: "error",
+			message: "Korisnik nije logiran",
+		};
+	}
+
 	if (!paymentId) {
 		return {
 			status: "error",
@@ -345,8 +355,44 @@ export async function deletePayment(prevState: any, formData: FormData) {
 		};
 	}
 
-	await prisma.invoicePayment.delete({
-		where: { id: paymentId },
+	const invoice = await prisma.invoice.findFirst({
+		where: {
+			id: invoiceId,
+			userId: session.user.id,
+		},
+		select: {
+			id: true,
+			totalAmount: true,
+		},
+	});
+
+	await prisma.$transaction(async (transaction) => {
+		await transaction.invoicePayment.delete({
+			where: { id: paymentId },
+		});
+
+		const payments = await transaction.invoicePayment.aggregate({
+			where: {
+				invoiceId,
+			},
+			_sum: {
+				amount: true,
+			},
+		});
+
+		const paidAmount = payments._sum.amount ?? 0;
+		const isFullyPaid = paidAmount >= (invoice?.totalAmount ?? 0) - 0.01;
+
+		await transaction.invoice.update({
+			where: { id: invoiceId },
+			data: {
+				status: isFullyPaid
+					? "PAID"
+					: paidAmount > 0
+						? "PARTIALLY_PAID"
+						: "ISSUED",
+			},
+		});
 	});
 
 	revalidatePath(`/invoices/${invoiceId}`);

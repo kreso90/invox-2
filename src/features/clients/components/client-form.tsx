@@ -138,9 +138,12 @@ export default function ClientForm({ clientData }: clientFormProps) {
 
 						<div className="grid md:grid-cols-2 md:gap-4">
 							<Field>
-								<FieldLabel htmlFor="vatCountryCode">Država PDV-a</FieldLabel>
+								<FieldLabel htmlFor="vatCountryCode">
+									Država <span className="text-destructive">*</span>
+								</FieldLabel>
 								<Select
 									id="vatCountryCode"
+									required
 									name="vatCountryCode"
 									value={formValues.vatCountryCode}
 									onValueChange={(value) =>
@@ -170,7 +173,9 @@ export default function ClientForm({ clientData }: clientFormProps) {
 								</Select>
 							</Field>
 							<Field>
-								<FieldLabel htmlFor="vatNumber">PDV broj</FieldLabel>
+								<FieldLabel htmlFor="vatNumber">
+									PDV broj (bez oznake države)
+								</FieldLabel>
 								<Input
 									id="vatNumber"
 									name="vatNumber"

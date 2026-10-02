@@ -188,6 +188,21 @@ export async function getInvoicesAmounts(
 		},
 	});
 
+	const currentYearIssuedAmount = await prisma.invoice.aggregate({
+		where: {
+			userId: session.user.id,
+			status: { in: ["PAID", "ISSUED"] },
+			issueDate: {
+				gte: new Date(new Date().getFullYear(), 0, 1),
+				lt: new Date(new Date().getFullYear() + 1, 0, 1),
+			},
+			...(clientCountryFilter ? { client: clientCountryFilter } : {}),
+		},
+		_sum: {
+			totalAmount: true,
+		},
+	});
+
 	return {
 		unpaidAmount: unpaid._sum.totalAmount ?? 0,
 		invoiceUnpaid: unpaid._count.totalAmount ?? 0,
@@ -195,6 +210,7 @@ export async function getInvoicesAmounts(
 		currentMonthPaidAmount: currentMonthPaidAmount._sum.totalAmount ?? 0,
 		previousMonthPaidAmount: previousMonthPaidAmount._sum.totalAmount ?? 0,
 		selectedMonthPaidAmount: selectedMonthPaidAmount._sum.totalAmount ?? 0,
+		currentYearIssuedAmount: currentYearIssuedAmount._sum.totalAmount ?? 0,
 	};
 }
 
