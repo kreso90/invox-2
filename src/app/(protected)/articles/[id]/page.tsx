@@ -8,21 +8,10 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { ToastFromQuery } from "@/components/ui/toast-from-query";
-import ArticleDeleteForm from "@/features/articles/components/article-delete-form";
 import ArticleForm from "@/features/articles/components/article-form";
+import { unitLabelsLong } from "@/features/articles/constants";
 import { getArticleById } from "@/features/articles/queries";
-import { Unit } from "@/generated/prisma/edge";
 import Link from "next/link";
-
-const unitLabels: Record<Unit, string> = {
-	PIECE: "Komad",
-	HOUR: "Sat",
-	DAY: "Dan",
-	METER: "Metar",
-	SQUARE_METER: "Kvadratni metar",
-	LITER: "Litar",
-	KILOGRAM: "Kilogram",
-};
 
 export default async function ArticlePage({
 	params,
@@ -65,7 +54,7 @@ export default async function ArticlePage({
 								<TableRow>
 									<TableCell className="font-medium">{article?.name}</TableCell>
 									<TableCell>
-										{article?.unit ? unitLabels[article?.unit] : ""}
+										{article?.unit ? unitLabelsLong[article?.unit] : ""}
 									</TableCell>
 									<TableCell className="font-mono">€{article?.price}</TableCell>
 								</TableRow>
