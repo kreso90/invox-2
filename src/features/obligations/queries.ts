@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 
 export async function getObligationById(obligationId: string) {
-	return prisma.user.findUnique({
+	return prisma.obligation.findUnique({
 		where: {
 			id: obligationId,
 		},

@@ -109,100 +109,95 @@ export async function getInvoicesAmounts(
 	date?: Date,
 	clientCountryFilter?: Prisma.InvoiceWhereInput["client"],
 ) {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-
+	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session?.user) {
-		return { unpaidAmount: 0, paidAmount: 0 };
+		return {
+			unpaidAmount: 0,
+			invoiceUnpaid: 0,
+			paidAmount: 0,
+			currentMonthPaidAmount: 0,
+			previousMonthPaidAmount: 0,
+			selectedMonthPaidAmount: 0,
+			currentYearIssuedAmount: 0,
+		};
 	}
-
-	const unpaid = await prisma.invoice.aggregate({
-		where: {
-			userId: session.user.id,
-			status: "ISSUED",
-		},
-		_sum: {
-			totalAmount: true,
-		},
-		_count: {
-			totalAmount: true,
-		},
-	});
-
-	const paidAmount = await prisma.invoice.aggregate({
-		where: {
-			userId: session.user.id,
-			status: "PAID",
-		},
-		_sum: {
-			totalAmount: true,
-		},
-	});
-
-	const currentMonthPaidAmount = await prisma.invoice.aggregate({
-		where: {
-			userId: session.user.id,
-			status: "PAID",
-			issueDate: {
-				gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-				lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
+	const now = new Date();
+	const year = now.getFullYear();
+	const month = now.getMonth();
+	const currentMonthStart = new Date(year, month, 1);
+	const nextMonthStart = new Date(year, month + 1, 1);
+	const previousMonthStart = new Date(year, month - 1, 1);
+	const currentYearStart = new Date(year, 0, 1);
+	const nextYearStart = new Date(year + 1, 0, 1);
+	const selectedMonth = date ?? now;
+	const selectedMonthStart = new Date(
+		selectedMonth.getFullYear(),
+		selectedMonth.getMonth(),
+		1,
+	);
+	const nextSelectedMonthStart = new Date(
+		selectedMonth.getFullYear(),
+		selectedMonth.getMonth() + 1,
+		1,
+	);
+	const [
+		unpaid,
+		paidAmount,
+		currentMonthPaidAmount,
+		previousMonthPaidAmount,
+		selectedMonthPaidAmount,
+		currentYearIssuedAmount,
+	] = await Promise.all([
+		prisma.invoice.aggregate({
+			where: {
+				userId: session.user.id,
+				status: { in: ["ISSUED", "PARTIALLY_PAID"] },
 			},
-		},
-		_sum: {
-			totalAmount: true,
-		},
-	});
-
-	const previousMonthPaidAmount = await prisma.invoice.aggregate({
-		where: {
-			userId: session.user.id,
-			status: "PAID",
-			issueDate: {
-				gte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
-				lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+			_sum: { totalAmount: true },
+			_count: { totalAmount: true },
+		}),
+		prisma.invoice.aggregate({
+			where: {
+				userId: session.user.id,
+				status: { notIn: ["DRAFT", "CANCELLED"] },
 			},
-		},
-		_sum: {
-			totalAmount: true,
-		},
-	});
-
-	const selectedMonth = date ?? new Date();
-	const selectedMonthPaidAmount = await prisma.invoice.aggregate({
-		where: {
-			userId: session.user.id,
-			status: { in: ["PAID", "ISSUED"] },
-			issueDate: {
-				gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1),
-				lt: new Date(
-					selectedMonth.getFullYear(),
-					selectedMonth.getMonth() + 1,
-					1,
-				),
+			_sum: { totalAmount: true },
+		}),
+		prisma.invoice.aggregate({
+			where: {
+				userId: session.user.id,
+				status: { notIn: ["DRAFT", "CANCELLED"] },
+				issueDate: { gte: currentMonthStart, lt: nextMonthStart },
 			},
-			...(clientCountryFilter ? { client: clientCountryFilter } : {}),
-		},
-		_sum: {
-			totalAmount: true,
-		},
-	});
-
-	const currentYearIssuedAmount = await prisma.invoice.aggregate({
-		where: {
-			userId: session.user.id,
-			status: { in: ["PAID", "ISSUED"] },
-			issueDate: {
-				gte: new Date(new Date().getFullYear(), 0, 1),
-				lt: new Date(new Date().getFullYear() + 1, 0, 1),
+			_sum: { totalAmount: true },
+		}),
+		prisma.invoice.aggregate({
+			where: {
+				userId: session.user.id,
+				status: { notIn: ["DRAFT", "CANCELLED"] },
+				issueDate: { gte: previousMonthStart, lt: currentMonthStart },
 			},
-			...(clientCountryFilter ? { client: clientCountryFilter } : {}),
-		},
-		_sum: {
-			totalAmount: true,
-		},
-	});
-
+			_sum: { totalAmount: true },
+		}),
+		prisma.invoice.aggregate({
+			where: {
+				userId: session.user.id,
+				status: { in: ["PAID", "ISSUED"] },
+				issueDate: { gte: selectedMonthStart, lt: nextSelectedMonthStart },
+				...(clientCountryFilter ? { client: clientCountryFilter } : {}),
+			},
+			_sum: { totalAmount: true },
+		}),
+		prisma.invoice.aggregate({
+			where: {
+				userId: session.user.id,
+				status: { in: ["PAID", "ISSUED"] },
+				issueDate: { gte: currentYearStart, lt: nextYearStart },
+				...(clientCountryFilter ? { client: clientCountryFilter } : {}),
+			},
+			_sum: { totalAmount: true },
+		}),
+	]);
 	return {
 		unpaidAmount: unpaid._sum.totalAmount ?? 0,
 		invoiceUnpaid: unpaid._count.totalAmount ?? 0,

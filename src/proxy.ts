@@ -9,6 +9,7 @@ const protectedRoutes = [
 	"/clients",
 	"/articles",
 	"/obligations",
+	"/dashboard",
 ];
 
 export async function proxy(request: NextRequest) {
@@ -21,6 +22,12 @@ export async function proxy(request: NextRequest) {
 			request.nextUrl.pathname === route ||
 			request.nextUrl.pathname.startsWith(`${route}/`),
 	);
+
+	const isEmptyRoute = request.nextUrl.pathname === "/";
+
+	if (session && isEmptyRoute) {
+		return NextResponse.redirect(new URL("/dashboard", request.url));
+	}
 
 	if (!session && isOnProtectedRoute) {
 		return NextResponse.redirect(new URL("/login", request.url));

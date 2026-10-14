@@ -3,14 +3,12 @@ import { Progress } from "@/components/ui/progress";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
 import { getCurrentBusiness } from "@/features/business/queries";
-import { getUserClients } from "@/features/clients/queries";
 import { getCurrentUser } from "@/features/dashboard/queries";
 import {
 	getDueInvoices,
@@ -55,7 +53,7 @@ export default async function DashboardPage() {
 	const previousMonth = new Intl.DateTimeFormat("hr-HR", {
 		month: "long",
 	}).format(new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1));
-	console.log(previousMonth);
+
 	const currentDate = new Intl.DateTimeFormat("hr-HR", {
 		weekday: "long",
 		day: "numeric",

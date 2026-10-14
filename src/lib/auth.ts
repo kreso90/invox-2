@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 import { sendVerificationEmail } from "./mail";
+import { hashPassword, verifyPassword } from "./password";
 
 const adapter = new PrismaPg({
 	connectionString: process.env.DATABASE_URL,
@@ -25,7 +26,12 @@ export const auth = betterAuth({
 		},
 	},
 	emailAndPassword: {
+		requireEmailVerification: true,
 		enabled: true,
+		password: {
+			hash: hashPassword,
+			verify: verifyPassword,
+		},
 	},
 	socialProviders: {
 		google: {

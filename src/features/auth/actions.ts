@@ -65,14 +65,18 @@ export async function login(prevState: any, formData: FormData) {
 			},
 		});
 	} catch (err: any) {
-		console.error(err);
 		return {
 			status: "error",
-			message: err?.message ?? "Login failed",
+			message:
+				err instanceof Error
+					? err.message == "Email not verified"
+						? "Email nije potvrđen"
+						: err.message
+					: "Prijava nije uspjela",
 		};
 	}
 
-	redirect("/");
+	redirect("/dashboard");
 }
 
 export async function signOut() {

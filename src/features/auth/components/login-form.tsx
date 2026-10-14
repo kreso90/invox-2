@@ -26,7 +26,7 @@ export default function LoginForm() {
 
 		await signIn.social({
 			provider: "google",
-			callbackURL: "/",
+			callbackURL: "/dashboard",
 			errorCallbackURL: "/auth/login/error",
 		});
 

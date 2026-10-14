@@ -140,17 +140,22 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 			const isEU = countryCode && EU_COUNTRY_CODES.includes(countryCode);
 
 			if (isOutsideHR) {
-				const obligationMonth = new Date(
+				const periodMonth = invoiceData.issueDate;
+				const dueMonth = new Date(
 					invoiceData.issueDate.getFullYear(),
 					invoiceData.issueDate.getMonth() + 1,
 					1,
 				);
-				const month = obligationMonth.getMonth() + 1;
-				const year = obligationMonth.getFullYear();
+				const month = periodMonth.getMonth() + 1;
+				const year = periodMonth.getFullYear();
 
 				const periodLabel = `${month.toString().padStart(2, "0")}/${year}`;
 
-				const dueDate = new Date(year, month - 1, 20);
+				const dueDate = new Date(
+					dueMonth.getFullYear(),
+					dueMonth.getMonth(),
+					15,
+				);
 
 				await tx.obligation.upsert({
 					where: {
@@ -413,7 +418,7 @@ export async function sendInvoiceEmail(prevState: any, formData: FormData) {
 	const files = formData
 		.getAll("file")
 		.filter((file): file is File => file instanceof File && file.size > 0);
-	console.log("Files to be attached:", files);
+
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
