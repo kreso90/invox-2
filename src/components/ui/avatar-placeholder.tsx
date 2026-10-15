@@ -13,7 +13,7 @@ export function AvatarPlaceholder({
 
 	return (
 		<div
-			className={`flex size-10 items-center justify-center rounded-full bg-muted font-medium ${className || ""}`}
+			className={`flex basis-10 size-10 items-center justify-center rounded-full bg-muted font-medium ${className || ""}`}
 		>
 			{initials}
 		</div>

@@ -85,24 +85,24 @@ export default async function ObligationsPage({
 						Porezni kalendar — {new Date().getFullYear()}.
 					</span>
 				</div>
-				<Link
+				{/* <Link
 					href="/obligations/new"
-					className="h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
+					className="fixed bottom-16 right-2.5 lg:static z-10 h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
 				>
 					<Plus />
-					Nova obveza
-				</Link>
+					<span className="hidden lg:inline">Nova obveza</span>
+				</Link> */}
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 				<Card>
-					<CardHeader>
-						<CardTitle className="font-mono uppercase text-muted text-xs tracking-wider">
+					<CardHeader className="flex-1 md:flex-0 px-2.5 lg:px-4">
+						<CardTitle className="font-mono uppercase text-muted! text-xxs md:text-xs tracking-wider">
 							Mjesečna obveza (MIO I + MIO II + ZO)
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="flex flex-col">
-						<span className="font-mono text-2xl font-semibold">
+						<span className="font-mono text-lg lg:text-2xl font-semibold">
 							{monthlyObligationsAmount?._sum?.amount
 								? new Intl.NumberFormat("hr-HR", {
 										style: "currency",
@@ -114,12 +114,12 @@ export default async function ObligationsPage({
 				</Card>
 				<Card>
 					<CardHeader>
-						<CardTitle className="font-mono uppercase text-muted text-xs tracking-wider">
+						<CardTitle className="font-mono uppercase text-muted! text-xxs md:text-xs tracking-wider">
 							Sljedeći rok
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="flex flex-col">
-						<span className="font-mono text-2xl font-semibold">
+						<span className="font-mono text-lg lg:text-2xl font-semibold">
 							15.{String(new Date().getMonth() + 2).padStart(2, "0")}
 						</span>
 						<span className="text-muted text-xs font-normal">
@@ -135,12 +135,12 @@ export default async function ObligationsPage({
 
 				<Card>
 					<CardHeader>
-						<CardTitle className="font-mono uppercase text-muted text-xs tracking-wider">
+						<CardTitle className="font-mono uppercase text-muted! text-xxs md:text-xs tracking-wider">
 							Porez na dohodak (tromjesečno)
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="flex flex-col">
-						<span className="font-mono text-2xl font-semibold">
+						<span className="font-mono text-lg lg:text-2xl font-semibold">
 							{taxObligations?.[0]?.amount
 								? new Intl.NumberFormat("hr-HR", {
 										style: "currency",

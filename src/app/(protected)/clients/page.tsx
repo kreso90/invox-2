@@ -31,10 +31,10 @@ export default async function ClientsPage() {
 				</div>
 				<Link
 					href="/clients/new"
-					className="h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
+					className="fixed bottom-16 right-2.5 lg:static z-10 h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
 				>
 					<Plus />
-					Novi klijent
+					<span className="hidden lg:inline">Novi klijent</span>
 				</Link>
 			</div>
 
@@ -60,7 +60,7 @@ export default async function ClientsPage() {
 											surname={client.contactLastName || ""}
 											className="rounded-lg bg-primary text-white"
 										/>
-										<div className="flex flex-col">
+										<div className="flex flex-col flex-1">
 											<p className="text-sm font-semibold">
 												{client.companyName}
 											</p>
@@ -85,7 +85,7 @@ export default async function ClientsPage() {
 										</CardContentRow>
 										<CardContentRow>
 											<span className="text-muted text-sm">Kontakt osoba</span>
-											<span className="text-sm font-mono">
+											<span className="text-sm font-mono text-right">
 												{client.contactFirstName} {client.contactLastName}
 											</span>
 										</CardContentRow>

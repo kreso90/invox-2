@@ -62,7 +62,7 @@ export default function ClientForm({ clientData }: clientFormProps) {
 
 				<FieldSet className="w-full">
 					<FieldGroup>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="companyName">
 									Naziv tvrtke / obrta{" "}
@@ -91,7 +91,7 @@ export default function ClientForm({ clientData }: clientFormProps) {
 							</Field>
 						</div>
 
-						<div className="grid md:grid-cols-3 md:gap-4">
+						<div className="grid md:grid-cols-3 gap-4">
 							<Field>
 								<FieldLabel htmlFor="address">
 									Adresa <span className="text-destructive">*</span>
@@ -136,7 +136,7 @@ export default function ClientForm({ clientData }: clientFormProps) {
 							</Field>
 						</div>
 
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="vatCountryCode">
 									Država <span className="text-destructive">*</span>
@@ -212,7 +212,7 @@ export default function ClientForm({ clientData }: clientFormProps) {
 
 				<FieldSet className="w-full">
 					<FieldGroup>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="contactFirstName">
 									Ime kontakt osobe <span className="text-destructive">*</span>
@@ -243,7 +243,7 @@ export default function ClientForm({ clientData }: clientFormProps) {
 							</Field>
 						</div>
 
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="email">
 									Email <span className="text-destructive">*</span>

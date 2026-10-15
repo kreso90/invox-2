@@ -276,7 +276,7 @@ export default function InvoiceForm({
 
 	return (
 		<>
-			<div className="flex justify-between items-end mb-8">
+			<div className="flex flex-col lg:flex-row gap-4 justify-between lg:items-end mb-8">
 				<div className="flex flex-col">
 					<Link
 						href="/invoices"
@@ -303,7 +303,6 @@ export default function InvoiceForm({
 								variant="destructive"
 								name="status"
 								value="CANCELLED"
-								className="ml-auto"
 								disabled={isPending}
 								form="invoice-form"
 							>
@@ -318,7 +317,6 @@ export default function InvoiceForm({
 								variant="outline"
 								name="status"
 								value="DRAFT"
-								className="ml-auto"
 								disabled={isPending}
 								form="invoice-form"
 							>
@@ -331,7 +329,6 @@ export default function InvoiceForm({
 							type="submit"
 							name="status"
 							value="ISSUED"
-							className="ml-auto"
 							disabled={isPending}
 							form="invoice-form"
 						>
@@ -418,7 +415,7 @@ export default function InvoiceForm({
 								Podaci o računu
 							</FieldLegend>
 							<FieldGroup>
-								<div className="grid md:grid-cols-2 md:gap-4">
+								<div className="grid md:grid-cols-2 gap-4">
 									<Field>
 										<FieldLabel htmlFor="invoiceNumber">
 											Broj računa
@@ -671,7 +668,7 @@ export default function InvoiceForm({
 							</FieldLegend>
 
 							<div className="border border-background rounded-lg">
-								<div className="grid grid-cols-[2.4fr_0.7fr_80px_1fr_1fr_24px] rounded-t-lg tracking-wide bg-background text-accent-backgorund uppercase py-2.5 px-3 gap-2.5 text-xs font-medium">
+								<div className="hidden lg:grid grid-cols-[2.4fr_0.7fr_80px_1fr_1fr_24px] rounded-t-lg tracking-wide bg-background text-accent-backgorund uppercase py-2.5 px-3 gap-2.5 text-xs font-medium">
 									<div>Naziv artikla / usluge</div>
 									<div>Kol.</div>
 									<div>JM</div>
@@ -836,7 +833,7 @@ export default function InvoiceForm({
 						Pregled retka na računu
 					</div>
 					<Card className="p-4">
-						<div className="flex justify-between border-b border-border pb-4">
+						<div className="flex flex-col lg:flex-row gap-y-4 justify-between border-b border-border pb-4">
 							{businessData ? (
 								<div>
 									<strong>{businessData?.business_name}</strong>

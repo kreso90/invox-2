@@ -30,7 +30,7 @@ export default async function SettingsPage() {
 
 			<Tabs
 				defaultValue="business_profile"
-				orientation={(await isServerMobile()) ? "horizontal" : "vertical"}
+				orientation="vertical"
 				className="grid lg:grid-cols-[200px_1fr] gap-4"
 			>
 				<TabsList>

@@ -68,7 +68,7 @@ export default function RegisterForm() {
 			</div>
 			<FieldSet className="w-full">
 				<FieldGroup>
-					<div className="grid md:grid-cols-2 md:gap-4">
+					<div className="grid md:grid-cols-2 gap-4">
 						<Field>
 							<FieldLabel htmlFor="firstname">
 								Ime <span className="text-destructive">*</span>

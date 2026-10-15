@@ -38,7 +38,7 @@ export function AppSidebar({ business }: AppSidebarProps) {
 	const pathname = usePathname();
 
 	return (
-		<Sidebar collapsible="icon">
+		<Sidebar collapsible="icon" className="hidden lg:block">
 			<SidebarHeader>
 				<Image
 					src="/logo-white.svg"

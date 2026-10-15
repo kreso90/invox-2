@@ -1,13 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
 import { getCurrentBusiness } from "@/features/business/queries";
 import { getCurrentUser } from "@/features/dashboard/queries";
 import {
@@ -21,6 +13,12 @@ import { Badge } from "@/components/ui/badge";
 import { getEffectiveStatus } from "@/features/invoices/utils";
 import { Plus } from "lucide-react";
 import { getDueObligations } from "@/features/obligations/queries";
+import {
+	CustomTable,
+	CustomTHead,
+	CustomTRItem,
+	CustomTRow,
+} from "@/components/ui/custom-table";
 
 export default async function DashboardPage() {
 	const [
@@ -101,54 +99,54 @@ export default async function DashboardPage() {
 
 				<Link
 					href="/invoices/new"
-					className="h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
+					className="fixed bottom-16 right-2.5 lg:static z-10 h-10 mb-4 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition"
 				>
 					<Plus />
-					Novi račun
+					<span className="hidden lg:inline">Novi račun</span>
 				</Link>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+			<div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
 				<Card>
-					<CardHeader>
-						<CardTitle className="font-mono uppercase text-muted text-xs tracking-wider">
+					<CardHeader className="flex-1 md:flex-0 px-2.5 lg:px-4">
+						<CardTitle className="font-mono uppercase text-muted! text-xxs md:text-xs tracking-wider">
 							Fakturirano — {currentMonth}
 						</CardTitle>
 					</CardHeader>
-					<CardContent className="flex flex-col">
-						<span className="font-mono text-2xl font-semibold">
+					<CardContent className="flex flex-col relative px-2.5 lg:px-4">
+						<span className="font-mono text-lg lg:text-2xl font-semibold">
 							{amountsData.currentMonthPaidAmount?.toLocaleString("hr-HR", {
 								style: "currency",
 								currency: "EUR",
 							})}
 						</span>
-						<span className="text-muted text-xs font-normal">
+						<span className="text-muted! text-xxs md:text-xs font-normal">
 							{percentageText}
 						</span>
 					</CardContent>
 				</Card>
 				<Card>
-					<CardHeader>
-						<CardTitle className="font-mono uppercase text-muted text-xs tracking-wider">
+					<CardHeader className="flex-1 md:flex-0 px-2.5 lg:px-4">
+						<CardTitle className="font-mono uppercase text-muted! text-xxs md:text-xs tracking-wider">
 							Neplaćeno
 						</CardTitle>
 					</CardHeader>
-					<CardContent className="flex flex-col">
-						<span className="font-mono text-2xl font-semibold">
+					<CardContent className="flex flex-col relative flex-1 px-2.5 lg:px-4">
+						<span className="font-mono text-lg lg:text-2xl font-semibold">
 							{amountsData.unpaidAmount?.toLocaleString("hr-HR", {
 								style: "currency",
 								currency: "EUR",
 							})}
 						</span>
-						<span className="text-muted text-xs font-normal">
+						<span className="text-muted! text-xxs md:text-xs font-normal">
 							{amountsData.invoiceUnpaid ?? 0} računa čekaju uplatu
 						</span>
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className="col-span-2 lg:col-span-1">
 					<CardHeader>
-						<CardTitle className="font-mono uppercase text-muted text-xs tracking-wider">
+						<CardTitle className="font-mono uppercase text-muted! text-xxs md:text-xs tracking-wider">
 							Godišnji prag paušalnog oporezivanja
 						</CardTitle>
 					</CardHeader>
@@ -206,68 +204,96 @@ export default async function DashboardPage() {
 					</CardContent>
 				</Card>
 			</div>
-			<div className="lg:grid lg:grid-cols-[1.7fr_1fr] gap-4">
-				<Card className="p-4">
-					<div className="flex items-center justify-between mb-4">
-						<span className="font-semibold">Nedavni računi</span>
-						<Link href="/invoices" className="text-muted text-xs font-semibold">
+			<div className="lg:grid lg:grid-cols-[1.7fr_1fr] gap-4 mt-8 lg:mt-0">
+				<CustomTable
+					columns={["0.25fr", "1fr", "0.5fr", "0.5fr", "0.5fr"]}
+					mobileColumns={["1fr", "0.75fr"]}
+				>
+					<CustomTHead className="flex items-center justify-between mb-4">
+						<span className="font-semibold text-xs lg:text-sm uppercase lg:normal-case text-muted lg:text-black">
+							Nedavni računi
+						</span>
+						<Link
+							href="/invoices"
+							className="text-muted text-xs font-semibold hover:text-black"
+						>
 							Svi računi →
 						</Link>
-					</div>
-					<Table>
-						<TableHeader>
-							<TableRow className="uppercase pointer-events-none">
-								<TableHead className="w-25">Broj</TableHead>
-								<TableHead>Klijenti</TableHead>
-								<TableHead>Datum</TableHead>
-								<TableHead className="text-right">Iznos</TableHead>
-								<TableHead className="text-right">Status</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{invoicesData.invoices.map((invoice) => (
-								<TableRow key={invoice.id} className="hover:bg-transparent">
-									<TableCell className="font-medium font-mono">
-										<Link href={`/invoices/${invoice.id}`}>
-											{invoice.invoiceNumber}
-										</Link>
-									</TableCell>
-									<TableCell className="font-medium">
-										{invoice.client.companyName}
-									</TableCell>
-									<TableCell className="font-mono">
-										{new Date(invoice.issueDate).toLocaleDateString("hr-HR")}
-									</TableCell>
-									<TableCell className="text-right font-mono">
-										{invoice.totalAmount.toLocaleString("hr-HR", {
-											style: "currency",
-											currency: "EUR",
-										})}
-									</TableCell>
-									<TableCell className="text-right">
-										<Badge
-											className="ml-auto"
-											variant={`${
-												getEffectiveStatus(invoice).toLowerCase() as
-													| "paid"
-													| "issued"
-													| "draft"
-													| "overdue"
-													| "partially_paid"
-													| "cancelled"
-											}`}
-										>
-											{statusLabels[getEffectiveStatus(invoice)]}
-										</Badge>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</Card>
+					</CustomTHead>
 
+					<CustomTRow variant="head" className="hidden lg:grid border-0!">
+						<CustomTRItem>Broj</CustomTRItem>
+						<CustomTRItem>Klijent</CustomTRItem>
+						<CustomTRItem>Datum izdavanja</CustomTRItem>
+						<CustomTRItem>Iznos</CustomTRItem>
+						<CustomTRItem className="text-right">Status</CustomTRItem>
+					</CustomTRow>
+					{invoicesData.invoices.map((invoice) => (
+						<CustomTRow key={invoice.id}>
+							<CustomTRItem className="order-3 lg:order-1 text-muted text-xs lg:text-sm">
+								<Link
+									href={`/invoices/${invoice.id}`}
+									className="text-primary underline"
+								>
+									{invoice.invoiceNumber}
+									<span className="lg:hidden">
+										{" "}
+										·{" "}
+										{invoice.issueDate
+											? new Intl.DateTimeFormat("hr-HR", {
+													day: "numeric",
+													month: "numeric",
+													year: "numeric",
+												}).format(new Date(invoice.issueDate))
+											: "N/A"}
+									</span>
+								</Link>
+							</CustomTRItem>
+							<CustomTRItem className="order-1 lg:order-2 text-sm font-medium">
+								{invoice.client.companyName}
+							</CustomTRItem>
+							<CustomTRItem className="hidden lg:block lg:order-3 text-sm font-mono">
+								{invoice.issueDate
+									? new Intl.DateTimeFormat("hr-HR", {
+											day: "numeric",
+											month: "numeric",
+											year: "numeric",
+										}).format(new Date(invoice.issueDate))
+									: "N/A"}
+							</CustomTRItem>
+							<CustomTRItem className="order-2 text-right lg:text-left lg:order-5 font-mono text-sm">
+								{invoice.totalAmount.toLocaleString("hr-HR", {
+									style: "currency",
+									currency: "EUR",
+								})}
+							</CustomTRItem>
+							<CustomTRItem className="order-4 lg:order-6">
+								<Badge
+									className="ml-auto"
+									variant={`${
+										getEffectiveStatus(invoice).toLowerCase() as
+											| "paid"
+											| "issued"
+											| "draft"
+											| "overdue"
+											| "partially_paid"
+											| "cancelled"
+									}`}
+								>
+									{statusLabels[getEffectiveStatus(invoice)]}
+								</Badge>
+							</CustomTRItem>
+						</CustomTRow>
+					))}
+				</CustomTable>
+
+				<div className="mt-8 mb-4 lg:hidden">
+					<span className="font-semibold text-xs lg:text-sm uppercase lg:normal-case text-muted lg:text-black">
+						Rokovi
+					</span>
+				</div>
 				<Card className="p-4">
-					<div className="font-semibold">Rokovi</div>
+					<div className="font-semibold hidden lg:block">Rokovi</div>
 					<ul className="mt-4 space-y-2">
 						{upcomingDeadlines.map((deadline) => {
 							const today = new Date();

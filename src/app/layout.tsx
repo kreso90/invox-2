@@ -22,7 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html lang="en">
 			<body className={`${ibmPlexSans.variable} ${ibmPlexMono.variable}`}>
-				<main className="flex-1">{children}</main>
+				{children}
 			</body>
 		</html>
 	);

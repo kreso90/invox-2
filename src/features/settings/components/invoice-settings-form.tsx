@@ -67,7 +67,7 @@ export default function InvoiceSettingsForm({
 				</div>
 				<FieldSet>
 					<FieldGroup>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="nextInvoiceNumber">
 									Sljedeći broj računa
@@ -114,7 +114,7 @@ export default function InvoiceSettingsForm({
 				</div>
 				<FieldSet>
 					<FieldGroup>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="defaultDueDays">
 									Zadani rok dospijeća

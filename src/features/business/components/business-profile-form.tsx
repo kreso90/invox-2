@@ -67,7 +67,7 @@ export default function BusinessProfileForm({
 								required
 							/>
 						</Field>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="ownerFirstName">
 									Ime vlasnika <span className="text-destructive">*</span>
@@ -97,7 +97,7 @@ export default function BusinessProfileForm({
 								/>
 							</Field>
 						</div>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="email">
 									Email <span className="text-destructive">*</span>
@@ -127,7 +127,7 @@ export default function BusinessProfileForm({
 								/>
 							</Field>
 						</div>
-						<div className="grid md:grid-cols-3 md:gap-4">
+						<div className="grid md:grid-cols-3 gap-4">
 							<Field>
 								<FieldLabel htmlFor="activityName">
 									Naziv djelatnosti <span className="text-destructive">*</span>
@@ -180,7 +180,7 @@ export default function BusinessProfileForm({
 				</div>
 				<FieldSet>
 					<FieldGroup>
-						<div className="grid md:grid-cols-[2.2fr_1fr] md:gap-4">
+						<div className="grid md:grid-cols-[2.2fr_1fr] gap-4">
 							<Field>
 								<FieldLabel htmlFor="address">
 									Adresa <span className="text-destructive">*</span>
@@ -210,7 +210,7 @@ export default function BusinessProfileForm({
 								/>
 							</Field>
 						</div>
-						<div className="grid md:grid-cols-[1fr_2fr] md:gap-4">
+						<div className="grid md:grid-cols-[1fr_2fr] gap-4">
 							<Field>
 								<FieldLabel htmlFor="city">
 									Grad <span className="text-destructive">*</span>
@@ -264,7 +264,7 @@ export default function BusinessProfileForm({
 								placeholder="HR1234567890123456789"
 							/>
 						</Field>
-						<div className="grid md:grid-cols-2 md:gap-4">
+						<div className="grid md:grid-cols-2 gap-4">
 							<Field>
 								<FieldLabel htmlFor="bankName">Naziv banke</FieldLabel>
 								<Input
