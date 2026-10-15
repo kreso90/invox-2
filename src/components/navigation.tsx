@@ -25,6 +25,7 @@ import {
 import { AvatarPlaceholder } from "./ui/avatar-placeholder";
 import Link from "next/link";
 import { signOut } from "@/features/auth/actions";
+import { Button } from "./ui/button";
 
 interface AppSidebarProps {
 	business: Business | null;
@@ -38,60 +39,6 @@ export function Navigation({ business }: AppSidebarProps) {
 	}, [pathname]);
 	return (
 		<>
-			{/* <div className="fixed lg:sticky lg:top-0 bottom-0 left-0 w-full bg-primary z-5 h-16 lg:h-screen border-t border-border lg:py-6 lg:px-2.5">
-				<nav>
-					<div className="text-xs text-sidebar-foreground/70 px-3 hidden lg:block tracking-wider">
-						PREGLED
-					</div>
-					<ul className="flex lg:flex-col justify-between py-2 lg:py-4">
-						<li>
-							<Link
-								href="/dashboard"
-								className={`flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 ${pathname === "/dashboard" ? "text-(--sidebar-accent-icon-foreground) font-semibold" : " text-white/70"}`}
-							>
-								<House size={20} />
-								<span>Početna</span>
-							</Link>
-						</li>
-						<li>
-							<Link
-								href="/invoices"
-								className={`flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 ${pathname === "/invoices" ? "text-(--sidebar-accent-icon-foreground) font-semibold" : " text-white/70"}`}
-							>
-								<ReceiptText size={20} />
-								<span>Računi</span>
-							</Link>
-						</li>
-						<li>
-							<Link
-								href="/clients"
-								className={`flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 ${pathname?.startsWith("/clients") ? "text-(--sidebar-accent-icon-foreground) font-semibold" : "text-white/70"}`}
-							>
-								<Users size={20} />
-								<span>Klijenti</span>
-							</Link>
-						</li>
-						<li>
-							<Link
-								href="/articles"
-								className={`flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 ${pathname?.startsWith("/articles") ? "text-(--sidebar-accent-icon-foreground) font-semibold" : "text-white/70"}`}
-							>
-								<Box size={20} />
-								<span>Artikli i usluge</span>
-							</Link>
-						</li>
-						<li>
-							<Link
-								href="/more"
-								className={`flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 ${pathname?.startsWith("/more") ? "text-(--sidebar-accent-icon-foreground) font-semibold" : "text-white/70"}`}
-							>
-								<MoreHorizontal size={20} />
-								<span>Više</span>
-							</Link>
-						</li>
-					</ul>
-				</nav>
-			</div> */}
 			<Nav>
 				<div className="px-2.5 mb-6 hidden lg:block">
 					<Image
@@ -155,7 +102,7 @@ export function Navigation({ business }: AppSidebarProps) {
 				</NavMenu>
 
 				<NavMenuFooter>
-					<div className="flex items-center gap-3 mb-4 border-t border-">
+					<div className="flex items-center gap-3 pt-4 border-t border-">
 						<AvatarPlaceholder
 							firstname={business?.ownerFirstName ?? ""}
 							surname={business?.ownerLastName ?? ""}
@@ -168,6 +115,14 @@ export function Navigation({ business }: AppSidebarProps) {
 							</span>
 						</div>
 					</div>
+					<Button
+						onClick={() => signOut()}
+						variant="destructive"
+						className="w-full mt-4"
+					>
+						<LogOut />
+						<span>Odjava</span>
+					</Button>
 				</NavMenuFooter>
 			</Nav>
 			<NavMenuCollapsible open={isCollapsibleOpen}>

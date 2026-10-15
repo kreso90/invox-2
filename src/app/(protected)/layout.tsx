@@ -3,6 +3,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toast";
 import { getCurrentBusiness } from "@/features/business/queries";
 import { Navigation } from "@/components/navigation";
+import { Suspense } from "react";
+import { LoaderCircle } from "lucide-react";
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
 	const userBusiness = await getCurrentBusiness();
@@ -11,7 +13,17 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 			{/* <AppSidebar business={userBusiness ?? null} /> */}
 			{/* <SidebarTrigger className="absolute hidden lg:block" /> */}
 			<Navigation business={userBusiness ?? null} />
-			<main className="flex-1 pt-10 pb-35 px-2.5 lg:p-10">{children}</main>
+			<main className="flex-1 pt-10 pb-35 px-2.5 lg:p-10">
+				<Suspense
+					fallback={
+						<div className="flex justify-center items-center h-[calc(100vh-64px)] lg:h-screen">
+							<LoaderCircle size={50} className="animate-spin" />
+						</div>
+					}
+				>
+					{children}
+				</Suspense>
+			</main>
 			<Toaster />
 		</div>
 	);
