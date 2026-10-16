@@ -9,10 +9,9 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { Business, Invoice, Prisma, Settings } from "@/generated/prisma";
+import { Business, Prisma, Settings } from "@/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
 	Field,
 	FieldDescription,
@@ -22,16 +21,7 @@ import {
 } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { useFormValues } from "@/hooks/use-form-values";
-import {
-	CheckIcon,
-	ClockIcon,
-	FileCodeIcon,
-	FileTextIcon,
-	FileWarningIcon,
-	RefreshCwIcon,
-	X,
-	XIcon,
-} from "lucide-react";
+import { X } from "lucide-react";
 import {
 	Attachment,
 	AttachmentAction,
@@ -39,7 +29,6 @@ import {
 	AttachmentContent,
 	AttachmentDescription,
 	AttachmentGroup,
-	AttachmentMedia,
 	AttachmentTitle,
 } from "@/components/ui/attachment";
 import { useState, useRef, useActionState, useEffect } from "react";
@@ -47,7 +36,7 @@ import { sendInvoiceEmail } from "../actions";
 import { toast } from "@/components/ui/toast";
 
 interface InvoiceEmailFormModalProps {
-	invoiceData: InvoiceWithRelations;
+	invoiceData: InvoiceWithRelations | null;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	settingsData: Settings | null;
@@ -78,30 +67,31 @@ export function InvoiceEmailFormModal({
 	const router = useRouter();
 
 	const initialValues = {
-		emailRecipient: invoiceData.client?.email || "",
+		emailRecipient: invoiceData?.client?.email || "",
 		emailSenderName: settingsData?.emailSenderName || "",
 		emailReplyTo: settingsData?.emailReplyTo || "",
 		emailSubjectTemplate: replaceInvoiceVariables(
 			settingsData?.emailSubjectTemplate || "",
 			{
-				broj_racuna: invoiceData.invoiceNumber,
-				invoiceNumber: invoiceData.invoiceNumber,
-				dueDate: invoiceData.dueDate?.toISOString() || "",
+				broj_racuna: invoiceData?.invoiceNumber || "",
+				invoiceNumber: invoiceData?.invoiceNumber || "",
+				dueDate: invoiceData?.dueDate?.toISOString() || "",
 			},
 		),
 		emailBodyTemplate: replaceInvoiceVariables(
 			settingsData?.emailBodyTemplate || "",
 			{
-				broj_racuna: invoiceData.invoiceNumber,
-				iznos: invoiceData?.totalAmount.toLocaleString("hr-HR", {
-					style: "currency",
-					currency: "EUR",
-				}),
+				broj_racuna: invoiceData?.invoiceNumber || "",
+				iznos:
+					invoiceData?.totalAmount.toLocaleString("hr-HR", {
+						style: "currency",
+						currency: "EUR",
+					}) ?? "",
 				dospijece: new Intl.DateTimeFormat("hr-HR", {
 					day: "numeric",
 					month: "numeric",
 					year: "numeric",
-				}).format(new Date(invoiceData.dueDate)),
+				}).format(new Date(invoiceData?.dueDate ?? "")),
 				ime_obrta: businessData?.business_name || "",
 			},
 		),
@@ -143,13 +133,13 @@ export function InvoiceEmailFormModal({
 					<DialogTitle>Pošalji emailom</DialogTitle>
 
 					<DialogDescription>
-						Račun {invoiceData.invoiceNumber} ·{" "}
+						Račun {invoiceData?.invoiceNumber || ""} ·{" "}
 						{businessData?.business_name || ""}
 					</DialogDescription>
 				</DialogHeader>
 
 				<form className="no-wrapper" action={formAction}>
-					<input type="hidden" name="invoiceId" value={invoiceData.id} />
+					<input type="hidden" name="invoiceId" value={invoiceData?.id} />
 					<FieldSet>
 						<FieldGroup>
 							<Field>

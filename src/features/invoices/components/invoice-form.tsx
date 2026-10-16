@@ -30,6 +30,7 @@ import {
 	CalendarIcon,
 	ChevronDownIcon,
 	Plus,
+	Trash,
 	X,
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -67,6 +68,8 @@ import { toast } from "@/components/ui/toast";
 import { DateRange } from "react-day-picker";
 import React from "react";
 import { addDays, format } from "date-fns";
+import InvoiceDeleteForm from "./invoice-delete-form";
+import { InvoiceEmailFormModal } from "./invoice-email-form";
 
 interface InvoiceFormProps {
 	invoiceData: InvoiceWithClient | null;
@@ -166,6 +169,11 @@ export default function InvoiceForm({
 	const [paymentAmount, setPaymentAmount] = useState(
 		invoiceData?.totalAmount?.toString() ?? "0",
 	);
+
+	const [modalOpen, setModalOpen] = useState({
+		emailModalOpen: false,
+		deleteModalOpen: false,
+	});
 
 	const [invoiceItems, setInvoiceItems] = useState<DraftInvoiceItem[]>(
 		invoiceData?.invoiceItems.map((item) => ({
@@ -293,7 +301,21 @@ export default function InvoiceForm({
 							: "Nacrt se sprema automatski"}
 					</span>
 				</div>
-				<div className="flex gap-2">
+				<div className="flex flex-wrap gap-2">
+					{invoiceData?.status === "DRAFT" && (
+						<Button
+							size="lg"
+							type="button"
+							variant="destructive"
+							disabled={isPending}
+							onClick={() => {
+								setModalOpen({ ...modalOpen, deleteModalOpen: true });
+							}}
+						>
+							<Trash />
+							Izbriši račun
+						</Button>
+					)}
 					{invoiceData &&
 						invoiceData?.status != "DRAFT" &&
 						invoiceData?.status != "CANCELLED" && (
@@ -307,6 +329,24 @@ export default function InvoiceForm({
 								form="invoice-form"
 							>
 								Storniraj
+							</Button>
+						)}
+					{invoiceData &&
+						invoiceData.status !== "DRAFT" &&
+						invoiceData.status !== "CANCELLED" && (
+							<Button
+								size="lg"
+								type="submit"
+								variant="outline"
+								value="DRAFT"
+								disabled={isPending}
+								onClick={() => {
+									setModalOpen({ ...modalOpen, emailModalOpen: true });
+								}}
+							>
+								{invoiceData.isEmailSent
+									? "Ponovno pošalji email"
+									: "Pošalji email"}
 							</Button>
 						)}
 					{(invoiceData && invoiceData?.status === "DRAFT") ||
@@ -1231,6 +1271,24 @@ export default function InvoiceForm({
 					)}
 				</div>
 			</div>
+			<InvoiceEmailFormModal
+				invoiceData={invoiceData ?? null}
+				open={modalOpen.emailModalOpen}
+				onOpenChange={(open) =>
+					setModalOpen({ ...modalOpen, emailModalOpen: open })
+				}
+				settingsData={settingsData}
+				businessData={businessData}
+			/>
+
+			<InvoiceDeleteForm
+				invoiceData={invoiceData}
+				variant="ghost"
+				open={modalOpen.deleteModalOpen}
+				onOpenChange={(open) =>
+					setModalOpen({ ...modalOpen, deleteModalOpen: open })
+				}
+			/>
 		</>
 	);
 }

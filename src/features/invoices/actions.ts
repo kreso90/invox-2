@@ -236,10 +236,8 @@ export async function deleteInvoice(prevState: any, formData: FormData) {
 		where: { id: invoiceId },
 	});
 
-	return {
-		status: "success",
-		message: "Račun je uspješno izbrisan",
-	};
+	revalidatePath("/invoices");
+	redirect("/invoices");
 }
 
 export async function enterPayment(prevState: any, formData: FormData) {
