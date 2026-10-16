@@ -13,17 +13,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 			{/* <AppSidebar business={userBusiness ?? null} /> */}
 			{/* <SidebarTrigger className="absolute hidden lg:block" /> */}
 			<Navigation business={userBusiness ?? null} />
-			<main className="flex-1 pt-10 pb-35 px-2.5 lg:p-10">
-				<Suspense
-					fallback={
-						<div className="flex justify-center items-center h-[calc(100vh-64px)] lg:h-screen">
-							<LoaderCircle size={50} className="animate-spin" />
-						</div>
-					}
-				>
-					{children}
-				</Suspense>
-			</main>
+			<main className="flex-1 pt-10 pb-35 px-2.5 lg:p-10">{children}</main>
 			<Toaster />
 		</div>
 	);
