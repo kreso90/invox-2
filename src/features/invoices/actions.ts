@@ -504,7 +504,7 @@ export async function sendInvoiceEmail(prevState: any, formData: FormData) {
 		];
 
 		const { error } = await resend.emails.send({
-			from: "onboarding@resend.dev",
+			from: "INVOX <noreply@invoxapp.eu>",
 			to: [emailRecipient],
 			subject: emailSubjectTemplate ?? "",
 			html: emailBodyTemplate ?? "",

@@ -61,7 +61,7 @@ export const sendVerificationEmail = async (
 	const template = emailTemplates.verify[locale];
 
 	await resend.emails.send({
-		from: "onboarding@resend.dev",
+		from: "INVOX <noreply@invoxapp.eu>",
 		to: email,
 		subject: template.subject,
 		html: template.html(link as unknown as string),
@@ -76,7 +76,7 @@ export const sendResetEmail = async (
 	const template = emailTemplates.reset[locale];
 
 	await resend.emails.send({
-		from: "onboarding@resend.dev",
+		from: "INVOX <noreply@invoxapp.eu>",
 		to: email,
 		subject: template.subject,
 		html: template.html(link as unknown as string),

@@ -166,7 +166,7 @@ export default async function InvoicesPage({
 									}).format(new Date(invoice.dueDate))
 								: "N/A"}
 						</CustomTRItem>
-						<CustomTRItem className="order-2 text-right lg:text-left lg:order-5 font-mono text-sm">
+						<CustomTRItem className="order-2 text-right lg:text-left lg:order-5 font-mono text-sm font-medium">
 							{invoice.totalAmount.toLocaleString("hr-HR", {
 								style: "currency",
 								currency: "EUR",
