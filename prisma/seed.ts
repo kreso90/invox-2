@@ -20,7 +20,7 @@ const prisma = new PrismaClient({
 });
 
 const DEMO_EMAIL = "demo@invox.hr";
-const DEMO_PASSWORD = "Demo1234!";
+const DEMO_PASSWORD = "admin123";
 const DEMO_NAME = "Demo Korisnik";
 
 async function main() {

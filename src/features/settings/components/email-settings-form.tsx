@@ -10,25 +10,9 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Card } from "../../../components/ui/card";
 import { useActionState } from "react";
-import { useState } from "react";
 import { updateEmailSettings } from "@/features/settings/actions";
 import { useFormValues } from "@/hooks/use-form-values";
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupInput,
-	InputGroupText,
-} from "@/components/ui/input-group";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { paymentLabels } from "@/features/invoices/constants";
-import { PaymentType, Settings } from "@/generated/prisma";
+import { Settings } from "@/generated/prisma";
 import { Textarea } from "@/components/ui/textarea";
 
 interface SettingsFormProps {
@@ -113,6 +97,47 @@ export default function EmailSettingsForm({ settingsData }: SettingsFormProps) {
 								value={formValues.emailBodyTemplate}
 								onChange={handleInputChange}
 							/>
+							<FieldDescription>
+								<div>
+									<strong>Dostupne varijable</strong>
+									<p>
+										Koristi sljedeće varijable u opisu polja. Automatski će biti
+										zamijenjene odgovarajućim vrijednostima.
+									</p>
+									<ul>
+										<li>
+											<code>{"{{business_name}}"}</code> - naziv tvrtke
+										</li>
+										<li>
+											<code>{"{{business_owner}}"}</code> - ime i prezime
+											vlasnika tvrtke
+										</li>
+										<li>
+											<code>{"{{invoice_issue_date}}"}</code> - datum izdavanja
+											računa
+										</li>
+										<li>
+											<code>{"{{today_date}}"}</code> - današnji datum
+										</li>
+										<li>
+											<code>{"{{invoice_number}}"}</code> - broj računa
+										</li>
+										<li>
+											<code>{"{{total_amount}}"}</code> - ukupni iznos računa u
+											eurima (EUR)
+										</li>
+									</ul>
+									<strong>Primjer korištenja</strong>
+									<p>
+										Račun <code>{"{{invoice_number}}"}</code> izdaje tvrtka{" "}
+										<code>{"{{business_name}}"}</code>, čiji je vlasnik{" "}
+										<code>{"{{business_owner}}"}</code>. Račun je izdan{" "}
+										<code>{"{{invoice_issue_date}}"}</code>, a ukupni iznos
+										iznosi <code>{"{{total_amount}}"}</code>. Današnji datum je{" "}
+										<code>{"{{today_date}}"}</code>.
+									</p>
+								</div>
+							</FieldDescription>
 						</Field>
 					</FieldGroup>
 				</FieldSet>

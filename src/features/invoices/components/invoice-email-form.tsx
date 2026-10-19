@@ -73,26 +73,37 @@ export function InvoiceEmailFormModal({
 		emailSubjectTemplate: replaceInvoiceVariables(
 			settingsData?.emailSubjectTemplate || "",
 			{
-				broj_racuna: invoiceData?.invoiceNumber || "",
-				invoiceNumber: invoiceData?.invoiceNumber || "",
-				dueDate: invoiceData?.dueDate?.toISOString() || "",
+				business_name: businessData?.business_name || "",
+				business_owner:
+					businessData?.ownerFirstName ||
+					"" + " " + businessData?.ownerLastName ||
+					"",
+				invoice_issue_date: invoiceData?.issueDate?.toISOString() || "",
+				today_date: new Date().toISOString() || "",
+				invoice_number: invoiceData?.invoiceNumber || "",
+				total_amount:
+					invoiceData?.totalAmount.toLocaleString("hr-HR", {
+						style: "currency",
+						currency: "EUR",
+					}) ?? "",
 			},
 		),
 		emailBodyTemplate: replaceInvoiceVariables(
 			settingsData?.emailBodyTemplate || "",
 			{
-				broj_racuna: invoiceData?.invoiceNumber || "",
-				iznos:
+				business_name: businessData?.business_name || "",
+				business_owner:
+					businessData?.ownerFirstName ||
+					"" + " " + businessData?.ownerLastName ||
+					"",
+				invoice_issue_date: invoiceData?.issueDate?.toISOString() || "",
+				today_date: new Date().toISOString() || "",
+				invoice_number: invoiceData?.invoiceNumber || "",
+				total_amount:
 					invoiceData?.totalAmount.toLocaleString("hr-HR", {
 						style: "currency",
 						currency: "EUR",
 					}) ?? "",
-				dospijece: new Intl.DateTimeFormat("hr-HR", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}).format(new Date(invoiceData?.dueDate ?? "")),
-				ime_obrta: businessData?.business_name || "",
 			},
 		),
 	};

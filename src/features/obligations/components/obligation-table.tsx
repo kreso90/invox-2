@@ -99,6 +99,7 @@ export function ObligationTable({
 		obligations: currentMonth,
 		otherObligations: currentMonth,
 	});
+
 	return (
 		<>
 			<Card className="p-4 mb-4">
@@ -287,6 +288,13 @@ export function ObligationTable({
 					<CustomTRItem className="text-center">Status</CustomTRItem>
 					<CustomTRItem className="text-right">Akcije</CustomTRItem>
 				</CustomTRow>
+
+				<div className="lg:hidden uppercase text-sm text-muted mb-4">
+					{selectedMonths.obligations === null
+						? "Svi mjeseci"
+						: selectedMonths.obligations}
+				</div>
+
 				{obligations
 					?.filter((obligation) => {
 						if (!selectedMonths.obligations) return true;
@@ -300,7 +308,7 @@ export function ObligationTable({
 					.map((obligation) => {
 						return (
 							<CustomTRow key={obligation.id} className="hover:bg-transparent">
-								<CustomTRItem className="font-medium font-mono text-muted text-xs order-1 lg:order-1">
+								<CustomTRItem className="hidden lg:block font-medium font-mono text-muted text-xs order-1 lg:order-1">
 									{(() => {
 										const [month, year] = obligation.periodLabel.split("/");
 
@@ -310,10 +318,11 @@ export function ObligationTable({
 										}).format(new Date(Number(year), Number(month) - 1));
 									})()}
 								</CustomTRItem>
-								<CustomTRItem className="font-medium text-sm order-3 lg:order-2">
+								<CustomTRItem className="font-medium text-sm order-1 lg:order-2">
 									{obligationLabels[obligation.kind as ObligationKind]}
 								</CustomTRItem>
-								<CustomTRItem className="font-mono text-sm order-2 lg:order-3 text-right lg:text-left">
+								<CustomTRItem className="font-mono text-xs lg:text-sm order-3 text-muted lg:text-black lg:order-3">
+									<span className="lg:hidden">Rok: </span>
 									{obligation.dueDate
 										? new Intl.DateTimeFormat("hr-HR", {
 												day: "numeric",
@@ -322,7 +331,7 @@ export function ObligationTable({
 											}).format(new Date(obligation.dueDate))
 										: "N/A"}
 								</CustomTRItem>
-								<CustomTRItem className="font-mono font-medium text-sm order-5 lg:order-4 text-right lg:text-left">
+								<CustomTRItem className="font-mono font-medium text-sm order-2 lg:order-4 text-right lg:text-left">
 									{obligation.amount
 										? new Intl.NumberFormat("hr-HR", {
 												style: "currency",
@@ -330,7 +339,7 @@ export function ObligationTable({
 											}).format(obligation.amount)
 										: "N/A"}
 								</CustomTRItem>
-								<CustomTRItem className="lg:mx-auto order-5 lg:order-5">
+								<CustomTRItem className="ml-auto lg:mx-auto order-5 lg:order-5">
 									<Badge
 										variant={obligation.status === "PENDING" ? "draft" : "paid"}
 									>
@@ -341,7 +350,7 @@ export function ObligationTable({
 										}
 									</Badge>
 								</CustomTRItem>
-								<CustomTRItem className="text-right flex justify-end gap-2 order-6 lg:order-6">
+								<CustomTRItem className="flex lg:ml-auto lg:justify-end gap-2 order-6 lg:order-6">
 									<Button
 										onClick={() => setSelectedObligationId(obligation.id)}
 										className="bg-accent-foreground"
@@ -361,97 +370,6 @@ export function ObligationTable({
 						);
 					})}
 			</CustomTable>
-
-			{/* <Card className="p-4 mb-4">
-				<div className="flex justify-between mb-2 font-semibold">
-					<span className="font-semibold">Porez na dohodak</span>
-					<span>tromjesečno</span>
-				</div>
-				<Table>
-					<TableHeader>
-						<TableRow className="uppercase hover:bg-transparent">
-							<TableHead>Razdoblje</TableHead>
-							<TableHead>Obveza</TableHead>
-							<TableHead>Rok</TableHead>
-							<TableHead>Iznos</TableHead>
-							<TableHead>Status</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{taxObligations?.map((taxObligation) => {
-							return (
-								<TableRow
-									key={taxObligation.id}
-									className="hover:bg-transparent"
-								>
-									<TableCell className="font-medium font-mono text-muted text-xs">
-										{(() => {
-											const [month, year] =
-												taxObligation.periodLabel.split("/");
-
-											return new Intl.DateTimeFormat("hr-HR", {
-												month: "long",
-												year: "numeric",
-											}).format(new Date(Number(year), Number(month) - 1));
-										})()}
-									</TableCell>
-									<TableCell className="font-medium text-sm">
-										{obligationLabels[taxObligation.kind as ObligationKind]}
-									</TableCell>
-									<TableCell className="font-mono text-sm">
-										{taxObligation.dueDate
-											? new Intl.DateTimeFormat("hr-HR", {
-													day: "numeric",
-													month: "numeric",
-													year: "numeric",
-												}).format(new Date(taxObligation.dueDate))
-											: "N/A"}
-									</TableCell>
-									<TableCell className="font-mono font-medium text-sm">
-										{taxObligation.amount
-											? new Intl.NumberFormat("hr-HR", {
-													style: "currency",
-													currency: "EUR",
-												}).format(taxObligation.amount)
-											: "N/A"}
-									</TableCell>
-									<TableCell>
-										<Badge
-											variant={
-												taxObligation.status === "PENDING" ? "draft" : "paid"
-											}
-										>
-											{
-												obligationStatusLabels[
-													taxObligation.status as ObligationStatus
-												]
-											}
-										</Badge>
-									</TableCell>
-									<TableCell className="text-right flex justify-end gap-2">
-										<Button
-											onClick={() => setSelectedObligationId(taxObligation.id)}
-											className="bg-accent-foreground"
-										>
-											<QrCode />
-											QR
-										</Button>
-										<Button
-											variant="outline"
-											className="bg-destructive text-white"
-											onClick={() =>
-												setSelectedDeleteObligationId(taxObligation.id)
-											}
-										>
-											<Trash2 />
-										</Button>
-									</TableCell>
-								</TableRow>
-							);
-						})}
-					</TableBody>
-				</Table>
-			</Card> */}
 
 			<CustomTable
 				className="mb-4"
@@ -477,7 +395,7 @@ export function ObligationTable({
 				{taxObligations?.map((taxObligation) => {
 					return (
 						<CustomTRow key={taxObligation.id} className="hover:bg-transparent">
-							<CustomTRItem className="font-medium font-mono text-muted text-xs">
+							<CustomTRItem className="hidden lg:block font-medium font-mono text-muted text-xs order-1 lg:order-1">
 								{(() => {
 									const [month, year] = taxObligation.periodLabel.split("/");
 
@@ -487,10 +405,10 @@ export function ObligationTable({
 									}).format(new Date(Number(year), Number(month) - 1));
 								})()}
 							</CustomTRItem>
-							<CustomTRItem className="font-medium text-sm text-right lg:text-left">
+							<CustomTRItem className="font-medium text-sm lg:text-left order-1 lg:order-2">
 								{obligationLabels[taxObligation.kind as ObligationKind]}
 							</CustomTRItem>
-							<CustomTRItem className="font-mono text-sm">
+							<CustomTRItem className="font-mono text-xs lg:text-sm order-3 text-muted lg:text-black lg:order-3">
 								{taxObligation.dueDate
 									? new Intl.DateTimeFormat("hr-HR", {
 											day: "numeric",
@@ -499,7 +417,7 @@ export function ObligationTable({
 										}).format(new Date(taxObligation.dueDate))
 									: "N/A"}
 							</CustomTRItem>
-							<CustomTRItem className="font-mono font-medium text-sm text-right lg:text-left">
+							<CustomTRItem className="font-mono font-medium text-sm order-2 lg:order-4 text-right lg:text-left">
 								{taxObligation.amount
 									? new Intl.NumberFormat("hr-HR", {
 											style: "currency",
@@ -507,7 +425,7 @@ export function ObligationTable({
 										}).format(taxObligation.amount)
 									: "N/A"}
 							</CustomTRItem>
-							<CustomTRItem className="lg:mx-auto">
+							<CustomTRItem className="ml-auto lg:mx-auto order-5 lg:order-5">
 								<Badge
 									variant={
 										taxObligation.status === "PENDING" ? "draft" : "paid"
@@ -520,7 +438,7 @@ export function ObligationTable({
 									}
 								</Badge>
 							</CustomTRItem>
-							<CustomTRItem className="text-right flex justify-end gap-2">
+							<CustomTRItem className="flex lg:ml-auto lg:justify-end gap-2 order-6 lg:order-6">
 								<Button
 									onClick={() => setSelectedObligationId(taxObligation.id)}
 									className="bg-accent-foreground"
@@ -648,7 +566,7 @@ export function ObligationTable({
 					.map((obligation) => {
 						return (
 							<CustomTRow key={obligation.id}>
-								<CustomTRItem className="font-medium font-mono text-muted text-xs">
+								<CustomTRItem className="hidden lg:block font-medium font-mono text-muted text-xs order-1 lg:order-1">
 									{(() => {
 										const [month, year] = obligation.periodLabel.split("/");
 
@@ -658,10 +576,10 @@ export function ObligationTable({
 										}).format(new Date(Number(year), Number(month) - 1));
 									})()}
 								</CustomTRItem>
-								<CustomTRItem className="font-medium text-sm text-right lg:text-left">
+								<CustomTRItem className="font-medium text-sm lg:text-left order-1 lg:order-2">
 									{obligationLabels[obligation.kind as ObligationKind]}
 								</CustomTRItem>
-								<CustomTRItem className="font-mono text-sm">
+								<CustomTRItem className="font-mono text-xs lg:text-sm order-3 text-muted lg:text-black lg:order-3">
 									{obligation.dueDate
 										? new Intl.DateTimeFormat("hr-HR", {
 												day: "numeric",
@@ -670,7 +588,7 @@ export function ObligationTable({
 											}).format(new Date(obligation.dueDate))
 										: "N/A"}
 								</CustomTRItem>
-								<CustomTRItem className="font-mono font-medium text-sm text-right lg:text-left">
+								<CustomTRItem className="font-mono font-medium text-sm order-2 lg:order-4 text-right lg:text-left">
 									{invoicesAmountsByPeriod[
 										`${obligation.kind}_${obligation.periodLabel}`
 									]
@@ -684,7 +602,7 @@ export function ObligationTable({
 											)
 										: "N/A"}
 								</CustomTRItem>
-								<CustomTRItem className="lg:mx-auto">
+								<CustomTRItem className="ml-auto lg:mx-auto order-5 lg:order-5">
 									<Badge
 										variant={obligation.status === "PENDING" ? "draft" : "paid"}
 									>
@@ -695,7 +613,7 @@ export function ObligationTable({
 										}
 									</Badge>
 								</CustomTRItem>
-								<CustomTRItem className="text-right flex justify-end gap-2">
+								<CustomTRItem className="flex lg:ml-auto lg:justify-end gap-2 order-6 lg:order-6">
 									<Button
 										onClick={() => setSelectedFormObligationId(obligation.id)}
 										className="bg-accent-foreground"

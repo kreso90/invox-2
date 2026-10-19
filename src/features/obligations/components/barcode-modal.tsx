@@ -131,7 +131,12 @@ export function BarcodeModal({
 							name="obligationId"
 							value={obligation?.id ?? ""}
 						/>
-						<Button type="submit" size="lg" disabled={isPending}>
+						<Button
+							type="submit"
+							size="lg"
+							disabled={isPending}
+							className="w-full"
+						>
 							{obligation?.status !== "SUBMITTED"
 								? "Plačeno"
 								: "Poništi plaćanje"}
