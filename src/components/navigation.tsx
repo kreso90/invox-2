@@ -1,5 +1,5 @@
 "use client";
-import { Business } from "@/generated/prisma";
+import { Business, User } from "@/generated/prisma";
 import { useEffect, useState } from "react";
 import {
 	House,
@@ -27,11 +27,12 @@ import Link from "next/link";
 import { signOut } from "@/features/auth/actions";
 import { Button } from "./ui/button";
 
-interface AppSidebarProps {
+interface NavigationProps {
+	user: User | null;
 	business: Business | null;
 }
 
-export function Navigation({ business }: AppSidebarProps) {
+export function Navigation({ business, user }: NavigationProps) {
 	const pathname = usePathname();
 	const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
 	useEffect(() => {
@@ -50,71 +51,82 @@ export function Navigation({ business }: AppSidebarProps) {
 					/>
 				</div>
 
-				<NavMenu className="w-full">
-					<NavMenuHeader>PREGLED</NavMenuHeader>
-					<NavMenuList>
-						<NavMenuLink href="/dashboard" pathname={pathname}>
-							<House size={20} />
-							<span>Početna</span>
-						</NavMenuLink>
+				{business && (
+					<NavMenu className="w-full">
+						<NavMenuHeader>PREGLED</NavMenuHeader>
+						<NavMenuList>
+							<NavMenuLink href="/dashboard" pathname={pathname}>
+								<House size={20} />
+								<span>Početna</span>
+							</NavMenuLink>
 
-						<NavMenuLink href="/invoices" pathname={pathname}>
-							<ReceiptText size={20} />
-							<span>Računi</span>
-						</NavMenuLink>
+							<NavMenuLink href="/invoices" pathname={pathname}>
+								<ReceiptText size={20} />
+								<span>Računi</span>
+							</NavMenuLink>
 
-						<NavMenuLink href="/clients" pathname={pathname}>
-							<Users size={20} />
-							<span>Klijenti</span>
-						</NavMenuLink>
+							<NavMenuLink href="/clients" pathname={pathname}>
+								<Users size={20} />
+								<span>Klijenti</span>
+							</NavMenuLink>
 
-						<NavMenuLink
-							href="/articles"
-							pathname={pathname}
-							className="hidden lg:flex"
-						>
-							<Box size={20} />
-							<span>Artikli i usluge</span>
-						</NavMenuLink>
+							<NavMenuLink
+								href="/articles"
+								pathname={pathname}
+								className="hidden lg:flex"
+							>
+								<Box size={20} />
+								<span>Artikli i usluge</span>
+							</NavMenuLink>
 
-						<NavMenuLink
-							trigger={() => setIsCollapsibleOpen((prev) => !prev)}
-							className="lg:hidden"
-							pathname={""}
-						>
-							<MoreHorizontal size={20} />
-							<span>Više</span>
-						</NavMenuLink>
-					</NavMenuList>
+							<NavMenuLink
+								trigger={() => setIsCollapsibleOpen((prev) => !prev)}
+								className="lg:hidden"
+								pathname={""}
+							>
+								<MoreHorizontal size={20} />
+								<span>Više</span>
+							</NavMenuLink>
+						</NavMenuList>
 
-					<NavMenuHeader className="hidden lg:block mt-4">OSTALO</NavMenuHeader>
+						<NavMenuHeader className="hidden lg:block mt-4">
+							OSTALO
+						</NavMenuHeader>
 
-					<NavMenuList className="hidden p-0 lg:block">
-						<NavMenuLink href="/obligations" pathname={pathname}>
-							<CalendarClock size={20} />
-							<span>Obveze</span>
-						</NavMenuLink>
-						<NavMenuLink href="/settings" pathname={pathname}>
-							<Settings size={20} />
-							<span>Postavke</span>
-						</NavMenuLink>
-					</NavMenuList>
-				</NavMenu>
+						<NavMenuList className="hidden p-0 lg:block">
+							<NavMenuLink href="/obligations" pathname={pathname}>
+								<CalendarClock size={20} />
+								<span>Obveze</span>
+							</NavMenuLink>
+							<NavMenuLink href="/settings" pathname={pathname}>
+								<Settings size={20} />
+								<span>Postavke</span>
+							</NavMenuLink>
+						</NavMenuList>
+					</NavMenu>
+				)}
 
 				<NavMenuFooter>
-					<div className="flex items-center gap-3 pt-4 border-t border-">
-						<AvatarPlaceholder
-							firstname={business?.ownerFirstName ?? ""}
-							surname={business?.ownerLastName ?? ""}
-							className="group/avatar relative shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:text-xs "
-						/>
-						<div className="flex flex-col flex-1 opacity-100 delay-150 transition whitespace-nowrap group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:opacity-0">
-							<span className="font-semibold text-sm"></span>
-							<span className="text-xs text-muted">
-								Obrt "{business?.business_name ?? ""}"
-							</span>
+					{business && (
+						<div className="flex items-center gap-3 pt-4 border-t border-">
+							<AvatarPlaceholder
+								firstname={business?.ownerFirstName ?? ""}
+								surname={business?.ownerLastName ?? ""}
+								className="group/avatar relative shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:text-xs "
+								image={user?.image ?? ""}
+							/>
+							<div className="flex flex-col flex-1 opacity-100 delay-150 transition whitespace-nowrap group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:opacity-0">
+								<span className="font-semibold text-sm"></span>
+								<span className="text-xs text-muted">
+									Obrt "{business?.business_name ?? ""}"
+								</span>
+								<span className="text-xs text-muted">
+									{business?.ownerFirstName ?? ""}{" "}
+									{business?.ownerLastName ?? ""}
+								</span>
+							</div>
 						</div>
-					</div>
+					)}
 					<Button
 						onClick={() => signOut()}
 						variant="destructive"

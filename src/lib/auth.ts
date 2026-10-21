@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
-import { sendVerificationEmail } from "./mail";
+import { sendResetEmail, sendVerificationEmail } from "./mail";
 import { hashPassword, verifyPassword } from "./password";
 
 const adapter = new PrismaPg({
@@ -32,6 +32,12 @@ export const auth = betterAuth({
 			hash: hashPassword,
 			verify: verifyPassword,
 		},
+		sendResetPassword: async ({ user, url, token }) => {
+			const resetLink = new URL(url);
+			resetLink.searchParams.set("callbackURL", "/reset-password");
+			await sendResetEmail(user.email, resetLink, "hr");
+		},
+		resetPasswordTokenExpiresIn: 3600,
 	},
 	socialProviders: {
 		google: {

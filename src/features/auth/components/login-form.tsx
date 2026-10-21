@@ -67,7 +67,12 @@ export default function LoginForm() {
 							placeholder="Unesite svoju lozinku"
 						/>
 					</Field>
-
+					<Link
+						href="/request-password-reset"
+						className="text-muted text-sm text-right hover:text-black"
+					>
+						Zaboravljena lozinka?
+					</Link>
 					<Button size="lg" type="submit" disabled={isPending}>
 						Prijavi se
 					</Button>

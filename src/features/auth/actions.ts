@@ -71,7 +71,9 @@ export async function login(prevState: any, formData: FormData) {
 				err instanceof Error
 					? err.message == "Email not verified"
 						? "Email nije potvrđen"
-						: err.message
+						: err.message == "Invalid email or password"
+							? "Neispravna e-pošta ili lozinka"
+							: err.message
 					: "Prijava nije uspjela",
 		};
 	}
@@ -84,4 +86,67 @@ export async function signOut() {
 		headers: await headers(),
 	});
 	redirect("/login");
+}
+
+export async function resetPasswordRequest(prevState: any, formData: FormData) {
+	const email = formData.get("email") as string;
+
+	try {
+		await auth.api.requestPasswordReset({
+			body: {
+				email: email,
+				redirectTo: "https://example.com/reset-password",
+			},
+		});
+
+		return {
+			status: "success",
+			message: "Provjeri svoju e-poštu za link za resetiranje lozinke",
+		};
+	} catch (err: any) {
+		return {
+			status: "error",
+			message:
+				err?.message ?? "Došlo je do neočekivane pogreške. Pokušajte ponovno.",
+		};
+	}
+}
+
+export async function resetPassword(prevState: any, formData: FormData) {
+	const token = formData.get("token") as string;
+	const password = formData.get("password") as string;
+
+	if (!token) {
+		return {
+			status: "error",
+			message: "Neispravan ili istekao link za resetiranje lozinke.",
+		};
+	}
+
+	if (!password) {
+		return {
+			status: "error",
+			message: "Unesite novu lozinku.",
+		};
+	}
+
+	try {
+		await auth.api.resetPassword({
+			body: {
+				newPassword: password,
+				token,
+			},
+		});
+
+		return {
+			status: "success",
+			message: "Vaša lozinka je uspješno resetirana. Sada se možete prijaviti.",
+		};
+	} catch (err: any) {
+		return {
+			status: "error",
+			message:
+				err?.message ?? "Došlo je do neočekivane pogreške. Pokušajte ponovno.",
+		};
+	}
 }

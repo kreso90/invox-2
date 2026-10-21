@@ -5,6 +5,7 @@ import { businessProfileSchema } from "./schemas";
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { ObligationKind, TaxClass } from "@/generated/prisma/client";
+import { revalidatePath } from "next/cache";
 
 function getMonthlyContributionObligations({
 	userId,
@@ -144,6 +145,7 @@ export async function createBusiness(prevState: unknown, formData: FormData) {
 		});
 
 		if (business) {
+			revalidatePath("/settings");
 			return {
 				status: "success",
 				message: "Podaci o obrtu su uspješno spremljeni!",
