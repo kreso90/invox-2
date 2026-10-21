@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useActionState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function ResetPasswordForm() {
 	const [state, formAction, isPending] = useActionState(

@@ -19,7 +19,6 @@ import {
 } from "../../../components/ui/input-group";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Separator } from "../../../components/ui/separator";
 import {
 	Select,
 	SelectContent,
@@ -28,8 +27,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../../../components/ui/select";
-import { TaxClass } from "@/generated/prisma/edge";
+
 import { taxClassContributions, taxClassLabels } from "../constants";
+import { TaxClass } from "@/generated/prisma";
 
 interface taxFormProps {
 	businessData?: Business | null;
@@ -64,7 +64,7 @@ export default function TaxForm({ businessData }: taxFormProps) {
 		<form action={fromAction} className="no-wrapper">
 			<input type="hidden" name="businessId" value={businessData?.id} />
 
-			<FieldSet className="w-full p-6 bg-white rounded-[var(--radius)] border mb-4">
+			<FieldSet className="w-full p-6 bg-white rounded-lg border mb-4">
 				<div>
 					<div className="font-semibold text-base">Paušalno oporezivanje</div>
 					<div className="text-muted text-sm mb-5">
@@ -103,51 +103,10 @@ export default function TaxForm({ businessData }: taxFormProps) {
 							</InputGroupAddon>
 						</InputGroup>
 					</Field>
-
-					{/*<Separator className="my-2" />
-
-					 <Field
-						className="justify-between"
-						orientation={useIsMobile() ? "vertical" : "horizontal"}
-					>
-						<div>
-							<FieldLabel htmlFor="thresholdWarning" className="text-black">
-								Upozori pri približavanju pragu
-							</FieldLabel>
-							<FieldDescription>
-								Primi obavijest kad promet dosegne postotak praga.
-							</FieldDescription>
-						</div>
-
-						<div className="w-1/5">
-							<Select
-								id="thresholdWarning"
-								name="thresholdWarning"
-								defaultValue={formValues.thresholdWarning}
-							>
-								<SelectTrigger className="w-full">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectItem value={warningAmount(80)}>
-											€{warningAmount(80)}
-										</SelectItem>
-										<SelectItem value={warningAmount(90)}>
-											€{warningAmount(90)}
-										</SelectItem>
-										<SelectItem value={warningAmount(100)}>
-											€{warningAmount(100)}
-										</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-							</Select>
-						</div>
-					</Field> */}
 				</FieldGroup>
 			</FieldSet>
 
-			<FieldSet className="w-full p-6 bg-white rounded-[var(--radius)] border mb-4">
+			<FieldSet className="w-full p-6 bg-white rounded-lg border mb-4">
 				<div>
 					<div className="font-semibold text-base">Razred i doprinosi</div>
 					<div className="text-muted text-sm mb-5">
