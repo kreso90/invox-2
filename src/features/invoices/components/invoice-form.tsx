@@ -165,7 +165,7 @@ export default function InvoiceForm({
 
 	const [paymentEntry, setPaymentEntry] = useState(false);
 
-	const [paymentDate, setPaymentDate] = useState("");
+	const [paymentDate, setPaymentDate] = useState<Date>(new Date());
 	const [paymentAmount, setPaymentAmount] = useState(
 		invoiceData?.totalAmount?.toString() ?? "0",
 	);
@@ -194,10 +194,6 @@ export default function InvoiceForm({
 			},
 		],
 	);
-
-	useEffect(() => {
-		setPaymentDate(new Date().toISOString().split("T")[0]);
-	}, []);
 
 	useEffect(() => {
 		if (state?.status === "success") {
@@ -520,7 +516,7 @@ export default function InvoiceForm({
 								</div>
 								<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 									<Field>
-										<FieldLabel htmlFor="dueDate">
+										<FieldLabel htmlFor="issueDate">
 											Datum izdavanja{" "}
 											<span className="text-destructive">*</span>
 										</FieldLabel>
@@ -1171,21 +1167,33 @@ export default function InvoiceForm({
 									<FieldSet>
 										<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 											<Field>
-												<FieldLabel htmlFor="issuePlace">
-													Datum
+												<FieldLabel htmlFor="paymentDate">
+													Datum uplate{" "}
 													<span className="text-destructive">*</span>
 												</FieldLabel>
-												<Input
-													id="date"
-													name="date"
-													type="date"
-													value={paymentDate}
-													onChange={(event) =>
-														setPaymentDate(event.target.value)
-													}
-													required
-												/>
+												<Popover>
+													<PopoverTrigger
+														render={
+															<Button variant="input">
+																{paymentDate.toLocaleDateString("hr-HR")}
+																<ChevronDownIcon data-icon="inline-end" />
+															</Button>
+														}
+													/>
+													<PopoverContent className="w-auto p-0" align="start">
+														<Calendar
+															mode="single"
+															selected={paymentDate}
+															onSelect={(date) => {
+																if (!date) return;
+																setPaymentDate(date);
+															}}
+															required
+														/>
+													</PopoverContent>
+												</Popover>
 											</Field>
+
 											<Field>
 												<FieldLabel htmlFor="paymentMethod">
 													Način plaćanja
@@ -1264,7 +1272,11 @@ export default function InvoiceForm({
 											Dodaj uplatu
 										</Button>
 									</div>
-									{paymentState?.message}
+									<input
+										type="hidden"
+										name="paymentDate"
+										value={formatDateInput(paymentDate)}
+									/>
 								</form>
 							</Card>
 						</div>

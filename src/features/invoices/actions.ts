@@ -244,6 +244,28 @@ export async function enterPayment(prevState: any, formData: FormData) {
 	const invoiceId = formData.get("invoiceId") as string;
 	const amount = Number(formData.get("amount"));
 	const method = formData.get("paymentMethod") as PaymentType;
+	const paymentDateValue = formData.get("paymentDate");
+
+	if (
+		typeof paymentDateValue !== "string" ||
+		!/^\d{4}-\d{2}-\d{2}$/.test(paymentDateValue)
+	) {
+		return {
+			status: "error",
+			message: "Odaberite valjani datum uplate",
+		};
+	}
+
+	const paidAt = new Date(`${paymentDateValue}T00:00:00.000Z`);
+	if (
+		Number.isNaN(paidAt.getTime()) ||
+		paidAt.toISOString().slice(0, 10) !== paymentDateValue
+	) {
+		return {
+			status: "error",
+			message: "Odaberite valjani datum uplate",
+		};
+	}
 
 	if (!invoiceId || !Number.isFinite(amount) || amount <= 0) {
 		return {
@@ -295,6 +317,7 @@ export async function enterPayment(prevState: any, formData: FormData) {
 					invoiceId,
 					amount,
 					method,
+					paidAt,
 				},
 			});
 

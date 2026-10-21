@@ -26,11 +26,11 @@ export default async function SettingsPage() {
 			<div className="flex flex-col mb-8">
 				<h1 className="page-title">Postavke</h1>
 				{!businessData && (
-					<span className="font-mono text-sm">
+					<div className="text-sm text-destructive mt-2 bg-destructive-foreground p-2 rounded-lg border border-destructive">
 						Kako biste mogli nastaviti koristiti aplikaciju, potrebno je prvo
 						ispuniti osnovne podatke o svom obrtu. Molimo vas da dovršite
 						postavljanje poslovnih podataka u postavkama.
-					</span>
+					</div>
 				)}
 			</div>
 
