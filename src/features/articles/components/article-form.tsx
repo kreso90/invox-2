@@ -114,6 +114,8 @@ export default function ArticleForm({ articleData }: ArticleFormProps) {
 								id="price"
 								name="price"
 								type="number"
+								step="0.01"
+								min="0"
 								value={formValues.price}
 								onChange={handleInputChange}
 								placeholder="npr. 100.00"

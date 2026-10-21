@@ -204,6 +204,8 @@ export default function InvoiceForm({
 					: "Novi račun je uspješno kreiran.",
 			});
 		}
+
+		router.refresh();
 	}, [state]);
 
 	useEffect(() => {
@@ -853,12 +855,6 @@ export default function InvoiceForm({
 								{state.messages.map((message, index) => (
 									<p key={index}>{message}</p>
 								))}
-							</div>
-						)}
-
-						{state?.status === "success" && (
-							<div className="text-sm text-success mt-2 bg-success-foreground p-2 rounded-lg border border-success">
-								<p>{state.message}</p>
 							</div>
 						)}
 					</form>

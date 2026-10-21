@@ -268,13 +268,12 @@ export default function TaxForm({ businessData }: taxFormProps) {
 						Spremi promjene
 					</Button>
 				</FieldGroup>
+				{state?.status === "success" && (
+					<div className="text-sm text-success mt-2 bg-success-foreground p-2 rounded-lg border border-success">
+						<p>{state.message}</p>
+					</div>
+				)}
 			</FieldSet>
-
-			{state?.status === "success" && (
-				<div className="text-sm text-success mt-2 bg-success-foreground p-2 rounded-lg border border-success">
-					<p>{state.message}</p>
-				</div>
-			)}
 		</form>
 	);
 }

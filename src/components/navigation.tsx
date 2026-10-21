@@ -93,7 +93,7 @@ export function Navigation({ business, user }: NavigationProps) {
 							OSTALO
 						</NavMenuHeader>
 
-						<NavMenuList className="hidden p-0 lg:block">
+						<NavMenuList className="hidden p-0 lg:flex">
 							<NavMenuLink href="/obligations" pathname={pathname}>
 								<CalendarClock size={20} />
 								<span>Obveze</span>
