@@ -104,9 +104,9 @@ export default function TaxForm({ businessData }: taxFormProps) {
 						</InputGroup>
 					</Field>
 
-					<Separator className="my-2" />
+					{/*<Separator className="my-2" />
 
-					<Field
+					 <Field
 						className="justify-between"
 						orientation={useIsMobile() ? "vertical" : "horizontal"}
 					>
@@ -143,7 +143,7 @@ export default function TaxForm({ businessData }: taxFormProps) {
 								</SelectContent>
 							</Select>
 						</div>
-					</Field>
+					</Field> */}
 				</FieldGroup>
 			</FieldSet>
 

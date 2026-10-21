@@ -41,7 +41,7 @@ export function Navigation({ business, user }: NavigationProps) {
 	return (
 		<>
 			<Nav>
-				<div className="px-2.5 mb-6 hidden lg:block">
+				<Link href="/" className="px-2.5 mb-6 hidden lg:block">
 					<Image
 						src="/logo-white.svg"
 						alt="Logo"
@@ -49,7 +49,7 @@ export function Navigation({ business, user }: NavigationProps) {
 						height={80}
 						loading="eager"
 					/>
-				</div>
+				</Link>
 
 				{business && (
 					<NavMenu className="w-full">
@@ -73,7 +73,7 @@ export function Navigation({ business, user }: NavigationProps) {
 							<NavMenuLink
 								href="/articles"
 								pathname={pathname}
-								className="hidden lg:flex"
+								className="hidden lg:block"
 							>
 								<Box size={20} />
 								<span>Artikli i usluge</span>

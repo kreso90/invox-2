@@ -25,7 +25,7 @@ function NavMenuHeader({ className, ...props }: React.ComponentProps<"div">) {
 function NavMenuList({ className, ...props }: React.ComponentProps<"ul">) {
 	return (
 		<ul
-			className={`flex lg:flex-col justify-around py-2 lg:py-4 ${className ?? ""}`}
+			className={`flex lg:flex-col lg:gap-1 justify-around py-2 lg:py-4 ${className ?? ""}`}
 			{...props}
 		/>
 	);
@@ -45,9 +45,9 @@ function NavMenuLink({
 	className?: string;
 	trigger?: () => void;
 }) {
-	const linkClassName = `flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 ${
+	const linkClassName = `flex flex-col lg:flex-row items-center text-xs lg:text-sm lg:py-2.5 px-3 gap-1 lg:gap-2 hover:bg-black/20 rounded-lg ${
 		pathname === href
-			? "text-(--sidebar-accent-icon-foreground) font-semibold"
+			? "text-(--sidebar-accent-icon-foreground) font-semibold lg:bg-black/20"
 			: "text-white/70"
 	}`;
 
