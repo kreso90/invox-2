@@ -204,8 +204,6 @@ export default function InvoiceForm({
 					: "Novi račun je uspješno kreiran.",
 			});
 		}
-
-		router.refresh();
 	}, [state]);
 
 	useEffect(() => {
@@ -266,6 +264,14 @@ export default function InvoiceForm({
 							unitPrice: article.price.toString(),
 						}
 					: item,
+			),
+		);
+	};
+
+	const handleArticleNameChange = (id: string, name: string) => {
+		setInvoiceItems((items) =>
+			items.map((item) =>
+				item.id === id ? { ...item, itemId: "", name } : item,
 			),
 		);
 	};
@@ -729,6 +735,10 @@ export default function InvoiceForm({
 												value={item.itemId}
 												onChange={(itemId) =>
 													handleArticleSelect(item.id, itemId)
+												}
+												inputValue={item.name}
+												onInputChange={(name) =>
+													handleArticleNameChange(item.id, name)
 												}
 											/>
 										</Field>

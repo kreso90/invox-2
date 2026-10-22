@@ -7,7 +7,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { PaymentType, ObligationKind } from "@/generated/prisma";
+import { PaymentType, ObligationKind, Unit } from "@/generated/prisma";
 import { Resend } from "resend";
 import { createElement } from "react";
 import { renderToBuffer } from "@react-pdf/renderer";
@@ -133,6 +133,20 @@ export async function createInvoice(prevState: unknown, formData: FormData) {
 						nextInvoiceNumber,
 					},
 				});
+
+				for (const item of invoiceItems) {
+					if (!item.itemId && item.name.trim()) {
+						await tx.article.create({
+							data: {
+								name: item.name.trim(),
+								price: item.unitPrice,
+								unit: item.unit as Unit,
+								lastUsedAt: new Date(),
+								userId: session.user.id,
+							},
+						});
+					}
+				}
 			}
 
 			const countryCode = client.vatCountryCode;
